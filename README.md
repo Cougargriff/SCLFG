@@ -7,4 +7,4 @@
 ## Preview
 Login                      |  Home
 :-------------------------:|:-------------------------:
-![](.images/lfgLogin)  |  ![](.images/lfgHome)
+![](https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgLogin.png)  |  ![](https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgHome.png)
