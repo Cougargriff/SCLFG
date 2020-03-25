@@ -12,7 +12,7 @@ class SearchFragment : Fragment()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View?
     {
-        var view = inflater.inflate(R.layout.tabSearch, container)
+        var view = inflater.inflate(R.layout.tab_search, container, false)
 
         /* Setup Fragment View here */
 

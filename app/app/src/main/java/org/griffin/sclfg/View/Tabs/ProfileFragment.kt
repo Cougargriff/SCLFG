@@ -12,7 +12,7 @@ class ProfileFragment : Fragment()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View?
     {
-        var view = inflater.inflate(R.layout.tabProfile, container)
+        var view = inflater.inflate(R.layout.tab_profile, container, false)
 
         /* Setup Fragment View here */
 
