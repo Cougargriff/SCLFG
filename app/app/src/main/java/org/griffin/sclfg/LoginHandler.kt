@@ -1,10 +1,6 @@
 package org.griffin.sclfg
 
-import android.content.Context
-import android.content.Intent
-import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
-
 
 class LoginHandler(lPacket : User, cb : () -> Unit)
 {

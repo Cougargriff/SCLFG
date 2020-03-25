@@ -17,6 +17,22 @@ class LoginActivity : AppCompatActivity()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        setup_login_onclick()
+    }
+
+    /*
+        Callback function to pass to login_handler.
+        Decouples the context logic with logging in for intent purposes
+     */
+    var login_cb = object : (() -> Unit) {
+        override fun invoke() {
+            val intent = Intent(this@LoginActivity, MainActivty::class.java)
+            ContextCompat.startActivity(this@LoginActivity, intent, null)
+        }
+    }
+
+    fun setup_login_onclick()
+    {
         /* Setup Button OnClick Listeners */
         login_button.setOnClickListener {
             var lpacket = LoginHandler.User(email = "", password = "")
@@ -45,12 +61,33 @@ class LoginActivity : AppCompatActivity()
                 handler.login()
             }
         }
-    }
 
-    var login_cb = object : (() -> Unit) {
-        override fun invoke() {
-            val intent = Intent(this@LoginActivity, MainActivty::class.java)
-            ContextCompat.startActivity(this@LoginActivity, intent, null)
+        register.setOnClickListener {
+            var lpacket = LoginHandler.User(email = "", password = "")
+            var err = false;
+
+            if(email.text.isNotBlank() && password.text.isNotBlank())
+            {
+                lpacket.email = email.text.toString()
+                lpacket.password = password.text.toString()
+            }
+            else
+            {
+                err = true;
+            }
+
+            if(err)
+            {
+                Toast.makeText(this,
+                    "Either email or password was incorrect!", Toast.LENGTH_SHORT)
+            }
+            else /* Handle Login Request */
+            {
+                Toast.makeText(this, "Registering...", Toast.LENGTH_SHORT)
+
+                var handler = LoginHandler(lpacket, login_cb)
+                handler.register()
+            }
         }
     }
 
