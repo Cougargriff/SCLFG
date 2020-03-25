@@ -26,7 +26,7 @@ class LoginActivity : AppCompatActivity()
      */
     var login_cb = object : (() -> Unit) {
         override fun invoke() {
-            val intent = Intent(this@LoginActivity, MainActivty::class.java)
+            var intent = Intent(this@LoginActivity, MainActivty::class.java)
             ContextCompat.startActivity(this@LoginActivity, intent, null)
         }
     }
@@ -34,6 +34,7 @@ class LoginActivity : AppCompatActivity()
     fun setup_login_onclick()
     {
         /* Setup Button OnClick Listeners */
+
         login_button.setOnClickListener {
             var lpacket = LoginHandler.User(email = "", password = "")
             var err = false;
