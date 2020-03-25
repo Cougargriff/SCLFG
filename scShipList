@@ -1,0 +1,171 @@
+Name 	Manufacturer 	Role 	Size 	Mass 	Production State 	Price (USD)
+100i 	Origin Jumpworks GmbH 	Starter/Touring 	Small 		In Concept 	45
+125a 	Origin Jumpworks GmbH 	Starter/Light Fighter 	Small 		In Concept 	55
+135c 	Origin Jumpworks GmbH 	Starter/Light Freight 	Small 		In Concept 	60
+300i 	Origin Jumpworks GmbH 	Touring 	Small 	65925 	Flight Ready 	55
+315p 	Origin Jumpworks GmbH 	Pathfinder 	Small 	66140 	Flight Ready 	65
+325a 	Origin Jumpworks GmbH 	Interdiction 	Small 	67002 	Flight Ready 	70
+350r 	Origin Jumpworks GmbH 	Racing 	Small 	64834 	Flight Ready 	125
+600i 	Origin Jumpworks GmbH 	Personal Transport 	Large 	1576792 	Flight Ready 	435
+85X 	Origin Jumpworks GmbH 	Touring 	Snub 	19097 	Flight Ready 	50
+890 Jump 	Origin Jumpworks GmbH 	Touring 	Capital 	4590000 	Flight Ready 	950
+A2 Hercules 	Crusader Industries 	Heavy Military Lifting 	Large 		In Concept 	700
+Ankar 	Vanduul Clans 	Small Bomber 	Small 		Unknown 	
+Apollo 	Roberts Space Industries 	Support - Medical 	Medium 	376500 	In Concept 	250
+Apollo Medivac 	Roberts Space Industries 	Support - Medical 	Medium 	376500 	In Concept 	275
+Ares Inferno 	Crusader Industries 	Anti-Capital 	Medium 		In Concept 	220
+Ares Ion 	Crusader Industries 	Anti-Capital 	Medium 		In Concept 	220
+Arrow 	Anvil Aerospace 	Light Fighter 	Small 	30752 	Flight Ready 	75
+Artemis 	Unknown Manufacturer 	Colonisation 			In Lore 	
+Aurora CL 	Roberts Space Industries 	Light Freight 	Small 	25172 	Flight Ready 	45
+Aurora ES 	Roberts Space Industries 	Pathfinder 	Small 	25172 	Flight Ready 	20
+Aurora LN 	Roberts Space Industries 	Light Fighter 	Small 	25338 	Flight Ready 	35
+Aurora LX 	Roberts Space Industries 	Pathfinder 	Small 	25017 	Flight Ready 	30
+Aurora MR 	Roberts Space Industries 	Light Fighter 	Small 	25017 	Flight Ready 	25
+Avenger Stalker 	Aegis Dynamics 	Interdiction 	Small 	50040 	Flight Ready 	60
+Avenger Titan 	Aegis Dynamics 	Light Freight 	Small 	50056 	Flight Ready 	50
+Avenger Titan Renegade 	Aegis Dynamics 	Light Freight 	Small 	50735 	Flight Ready 	75
+Avenger Trainer 	Aegis Dynamics 	Combat 	Small 	50765 	Active for Squadron 42 	
+Avenger Warlock 	Aegis Dynamics 	Interdiction 	Small 	50070 	Flight Ready 	85
+Bengal 	Roberts Space Industries 	Carrier 	Capital 	155608432 	Active for Squadron 42 	
+Blade 	Vanduul Clans 	Light Fighter 	Small 	10000 	Flight Ready 	
+Blade (replica) 	Esperia 	Light Fighter 	Small 	26082 	Flight Ready 	275
+Buccaneer 	Drake Interplanetary 	Interdiction 	Small 	40821 	Flight Ready 	110
+C2 Hercules 	Crusader Industries 	Heavy Lifting 	Large 		In Concept 	360
+C8 Pisces 	Anvil Aerospace 	Pathfinder 	Snub 		Flight Ready 	
+C8X Pisces Expedition 	Anvil Aerospace 	Pathfinder 	Snub 		Flight Ready 	45
+Carrack 	Anvil Aerospace 	Expedition 	Large 	4397858 	Flight Ready 	600
+Caterpillar 	Drake Interplanetary 	Transport 	Large 	1608205 	Flight Ready 	295
+Cleaver 	Vanduul Clans 	Boarding 	Snub 		Active for Squadron 42 	
+Constellation Andromeda 	Roberts Space Industries 	Medium Freight 	Large 	419850 	Flight Ready 	225
+Constellation Aquila 	Roberts Space Industries 	Expedition 	Large 	439108 	Flight Ready 	310
+Constellation Phoenix 	Roberts Space Industries 	Touring 	Large 	417510 	Flight Ready 	350
+Constellation Taurus 	Roberts Space Industries 	Medium Freight 	Large 	416009 	Temporarily removed from the roadmap 	150
+Corsair 	Drake Interplanetary 	Exploration 	Large 		In Concept 	215
+Crawler 	Vanduul Clans 	Boarding ship 	Medium 		Unknown 	
+Crucible 	Anvil Aerospace 	Heavy Repair 	Large 	3650500 	In Concept 	350
+Cutlass Black 	Drake Interplanetary 	Medium Fighter / Medium Freight 	Medium 	226700 	Flight Ready 	100
+Cutlass Blue 	Drake Interplanetary 	Police / Bounty Hunter 	Medium 	226700 	Active for Alpha 3.9 	150
+Cutlass Red 	Drake Interplanetary 	Search & Rescue 	Medium 	226700 	Flight Ready 	135
+Cydnus 	Greycat Industrial 	Mining 	Medium 	220978 	Active for Squadron 42 	
+Defender 	Banu Souli 	Light Fighter 	Small 	78406 	Flight Ready 	220
+DireHawk 	Anvil Aerospace 		Small 		In Lore 	
+Dragonfly 	Drake Interplanetary 	Racing 	Snub 	2169 	Flight Ready 	40
+Driller 	Vanduul Clans 	Escort Carrier 	Capital 	10218790 	Active for Squadron 42 	
+Eclipse 	Aegis Dynamics 	Stealth Bomber 	Medium 	54216 	Flight Ready 	300
+Endeavor 	Musashi Industrial and Starflight Concern 	Heavy Science 	Capital 	4055000 	In Concept 	350
+F7A Hornet 	Anvil Aerospace 	Medium Fighter 	Small 	73317 	In Lore 	
+F7A Hornet Mk II 	Anvil Aerospace 	Military Close Support 	Small 	22933 	Active for Squadron 42 	
+F7A-R Hornet Tracker 	Anvil Aerospace 	Scout 	Small 		Unknown 	
+F7C Hornet 	Anvil Aerospace 	Medium fighter 	Small 	73535 	Flight Ready 	110
+F7C Hornet Wildfire 	Anvil Aerospace 	Medium Fighter 	Small 	73535 	Flight Ready 	175
+F7C-M Super Hornet 	Anvil Aerospace 	Medium Fighter 	Small 	78466 	Flight Ready 	180
+F7C-M Super Hornet Heartseeker 	Anvil Aerospace 	Medium Fighter 	Small 	78886 	Flight Ready 	
+F7C-R Hornet Tracker 	Anvil Aerospace 	Pathfinder 	Small 	73497 	Flight Ready 	140
+F7C-S Hornet Ghost 	Anvil Aerospace 	Stealth Fighter 	Small 	73454 	Flight Ready 	125
+F8A Lightning 	Anvil Aerospace 	Space Superiority 	Medium 	55339 	Active for Squadron 42 	
+F8C Lightning 	Anvil Aerospace 		Medium 		Unknown 	
+F8C Lightning Executive Edition 	Anvil Aerospace 		Medium 		Unknown 	
+Freelancer 	Musashi Industrial and Starflight Concern 	Transport 	Medium 	209230 	Flight Ready 	110
+Freelancer DUR 	Musashi Industrial and Starflight Concern 	Exploration 	Medium 	213680 	Flight Ready 	135
+Freelancer MAX 	Musashi Industrial and Starflight Concern 	Medium Freight 	Medium 	336230 	Flight Ready 	150
+Freelancer MIS 	Musashi Industrial and Starflight Concern 	Combat 	Medium 	213680 	Flight Ready 	175
+Genesis Starhunter 	Crusader Industries 	Patrol Hunter-Killer 	Large 		In Lore 	
+Genesis Starliner 	Crusader Industries 	Passenger Transport 	Large 	3120000 	In Concept 	400
+Genesis Starseeker 	Crusader Industries 	SWACS/C&C platform 	Large 		In Lore 	
+Gladiator 	Anvil Aerospace 	Light Bomber 	Small 	87497 	Flight Ready 	165
+Gladius 	Aegis Dynamics 	Light Fighter 	Small 	48958 	Flight Ready 	90
+Gladius Valiant 	Aegis Dynamics 	Short-range Dogfighter 	Small 	48958 	Flight Ready 	110
+Glaive 	Vanduul Clans 	Medium Fighter 	Medium 		Flight Ready 	
+Glaive (replica) 	Esperia 	Medium Fighter 	Medium 	66013 	Flight Ready 	350
+Hammerhead 	Aegis Dynamics 	Heavy Gun Ship 	Large 	4260000 	Flight Ready 	725
+Harvester 	Vanduul Clans 	Scavenging, Mining, Refining ?, Recycling 			Unknown 	
+Harvester Carrier 	Vanduul Clans 	Carrier 			Unknown 	
+Hatchet 	Vanduul Clans 	Medium Cargo 	Medium 		Unknown 	
+Hawk 	Anvil Aerospace 	Light Fighter 	Small 	40000 	Flight Ready 	100
+Herald 	Drake Interplanetary 	Medium Data 	Small 	66031 	Flight Ready 	85
+Hull A 	Musashi Industrial and Starflight Concern 	Cargo 	Small 	122650 	In Concept 	60
+Hull B 	Musashi Industrial and Starflight Concern 	Heavy Freight 	Medium 	387500 	In Concept 	90
+Hull C 	Musashi Industrial and Starflight Concern 	Heavy Freight 	Large 	886930 	In Production 	250
+Hull D 	Musashi Industrial and Starflight Concern 	Transport 	Capital 	1216000 	In Concept 	350
+Hull E 	Musashi Industrial and Starflight Concern 	Transport 	Capital 	1652000 	In Concept 	650
+Hunter 	Vanduul Clans 	Corvette 	Large 	90028 	Active for Squadron 42 	
+Hurricane 	Anvil Aerospace 	Heavy Fighter 	Small 	148028 	Flight Ready 	195
+Idris-K 	Aegis Dynamics 	Frigate 	Capital 		In Concept 	1800
+Idris-M 	Aegis Dynamics 	Frigate 	Capital 	37459548 	Active for Squadron 42 	1000
+Idris-P 	Aegis Dynamics 	Frigate 	Capital 	37310200 	In Concept 	1500
+Indefatigable 	Unknown Manufacturer 	Battleship 	Capital 		In Lore 	
+Javelin 	Aegis Dynamics 	Destroyer 	Capital 	109860179 	Active for Squadron 42 	3000
+Jupiter (ship) 	Crusader Industries 	Carrier 	Capital 		In Lore 	
+Khartu-al 	Aopoa 	Light Fighter 	Small 	67115 	Flight Ready 	170
+Kingship 	Vanduul Clans 	Carrier 	Capital 	280001 	Active for Squadron 42 	
+Kraken 	Drake Interplanetary 	Support 	Capital 		In Concept 	1650
+Kraken Privateer 	Drake Interplanetary 	Multi-role, light carrier 	Capital 		In Concept 	2000
+Lightfire 	Vanduul Clans 	Comms Ship 	Capital 		Unknown 	
+M2 Hercules 	Crusader Industries 	Heavy Military Lifting 	Large 		In Concept 	480
+M50 	Origin Jumpworks GmbH 	Racing/Interdiction 	Small 	10580 	Flight Ready 	100
+MPUV Cargo 	Argo Astronautics 	Light Freight 	Snub 	12187 	Flight Ready 	35
+MPUV Personnel 	Argo Astronautics 	Passenger 	Snub 	12307 	Flight Ready 	40
+Mantis 	Roberts Space Industries 	Interdiction 	Small 		Flight Ready 	150
+Mauler 	Vanduul Clans 	Cruiser 	Capital 		Unknown 	
+Merchantman 	Banu Souli 	Heavy Freight 	Large 	9635000 	In Concept 	350
+Mercury Star Runner 	Crusader Industries 	Blockade Runner 	Medium 		Active for Alpha 4.1 	225
+Mole 	Argo Astronautics 	Mining 	Medium 		Flight Ready 	315
+Mustang Alpha 	Consolidated Outland 	Light Freight 	Small 	32970 	Flight Ready 	30
+Mustang Beta 	Consolidated Outland 	Pathfinder 	Small 	39610 	Flight Ready 	40
+Mustang Delta 	Consolidated Outland 	Light Fighter 	Small 	37345 	Flight Ready 	65
+Mustang Gamma 	Consolidated Outland 	Racing 	Small 	30263 	Flight Ready 	55
+Mustang Omega 	Consolidated Outland 	Competition 	Small 	30263 	Flight Ready 	
+Nova (ship) 	Roberts Space Industries 	Courier 			In Lore 	
+Nox 	Aopoa 	Space and Ground Racing 	Snub 	1394 	Flight Ready 	45
+Oracle 	Unknown Manufacturer 	Carrier 	Capital 		In Lore 	
+Orbital Utility Craft 	Argo Astronautics 	Freight 			In Lore 	
+Orion 	Roberts Space Industries 	Mining 	Capital 	26496000 	In Concept 	575
+P-52 Merlin 	Kruger Intergalactic 	Snub Fighter 	Snub 	8493 	Flight Ready 	25
+P-72 Archimedes 	Kruger Intergalactic 	Racing 	Snub 	8290 	Flight Ready 	35
+Pegasus 	Roberts Space Industries 	Escort Carrier 	Capital 		Inactive 	
+Pioneer 	Consolidated Outland 	Heavy Construction 	Capital 	35600000 	In Concept 	850
+Polaris 	Roberts Space Industries 	Corvette 	Capital 	17155000 	In Concept 	750
+Prospector 	Musashi Industrial and Starflight Concern 	Mining 	Small 	116477 	Flight Ready 	155
+Prowler 	Esperia 	Dropship 	Medium 	171700 	Active for Alpha 3.8 	425
+Qhire Khartu 	Aopoa 	Light Fighter 	Small 		Unknown 	
+Razor 	Musashi Industrial and Starflight Concern 	Racing 	Small 	10925 	Flight Ready 	145
+Razor EX 	Musashi Industrial and Starflight Concern 	Stealth 	Small 	10925 	Flight Ready 	155
+Razor LX 	Musashi Industrial and Starflight Concern 	Racing 	Small 	10925 	Flight Ready 	150
+Reaper (ship) 	Unknown Manufacturer 		Capital 		In Lore 	
+Reclaimer 	Aegis Dynamics 	Heavy Salvage 	Large 	9500158 	Flight Ready 	400
+Redeemer 	Aegis Dynamics 	Gunship 	Medium 	120380 	Hangar Ready 	250
+Reliant Kore 	Musashi Industrial and Starflight Concern 	Light Freight 	Small 	38566 	Flight Ready 	65
+Reliant Mako 	Musashi Industrial and Starflight Concern 	Reporting 	Small 	38566 	Flight Ready 	95
+Reliant Sen 	Musashi Industrial and Starflight Concern 	Light Science 	Small 	38566 	Flight Ready 	85
+Reliant Tana 	Musashi Industrial and Starflight Concern 	Light Fighter 	Small 	38566 	Flight Ready 	75
+Retaliator 	Aegis Dynamics 	Heavy Bomber 	Large 	300392 	Flight Ready 	275
+Retribution 	UEE Navy 	Flagship 	Capital 		Inactive 	
+SRV 	Argo Astronautics 	Tugging 	Small 	231680 	In Concept 	150
+Sabre 	Aegis Dynamics 	Stealth Fighter 	Small 	78513 	Flight Ready 	170
+Sabre Comet 	Aegis Dynamics 	Combat 	Small 	78513 	Flight Ready 	185
+Sabre Raven 	Aegis Dynamics 	Combat 	Small 	69433 	Flight Ready 	
+San'tok.yāi 	Aopoa 	Medium Fighter 	Small 	106566 	In Concept 	220
+Scythe 	Vanduul Clans 	Medium Fighter 	Small 	29387 	Flight Ready 	300
+Scythe (replica) 	Esperia 	Medium Fighter 	Small 	59573 	Flight Ready 	
+ShadowHawk 	Anvil Aerospace 		Small 		In Lore 	
+Starfarer 	Musashi Industrial and Starflight Concern 	Refueling 	Large 	3510000 	Flight Ready 	300
+Starfarer Gemini 	Musashi Industrial and Starflight Concern 	Military Refueling 	Large 	350000 	Flight Ready 	340
+Stinger 	Vanduul Clans 	Heavy Fighter 	Medium 	19847 	Active for Squadron 42 	
+T8A Gladiator 	Anvil Aerospace 	Light Bomber 	Small 		Unknown 	
+Terrapin 	Anvil Aerospace 	Scout 	Small 	86454 	Flight Ready 	220
+Tomahawk 	Vanduul Clans 	Heavy Cargo 	Large 		Unknown 	
+Type-IV 	Unknown Manufacturer 	Cargo 			In Lore 	
+Valkyrie 	Anvil Aerospace 	Heavy Dropship 	Medium 	75000 	Flight Ready 	375
+Vanguard Harbinger 	Aegis Dynamics 	Bomber 	Medium 	240092 	Flight Ready 	290
+Vanguard Hoplite 	Aegis Dynamics 	Dropship 	Medium 	229440 	Flight Ready 	235
+Vanguard Sentinel 	Aegis Dynamics 	Electronic Warfare 	Medium 	238616 	Flight Ready 	275
+Vanguard Warden 	Aegis Dynamics 	Heavy Fighter 	Medium 	238616 	Flight Ready 	260
+Void 	Vanduul Clans 	Heavy Bomber 	Large 	106460 	Active for Squadron 42 	
+Volper 	Xi’an 	Light Bomber 			Unknown 	
+Vulcan 	Aegis Dynamics 	Medium Repair / Medium Refuel 	Medium 	623330 	In Concept 	200
+Vulture 	Drake Interplanetary 	Salvage 	Small 	114591 	Active for Alpha 3.9 	140
+X1 	Origin Jumpworks GmbH 	Ultra-light Space and Ground 	Snub 	1610 	In Concept 	40
+X1 Force 	Origin Jumpworks GmbH 	Ultra-light Space and Ground 	Snub 	1682 	In Concept 	50
+X1 Velocity 	Origin Jumpworks GmbH 	Space and Ground Racing 	Snub 	1528 	In Concept 	45
+Zeus 	Roberts Space Industries 	Exploration 			In Lore 	
