@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">SCLFG</string>
+    <string name="app_name">Star Citizen LFG Tool</string>
+
+    <string name="tab1">Search</string>
+    <string name="tab2">Group Listings</string>
+    <string name="tab3">Profile</string>
+
 </resources>

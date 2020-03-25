@@ -1,17 +1,16 @@
-package org.griffin.sclfg
+package org.griffin.sclfg.Login
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_login.*
+import org.griffin.sclfg.View.MainActivity
+import org.griffin.sclfg.R
 
 class LoginActivity : AppCompatActivity()
 {
-
-
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
@@ -24,14 +23,14 @@ class LoginActivity : AppCompatActivity()
         Callback function to pass to login_handler.
         Decouples the context logic with logging in for intent purposes
      */
-    var login_cb = object : (() -> Unit) {
+    private var login_cb = object : (() -> Unit) {
         override fun invoke() {
-            var intent = Intent(this@LoginActivity, MainActivty::class.java)
+            var intent = Intent(this@LoginActivity, MainActivity::class.java)
             ContextCompat.startActivity(this@LoginActivity, intent, null)
         }
     }
 
-    fun setup_login_onclick()
+    private fun setup_login_onclick()
     {
         /* Setup Button OnClick Listeners */
 
@@ -58,7 +57,8 @@ class LoginActivity : AppCompatActivity()
             {
                 Toast.makeText(this, "Logging in...", Toast.LENGTH_SHORT)
 
-                var handler = LoginHandler(lpacket, login_cb)
+                var handler =
+                    LoginHandler(lpacket, login_cb)
                 handler.login()
             }
         }
@@ -86,7 +86,8 @@ class LoginActivity : AppCompatActivity()
             {
                 Toast.makeText(this, "Registering...", Toast.LENGTH_SHORT)
 
-                var handler = LoginHandler(lpacket, login_cb)
+                var handler =
+                    LoginHandler(lpacket, login_cb)
                 handler.register()
             }
         }
