@@ -1,23 +1,21 @@
 package org.griffin.sclfg.View
 
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FirebaseFirestore
-import org.griffin.sclfg.R
+import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.model.Document
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activty_main.*
+import org.griffin.sclfg.R
 import org.griffin.sclfg.View.Tabs.ListFragment
 import org.griffin.sclfg.View.Tabs.ProfileFragment
 import org.griffin.sclfg.View.Tabs.SearchFragment
+import java.util.*
 
 class MainActivity : AppCompatActivity()
 {
@@ -25,6 +23,7 @@ class MainActivity : AppCompatActivity()
         Firebase / FireStore Setup
      */
     private lateinit var userRef : DocumentReference
+    private lateinit var shipRef : CollectionReference
     private var auth = FirebaseAuth.getInstance()
     private var db = Firebase.firestore
     private val FTAG = "FIRESTORE -> "
@@ -52,22 +51,45 @@ class MainActivity : AppCompatActivity()
     {
         userRef = db.collection("users")
             .document(auth.uid.toString())
-
-        /*
-
-        val user = hashMapOf(
-            "screenName" to "cougargriff",
-            "created" to "NOW"
-        )
-
-        userRef.set(user, SetOptions.merge())
-            .addOnSuccessListener { Toast.makeText(this,
-                "Success!", Toast.LENGTH_SHORT) }
-            .addOnFailureListener { Toast.makeText(this,
-                "FAILURE !!", Toast.LENGTH_LONG) }
-
-         */
+        shipRef = db.collection("ships")
+        
     }
+
+    /*
+    Used for one time initing the ship database list in FireStore
+
+    private fun shipPush()
+    {
+        var shipFile = Scanner(this.assets.open("scShipList"))
+        var shipColumns = shipFile.nextLine().split("\t")
+
+        var name = shipColumns[0]
+        var manuf = shipColumns[1]
+        var role = shipColumns[2]
+        var sz = shipColumns[3]
+        var mass = shipColumns[4]
+        var prod = shipColumns[5]
+        var price = shipColumns[6]
+
+
+        while(shipFile.hasNextLine())
+        {
+            var line = shipFile.nextLine()
+            val items =  line.split("\t")
+
+            val ship = hashMapOf(
+                name to items[0],
+                manuf to items[1],
+                role to items[2],
+                sz to items[3],
+                mass to items[4],
+                prod to items[5],
+                price to items[6]
+            )
+            shipRef.document().set(ship, SetOptions.merge())
+        }
+    }
+     */
 
     private fun paSetup()
     {
