@@ -1,4 +1,5 @@
 # SCLFG - Star Citizen : Looking For Group
+[![Platform](https://img.shields.io/badge/Platform-Android-brightgreen.svg)](#)      [![Platform](https://img.shields.io/badge/Language-Kotlin-yellowgreen.svg)](#)
 
 #### Starting a LFG android app for the sci-fi game Star Citizen.
   - Written in Kotlin
