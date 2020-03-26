@@ -1,8 +1,8 @@
 package org.griffin.sclfg.View
 
-
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
@@ -11,11 +11,14 @@ import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activty_main.*
+import org.griffin.sclfg.Models.Ship
+import org.griffin.sclfg.Models.ViewModel
 import org.griffin.sclfg.R
 import org.griffin.sclfg.View.Tabs.ListFragment
 import org.griffin.sclfg.View.Tabs.ProfileFragment
 import org.griffin.sclfg.View.Tabs.SearchFragment
 import java.util.*
+
 
 class MainActivity : AppCompatActivity()
 {
@@ -24,13 +27,17 @@ class MainActivity : AppCompatActivity()
      */
     private lateinit var userRef : DocumentReference
     private lateinit var shipRef : CollectionReference
+    private lateinit var locRef  : CollectionReference
+
     private var auth = FirebaseAuth.getInstance()
     private var db = Firebase.firestore
     private val FTAG = "FIRESTORE -> "
 
     /* Fragment Frameworks */
     private lateinit var pa : PageAdapter
-    // private lateinit var vm : ViewModel
+    private lateinit var vm : ViewModel
+
+    private lateinit var shipList : List<Ship>
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -52,44 +59,15 @@ class MainActivity : AppCompatActivity()
         userRef = db.collection("users")
             .document(auth.uid.toString())
         shipRef = db.collection("ships")
-        
+        locRef = db.collection("locations")
+
+        vm = ViewModel(shipRef, locRef)
+        vm.getShips().observe(this, androidx.lifecycle.Observer {
+            shipList = it!!
+        })
+
+        // ViewModelProviders.of(this, ViewModelFactory(userRef)).get(ViewModel(shipRef, locRef)::class.java)
     }
-
-    /*
-    Used for one time initing the ship database list in FireStore
-
-    private fun shipPush()
-    {
-        var shipFile = Scanner(this.assets.open("scShipList"))
-        var shipColumns = shipFile.nextLine().split("\t")
-
-        var name = shipColumns[0]
-        var manuf = shipColumns[1]
-        var role = shipColumns[2]
-        var sz = shipColumns[3]
-        var mass = shipColumns[4]
-        var prod = shipColumns[5]
-        var price = shipColumns[6]
-
-
-        while(shipFile.hasNextLine())
-        {
-            var line = shipFile.nextLine()
-            val items =  line.split("\t")
-
-            val ship = hashMapOf(
-                name to items[0],
-                manuf to items[1],
-                role to items[2],
-                sz to items[3],
-                mass to items[4],
-                prod to items[5],
-                price to items[6]
-            )
-            shipRef.document().set(ship, SetOptions.merge())
-        }
-    }
-     */
 
     private fun paSetup()
     {
@@ -138,4 +116,47 @@ class MainActivity : AppCompatActivity()
         viewPager.adapter = pa
         tabLayout.setupWithViewPager(viewPager)
     }
+
+    /*
+    Used for one time initing the ship list and location list
+    in our FireStore db.
+    ***********************************************************
+
+
+    private fun shipPush()
+    {
+        var shipFile = Scanner(this.assets.open("scShipList"))
+        var shipColumns = shipFile.nextLine().split("\t")
+        while(shipFile.hasNextLine())
+        {
+            var line = shipFile.nextLine()
+            val items =  line.split("\t")
+            val ship = hashMapOf(
+                "name" to items[0].trim(),
+                "manufacturer" to items[1].trim(),
+                "role" to items[2].trim(),
+                "size" to items[3].trim(),
+                "mass" to items[4].trim(),
+                "prod_state" to items[5].trim(),
+                "price" to items[6].trim()
+            )
+            shipRef.document().set(ship)
+        }
+    }
+
+    private fun locPush()
+    {
+        var shipFile = Scanner(this.assets.open("scLocations"))
+        var locColumns = shipFile.nextLine().split("\t")
+        while(shipFile.hasNextLine())
+        {
+            var line = shipFile.nextLine()
+            val loc = hashMapOf(
+                "name" to line.trim()
+            )
+            locRef.document().set(loc, SetOptions.merge())
+        }
+    }
+     */
+
 }
