@@ -2,8 +2,10 @@
 [![Platform](https://img.shields.io/badge/Platform-Android-brightgreen.svg)](#)      [![Platform](https://img.shields.io/badge/Language-Kotlin-yellowgreen.svg)](#)
 
 #### Starting a LFG android app for the sci-fi game Star Citizen.
-  - Written in Kotlin
-  - Uses Firestore for Authentication and Data Storage
+This app is meant to serve as a tool for the Star Citizen and fill a gap in the ability for users to connect and play together. The app requires email, password authentication currently. Authenticatin is handled with Google's FireStore cloud database solution. 
+
+#### Goals
+
   
 ## Preview
 Login                      |  Home
