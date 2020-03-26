@@ -26,7 +26,6 @@ class MainActivity : AppCompatActivity()
     private lateinit var userRef : DocumentReference
     private lateinit var shipRef : CollectionReference
     private lateinit var locRef  : CollectionReference
-
     private var auth = FirebaseAuth.getInstance()
     private var db = Firebase.firestore
     private val FTAG = "FIRESTORE -> "
