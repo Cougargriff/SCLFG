@@ -2,22 +2,20 @@ package org.griffin.sclfg.View
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activty_main.*
+import org.griffin.sclfg.Models.Location
 import org.griffin.sclfg.Models.Ship
 import org.griffin.sclfg.Models.ViewModel
 import org.griffin.sclfg.R
 import org.griffin.sclfg.View.Tabs.ListFragment
 import org.griffin.sclfg.View.Tabs.ProfileFragment
 import org.griffin.sclfg.View.Tabs.SearchFragment
-import java.util.*
 
 
 class MainActivity : AppCompatActivity()
@@ -38,6 +36,7 @@ class MainActivity : AppCompatActivity()
     private lateinit var vm : ViewModel
 
     private lateinit var shipList : List<Ship>
+    private lateinit var locList : List<Location>
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -49,9 +48,24 @@ class MainActivity : AppCompatActivity()
 
     private fun lateSetup()
     {
-        firestoreSetup()
         paSetup()
         vpSetup()
+        firestoreSetup()
+        vmSetup()
+    }
+
+    private fun vmSetup()
+    {
+        /* View Model Setup */
+        vm = ViewModel(shipRef, locRef)
+
+        /* UI Updaters on Observation Changes from FireStore */
+        vm.getShips().observe(this, androidx.lifecycle.Observer {
+            shipList = it!!
+        })
+        vm.getLocs().observe(this, androidx.lifecycle.Observer {
+            locList = it!!
+        })
     }
 
     private fun firestoreSetup()
@@ -60,13 +74,6 @@ class MainActivity : AppCompatActivity()
             .document(auth.uid.toString())
         shipRef = db.collection("ships")
         locRef = db.collection("locations")
-
-        vm = ViewModel(shipRef, locRef)
-        vm.getShips().observe(this, androidx.lifecycle.Observer {
-            shipList = it!!
-        })
-
-        // ViewModelProviders.of(this, ViewModelFactory(userRef)).get(ViewModel(shipRef, locRef)::class.java)
     }
 
     private fun paSetup()
