@@ -9,11 +9,14 @@ import android.widget.AutoCompleteTextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.tab_search.*
 import org.griffin.sclfg.Models.Group
 import org.griffin.sclfg.Models.Location
 import org.griffin.sclfg.Models.Ship
 import org.griffin.sclfg.Models.ViewModel
+import org.griffin.sclfg.Models.ViewModel.Companion.findLoc
+import org.griffin.sclfg.Models.ViewModel.Companion.findShip
 import org.griffin.sclfg.R
 
 class SearchFragment : Fragment()
@@ -26,6 +29,7 @@ class SearchFragment : Fragment()
     private lateinit var shipAdapter : ArrayAdapter<String>
     private lateinit var locAdapter : ArrayAdapter<String>
     private lateinit var acView : AutoCompleteTextView
+    private val EMPTY = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View?
@@ -53,34 +57,22 @@ class SearchFragment : Fragment()
             {
 
                 var newGroup = Group(groupBox.text.toString(), System.currentTimeMillis(),
-                    listOf(""), findShip(shipSearchBox.text.toString())!!,
-                    findLoc(locSearchBox.text.toString())!!, playNumSelector.value, 1)
+                    listOf(), findShip(shipSearchBox.text.toString(), shipList)!!,
+                    findLoc(locSearchBox.text.toString(), locList)!!,
+                    playNumSelector.value, 1, true)
+
+                vm.pushGroup(newGroup, resetTextBoxes)
             }
         }
     }
 
-    private fun findLoc(searchLoc : String) : Location?
-    {
-        for(loc in locList)
-        {
-            if(loc.name.compareTo(searchLoc) == 0)
-            {
-                return loc
-            }
+    private var resetTextBoxes = object : (() -> Unit) {
+        override fun invoke() {
+            groupBox.text.clear()
+            shipSearchBox.text.clear()
+            locSearchBox.text.clear()
+            roleBox.text.clear()
         }
-        return null
-    }
-
-    private fun findShip(searchName : String) : Ship?
-    {
-        for(ship in shipList)
-        {
-            if(ship.name.compareTo(searchName) == 0)
-            {
-                return ship
-            }
-        }
-        return null
     }
 
     private fun setupVM()

@@ -26,13 +26,25 @@ class LoginActivity : AppCompatActivity()
         Decouples the context logic with logging in for intent purposes
      */
     private var login_cb = object : (() -> Unit) {
-        override fun invoke() {
+        override fun invoke()
+        {
             var intent = Intent(this@LoginActivity, MainActivity::class.java)
             ContextCompat.startActivity(this@LoginActivity, intent, null)
         }
     }
-    private var login_err_cb = object : (() -> Unit) {
-        override fun invoke() {
+
+    private var register_cb = object : (() -> Unit) {
+        override fun invoke()
+        {
+            var intent = Intent(this@LoginActivity, MainActivity::class.java)
+            ContextCompat.startActivity(this@LoginActivity, intent, null)
+        }
+    }
+
+    private var err_cb = object : (() -> Unit) {
+        override fun invoke()
+        {
+            /* reset button heights on failed attempt */
             login_button.elevation = BUTTON_ELEVATION
             register.elevation = BUTTON_ELEVATION
         }
@@ -68,11 +80,10 @@ class LoginActivity : AppCompatActivity()
                 Toast.makeText(this, "Logging in...", Toast.LENGTH_SHORT)
 
                 var handler =
-                    LoginHandler(lpacket, login_cb, login_err_cb)
+                    LoginHandler(lpacket, login_cb, err_cb)
                 handler.login()
             }
         }
-
 
         register.setOnClickListener {
             register.elevation = 0f
@@ -99,7 +110,7 @@ class LoginActivity : AppCompatActivity()
                 Toast.makeText(this, "Registering...", Toast.LENGTH_SHORT)
 
                 var handler =
-                    LoginHandler(lpacket, login_cb, login_err_cb)
+                    LoginHandler(lpacket, register_cb, err_cb)
                 handler.register()
             }
         }
