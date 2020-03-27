@@ -4,11 +4,9 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activty_main.*
@@ -16,7 +14,7 @@ import org.griffin.sclfg.Models.*
 import org.griffin.sclfg.R
 import org.griffin.sclfg.View.Tabs.ListFragment
 import org.griffin.sclfg.View.Tabs.ProfileFragment
-import org.griffin.sclfg.View.Tabs.SearchFragment
+import org.griffin.sclfg.View.Tabs.CreateFragment
 
 
 class MainActivity : AppCompatActivity()
@@ -92,7 +90,7 @@ class MainActivity : AppCompatActivity()
         pa = PageAdapter(supportFragmentManager)
 
         /* Create and add fragments to page adapter */
-        pa.addFragments(SearchFragment(), "Search")
+        pa.addFragments(CreateFragment(), "Search")
         pa.addFragments(ListFragment(), "List")
         pa.addFragments(ProfileFragment(), "Profile")
     }

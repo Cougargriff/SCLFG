@@ -9,8 +9,7 @@ import android.widget.AutoCompleteTextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.tab_search.*
+import kotlinx.android.synthetic.main.tab_create.*
 import org.griffin.sclfg.Models.Group
 import org.griffin.sclfg.Models.Location
 import org.griffin.sclfg.Models.Ship
@@ -19,7 +18,7 @@ import org.griffin.sclfg.Models.ViewModel.Companion.findLoc
 import org.griffin.sclfg.Models.ViewModel.Companion.findShip
 import org.griffin.sclfg.R
 
-class SearchFragment : Fragment()
+class CreateFragment : Fragment()
 {
     private val vm : ViewModel by activityViewModels()
     private lateinit var shipList : List<Ship>
@@ -34,7 +33,7 @@ class SearchFragment : Fragment()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View?
     {
-        var view = inflater.inflate(R.layout.tab_search, container, false)
+        var view = inflater.inflate(R.layout.tab_create, container, false)
         /* Setup Fragment View here */
 
         return view
@@ -56,9 +55,9 @@ class SearchFragment : Fragment()
                 locSearchBox.text.isBlank() || roleBox.text.isBlank()))
             {
 
-                var newGroup = Group(groupBox.text.toString(), System.currentTimeMillis(),
-                    listOf(), findShip(shipSearchBox.text.toString(), shipList)!!,
-                    findLoc(locSearchBox.text.toString(), locList)!!,
+                var newGroup = Group(groupBox.text.toString().trim(), System.currentTimeMillis(),
+                    listOf(), findShip(shipSearchBox.text.toString().trim(), shipList)!!,
+                    findLoc(locSearchBox.text.toString().trim(), locList)!!,
                     playNumSelector.value, 1, true)
 
                 vm.pushGroup(newGroup, resetTextBoxes)
