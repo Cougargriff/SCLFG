@@ -4,10 +4,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 /* Need to pass Ship and Loc db ref to get lists */
-class ViewModel(val shipRef : CollectionReference, val locRef : CollectionReference) : ViewModel()
+class ViewModel : ViewModel()
 {
+    private lateinit var shipRef : CollectionReference
+    private lateinit var locRef: CollectionReference
+
+    private val db = Firebase.firestore
+
     private val ships: MutableLiveData<List<Ship>> by lazy {
         MutableLiveData<List<Ship>>().also {
             loadShips()
@@ -30,7 +37,9 @@ class ViewModel(val shipRef : CollectionReference, val locRef : CollectionRefere
         return locations
     }
 
-    private fun loadLocs() {
+    private fun loadLocs()
+    {
+        locRef = db.collection("locations")
         // Do an asynchronous operation to fetch users.
         locRef.get()
             .addOnCompleteListener {
@@ -52,7 +61,9 @@ class ViewModel(val shipRef : CollectionReference, val locRef : CollectionRefere
             }
     }
 
-    private fun loadShips() {
+    private fun loadShips()
+    {
+        shipRef = db.collection("ships")
         // Do an asynchronous operation to fetch users.
         shipRef.get()
             .addOnCompleteListener {

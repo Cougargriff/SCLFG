@@ -11,6 +11,8 @@ import org.griffin.sclfg.R
 
 class LoginActivity : AppCompatActivity()
 {
+    private val BUTTON_ELEVATION = 20f
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
@@ -29,12 +31,20 @@ class LoginActivity : AppCompatActivity()
             ContextCompat.startActivity(this@LoginActivity, intent, null)
         }
     }
+    private var login_err_cb = object : (() -> Unit) {
+        override fun invoke() {
+            login_button.elevation = BUTTON_ELEVATION
+            register.elevation = BUTTON_ELEVATION
+        }
+    }
+
 
     private fun setup_login_onclick()
     {
         /* Setup Button OnClick Listeners */
 
         login_button.setOnClickListener {
+            login_button.elevation = 0f
             var lpacket = LoginHandler.User(email = "", password = "")
             var err = false;
 
@@ -58,12 +68,14 @@ class LoginActivity : AppCompatActivity()
                 Toast.makeText(this, "Logging in...", Toast.LENGTH_SHORT)
 
                 var handler =
-                    LoginHandler(lpacket, login_cb)
+                    LoginHandler(lpacket, login_cb, login_err_cb)
                 handler.login()
             }
         }
 
+
         register.setOnClickListener {
+            register.elevation = 0f
             var lpacket = LoginHandler.User(email = "", password = "")
             var err = false;
 
@@ -87,7 +99,7 @@ class LoginActivity : AppCompatActivity()
                 Toast.makeText(this, "Registering...", Toast.LENGTH_SHORT)
 
                 var handler =
-                    LoginHandler(lpacket, login_cb)
+                    LoginHandler(lpacket, login_cb, login_err_cb)
                 handler.register()
             }
         }
