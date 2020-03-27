@@ -10,4 +10,4 @@ Currently working on group creation.
 ## Preview
 Login                      |  Home
 :-------------------------:|:-------------------------:
-![](https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgLogin.png)  |  ![](https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgHome.png)
+![scale=0.4](https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgLogin.png)  |  ![scale=0.4](https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgSearch.png)
