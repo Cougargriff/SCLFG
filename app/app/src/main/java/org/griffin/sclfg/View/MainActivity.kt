@@ -1,7 +1,9 @@
 package org.griffin.sclfg.View
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
@@ -32,7 +34,7 @@ class MainActivity : AppCompatActivity()
 
     /* Fragment Frameworks */
     private lateinit var pa : PageAdapter
-    private lateinit var vm : ViewModel
+    private val vm : ViewModel by viewModels()
 
     private lateinit var shipList : List<Ship>
     private lateinit var locList : List<Location>
@@ -51,12 +53,13 @@ class MainActivity : AppCompatActivity()
         vpSetup()
         firestoreSetup()
         vmSetup()
+
+        viewPager.setCurrentItem(0, true)
     }
 
     private fun vmSetup()
     {
         /* View Model Setup */
-        vm = ViewModel(shipRef, locRef)
 
         /* UI Updaters on Observation Changes from FireStore */
         vm.getShips().observe(this, androidx.lifecycle.Observer {

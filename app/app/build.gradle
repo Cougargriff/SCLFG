@@ -23,16 +23,45 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
 }
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 dependencies {
-    // Firestore
+    def lifecycle_version = "2.2.0"
+    def fragment_version = "1.2.3"
+
+
+    /* Firestore */
     implementation 'com.google.firebase:firebase-analytics:17.2.2'
     implementation 'com.google.firebase:firebase-auth:19.3.0'
     implementation 'com.google.firebase:firebase-firestore-ktx:21.4.1'
-    // *********
+
+    // ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    // LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    // optional - helpers for implementing LifecycleOwner in a Service
+    implementation "androidx.lifecycle:lifecycle-service:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
+
+    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
+    // Kotlin fragments
+    implementation "androidx.fragment:fragment-ktx:$fragment_version"
+
+    /* ******** */
+
+    /* Number Picker UI ELEMENT */
+    implementation 'com.shawnlin:number-picker:2.4.9'
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
