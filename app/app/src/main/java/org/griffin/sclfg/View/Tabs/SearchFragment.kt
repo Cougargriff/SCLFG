@@ -30,9 +30,7 @@ class SearchFragment : Fragment()
         /* Setup Fragment View here */
         vm.getShips().observe(viewLifecycleOwner, Observer {
             shipList = it!!
-
         })
-
         return view
     }
 

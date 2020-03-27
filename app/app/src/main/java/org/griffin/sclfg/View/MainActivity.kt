@@ -121,7 +121,6 @@ class MainActivity : AppCompatActivity()
                 }
             }
         })
-
         viewPager.adapter = pa
         tabLayout.setupWithViewPager(viewPager)
     }
@@ -130,8 +129,6 @@ class MainActivity : AppCompatActivity()
     Used for one time initing the ship list and location list
     in our FireStore db.
     ***********************************************************
-
-
     private fun shipPush()
     {
         var shipFile = Scanner(this.assets.open("scShipList"))
@@ -152,7 +149,6 @@ class MainActivity : AppCompatActivity()
             shipRef.document().set(ship)
         }
     }
-
     private fun locPush()
     {
         var shipFile = Scanner(this.assets.open("scLocations"))
