@@ -10,4 +10,4 @@ Currently working on group creation.
 ## Preview
 Login                      |Group Creation             | Star Citizen autocomplete                      
 :-------------------------:|:-------------------------:|:-------------------------:
-![](https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgLogin.png  | width=100)  |  ![](https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgSearch.png  | width=100)  |  ![](https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgAutoComplete.png  | width=100)
+<img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgLogin.png" width="40%">  |  <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgSearch.png" width="40%">  |  <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgAutoComplete.png" width="40%">
