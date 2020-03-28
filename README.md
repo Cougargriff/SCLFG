@@ -9,8 +9,9 @@ Currently working on group creation.
 <center>
   
 ## Preview
-Login                      |Group Creation             | Star Citizen autocomplete                      
-:-------------------------:|:-------------------------:|:-------------------------:
-<img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgLogin.png" height="520">  |  <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgSearch.png" height="520">  |  <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgAutoComplete.png" height="520">
+Login                      |Group Creation             | Star Citizen autocomplete | Group Listing                      
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+<img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgLogin.png" height="520">  |  <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgSearch.png" height="520">  |  <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgAutoComplete.png" height="520"> |
+ <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgList.png" height="520">
 
 </center>
