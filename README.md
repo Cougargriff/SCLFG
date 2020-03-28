@@ -6,16 +6,17 @@ This app is meant to serve as a tool for the Star Citizen and fill a gap in the 
 
 Currently working on group creation.
 
-<center>
+
   
 ## Preview
-Login                      |Group Creation             | Star Citizen autocomplete | Group Listing                      
-:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+Login                      |Group Creation             |                      
+:-------------------------:|:-------------------------:|
 <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgLogin.png" height="520">  |  <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgSearch.png" height="520">   
+
  
 Star Citizen autocomplete  | Group Listing                      
 :-------------------------:|:-------------------------:
 <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgAutoComplete.png" height="520"> |
  <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgList.png" height="520"> 
 
-</center>
+
