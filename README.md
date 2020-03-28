@@ -11,7 +11,7 @@ Currently working on group creation.
 ## Preview
 Login                      |Group Creation             |                      
 :-------------------------:|:-------------------------:|
-<img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgLogin.png" height="520">  |  <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgSearch.png" height="520">   
+<img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgLogin.png" >  |  <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgSearch.png" >   
 
  
 Star Citizen autocomplete  | Group Listing             |         
