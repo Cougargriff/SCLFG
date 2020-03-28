@@ -46,6 +46,10 @@ class MainActivity : AppCompatActivity()
         lateSetup()
     }
 
+    override fun onBackPressed() {
+        /* do nothing */
+    }
+
     private fun lateSetup()
     {
         paSetup()
@@ -61,20 +65,25 @@ class MainActivity : AppCompatActivity()
         /* View Model Setup */
 
         /* UI Updaters on Observation Changes from FireStore */
-        vm.getShips().observe(this, Observer {
-            shipList = it!!
-        })
+
         vm.getLocs().observe(this, Observer {
             locList = it!!
+
+            vm.getShips().observe(this, Observer {
+                shipList = it!!
+
+                /* depends on ships and locations */
+                vm.getGroups().observe(this, Observer {
+                    grpList = it!!
+                })
+            })
         })
 
         vm.getUser().observe(this, Observer {
             user = it!!
         })
 
-        vm.getGroups().observe(this, Observer {
-            grpList = it!!
-        })
+
 
     }
 

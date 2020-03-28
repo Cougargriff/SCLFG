@@ -56,8 +56,8 @@ class CreateFragment : Fragment()
             {
 
                 var newGroup = Group(groupBox.text.toString().trim(), System.currentTimeMillis(),
-                    listOf(), findShip(shipSearchBox.text.toString().trim(), shipList)!!,
-                    findLoc(locSearchBox.text.toString().trim(), locList)!!,
+                    ArrayList<String>(), shipSearchBox.text.toString().trim(),
+                    locSearchBox.text.toString().trim(),
                     playNumSelector.value, 1, true)
 
                 vm.pushGroup(newGroup, resetTextBoxes)

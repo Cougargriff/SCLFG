@@ -47,6 +47,22 @@ class ViewModel : ViewModel()
             return User(name, time.toLong())
         }
 
+        fun groupFromHash(result : DocumentSnapshot) : Group
+        {
+            var name = result["name"].toString()
+            var time = result["timeCreated"].toString().toLong()
+            var ship = result["ship"].toString()
+            var loc = result["location"].toString()
+            var maxPlyr = result["maxPlayers"].toString()
+            var currCnt = result["currCount"].toString()
+            var playerList = result["playerList"] as ArrayList<String>
+            var active = result["active"] as Boolean
+
+            return Group(name, time, playerList, ship,
+                loc, maxPlyr.toInt(), currCnt.toInt(),
+                active)
+        }
+
     }
 
     private lateinit var shipRef : CollectionReference
@@ -128,8 +144,8 @@ class ViewModel : ViewModel()
         var grpHash = hashMapOf(
             "name" to grp.name,
             "timeCreated" to grp.timeCreated,
-            "ship" to grp.ship.name,
-            "location" to grp.loc.name,
+            "ship" to grp.ship,
+            "location" to grp.loc,
             "maxPlayers" to grp.maxPlayers,
             "currCount" to grp.currCount,
             "playerList" to listOf(auth.uid),
@@ -196,18 +212,7 @@ class ViewModel : ViewModel()
                     var grpList = ArrayList<Group>()
                     for(grp in grpDocs)
                     {
-                        var name = grp["name"].toString()
-                        var time = grp["timeCreated"].toString().toLong()
-                        var ship = grp["ship"].toString()
-                        var loc = grp["location"].toString()
-                        var maxPlyr = grp["maxPlayers"].toString()
-                        var currCnt = grp["currCount"].toString()
-                        var playerList = grp["playerList"] as List<String>
-                        var active = grp["active"] as Boolean
-
-                        grpList.add(Group(name, time, playerList, findShip(ship, ships.value!!)!!,
-                            findLoc(loc, locations.value!!)!!, maxPlyr.toInt(), currCnt.toInt(),
-                            active))
+                        grpList.add(groupFromHash(grp))
                     }
                     /* Update our groups list */
                     groups.value = grpList

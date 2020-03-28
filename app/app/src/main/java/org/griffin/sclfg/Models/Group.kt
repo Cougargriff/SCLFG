@@ -6,9 +6,9 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Group(var name: String,
                  var timeCreated: Long,
-                 var playerList: List<String>,
-                 var ship: Ship,
-                 var loc: Location,
+                 var playerList: ArrayList<String>,
+                 var ship: String,
+                 var loc: String,
                  var maxPlayers: Int,
                  var currCount: Int,
                  var active : Boolean) : Parcelable

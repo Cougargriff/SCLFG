@@ -7,7 +7,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
-        android:layout_width="384dp"
+        android:layout_width="match_parent"
         android:layout_height="136dp"
         android:layout_marginTop="16dp"
         app:cardBackgroundColor="@color/rsiWall"
@@ -69,7 +69,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
-        android:layout_width="384dp"
+        android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_marginTop="8dp"
         app:cardBackgroundColor="@color/rsiWall"
