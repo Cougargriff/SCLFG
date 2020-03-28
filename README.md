@@ -2,7 +2,7 @@
 [![Platform](https://img.shields.io/badge/Platform-Android-brightgreen.svg)](#)      [![Platform](https://img.shields.io/badge/Language-Kotlin-yellowgreen.svg)](#)
 
 #### Starting a :family: LFG android app for the sci-fi game :star2: Star Citizen.
-This app is meant to serve as a tool for the Star Citizen and fill a gap in the ability for users to connect and play together. The app requires email, password authentication currently. Authenticatin is handled with Google's :fire: FireStore cloud database solution.  
+This app is meant to serve as a tool for the Star Citizen and fill a gap in the ability for users to connect and play together. The app requires email, password authentication currently. Authentication is handled with Google's :fire: FireStore cloud database solution.  
 
 Currently working on group list view
 
