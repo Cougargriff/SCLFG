@@ -3,21 +3,18 @@ package org.griffin.sclfg.View
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activty_main.*
-import org.griffin.sclfg.Models.Location
-import org.griffin.sclfg.Models.Ship
-import org.griffin.sclfg.Models.ViewModel
+import org.griffin.sclfg.Models.*
 import org.griffin.sclfg.R
 import org.griffin.sclfg.View.Tabs.ListFragment
 import org.griffin.sclfg.View.Tabs.ProfileFragment
-import org.griffin.sclfg.View.Tabs.SearchFragment
+import org.griffin.sclfg.View.Tabs.CreateFragment
 
 
 class MainActivity : AppCompatActivity()
@@ -25,7 +22,7 @@ class MainActivity : AppCompatActivity()
     /*
         Firebase / FireStore Setup
      */
-    private lateinit var userRef : DocumentReference
+    private lateinit var userRef : CollectionReference
     private lateinit var shipRef : CollectionReference
     private lateinit var locRef  : CollectionReference
     private var auth = FirebaseAuth.getInstance()
@@ -38,6 +35,8 @@ class MainActivity : AppCompatActivity()
 
     private lateinit var shipList : List<Ship>
     private lateinit var locList : List<Location>
+    private lateinit var grpList : List<Group>
+    private lateinit var user : User
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -45,6 +44,10 @@ class MainActivity : AppCompatActivity()
         setContentView(R.layout.activty_main)
 
         lateSetup()
+    }
+
+    override fun onBackPressed() {
+        /* do nothing */
     }
 
     private fun lateSetup()
@@ -62,18 +65,31 @@ class MainActivity : AppCompatActivity()
         /* View Model Setup */
 
         /* UI Updaters on Observation Changes from FireStore */
-        vm.getShips().observe(this, androidx.lifecycle.Observer {
-            shipList = it!!
-        })
-        vm.getLocs().observe(this, androidx.lifecycle.Observer {
+
+        vm.getLocs().observe(this, Observer {
             locList = it!!
+
+            vm.getShips().observe(this, Observer {
+                shipList = it!!
+
+                /* depends on ships and locations */
+                vm.getGroups().observe(this, Observer {
+                    grpList = it!!
+                })
+            })
         })
+
+        vm.getUser().observe(this, Observer {
+            user = it!!
+        })
+
+
+
     }
 
     private fun firestoreSetup()
     {
         userRef = db.collection("users")
-            .document(auth.uid.toString())
         shipRef = db.collection("ships")
         locRef = db.collection("locations")
     }
@@ -83,10 +99,11 @@ class MainActivity : AppCompatActivity()
         pa = PageAdapter(supportFragmentManager)
 
         /* Create and add fragments to page adapter */
-        pa.addFragments(SearchFragment(), "Search")
+        pa.addFragments(CreateFragment(), "Search")
         pa.addFragments(ListFragment(), "List")
         pa.addFragments(ProfileFragment(), "Profile")
     }
+
 
     private fun vpSetup()
     {
