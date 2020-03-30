@@ -1,6 +1,8 @@
 package org.griffin.sclfg.View
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -38,12 +40,29 @@ class MainActivity : AppCompatActivity()
     private lateinit var grpList : List<Group>
     private lateinit var user : User
 
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activty_main)
 
         lateSetup()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean
+    {
+        menuInflater.inflate(R.menu.action_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean
+    {
+        if(item.itemId == R.id.refresh)
+        {
+            vm.update()
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onBackPressed() {
@@ -111,7 +130,8 @@ class MainActivity : AppCompatActivity()
         viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener
         {
             override fun onPageScrollStateChanged(state: Int)
-            {}
+            {
+            }
             override fun onPageScrolled(position: Int, positionOffset: Float,
                                         positionOffsetPixels: Int)
             {}

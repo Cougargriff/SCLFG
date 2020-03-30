@@ -33,6 +33,7 @@ class LoginActivity : AppCompatActivity()
         }
     }
 
+    /* register screen to immediately set screen name */
     private var register_cb = object : (() -> Unit) {
         override fun invoke()
         {

@@ -5,6 +5,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Group(var name: String,
+                 var gid: String,
                  var timeCreated: Long,
                  var playerList: ArrayList<String>,
                  var ship: String,

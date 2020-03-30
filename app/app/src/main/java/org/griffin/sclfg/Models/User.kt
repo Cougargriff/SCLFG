@@ -5,5 +5,6 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class User(var screenName: String,
+                var uid: String,
                  var timeCreated: Long) : Parcelable
 

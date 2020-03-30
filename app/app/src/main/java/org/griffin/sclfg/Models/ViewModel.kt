@@ -1,15 +1,16 @@
 package org.griffin.sclfg.Models
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.*
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.io.Serializable
 
 /* Need to pass Ship and Loc db ref to get lists */
 class ViewModel : ViewModel()
@@ -44,8 +45,9 @@ class ViewModel : ViewModel()
         {
             var time = result["timeCreated"].toString()
             var name = result["screenName"].toString()
-            return User(name, time.toLong())
+            return User(name, result.id ,time.toLong())
         }
+
 
         fun groupFromHash(result : DocumentSnapshot) : Group
         {
@@ -58,7 +60,7 @@ class ViewModel : ViewModel()
             var playerList = result["playerList"] as ArrayList<String>
             var active = result["active"] as Boolean
 
-            return Group(name, time, playerList, ship,
+            return Group(name, result.id, time, playerList, ship,
                 loc, maxPlyr.toInt(), currCnt.toInt(),
                 active)
         }
@@ -101,13 +103,13 @@ class ViewModel : ViewModel()
         return user
     }
 
-
-    private fun findUser(UID : String, cb: (User) -> Unit)
+    fun update()
     {
-        if(UID.compareTo(auth.uid!!) == 0)
-        {
-            return cb(user.value!!)
-        }
+        loadGroups()
+    }
+
+    fun findUser(UID : String, cb: (User) -> Unit)
+    {
         userRef.document(UID).get()
             .addOnCompleteListener {
                 if(it.isSuccessful && it.result!!.exists())
@@ -122,6 +124,17 @@ class ViewModel : ViewModel()
         userRef.document(auth.uid!!).set(hashMapOf(
             "screenName" to name
         ), SetOptions.merge())
+        loadUser()
+        loadGroups()
+    }
+
+    fun joinGroup(gid : String, hash : HashMap<String, Serializable>)
+    {
+        grpRef.document(gid)
+            .set(hash, SetOptions.merge())
+            .addOnSuccessListener {
+                loadGroups()
+            }
     }
 
     fun getGroups(): LiveData<List<Group>>
@@ -195,14 +208,17 @@ class ViewModel : ViewModel()
                     }
                 }
             }
+        getUser()
     }
 
+    /* loads oldest first */
     private fun loadGroups()
     {
 
         grpRef = db.collection("groups")
 
-        grpRef.get()
+        grpRef.orderBy("timeCreated", Query.Direction.ASCENDING)
+            .get()
             .addOnCompleteListener {
                 /* Sanity Check */
                 if(it.isSuccessful && !it.result!!.isEmpty)

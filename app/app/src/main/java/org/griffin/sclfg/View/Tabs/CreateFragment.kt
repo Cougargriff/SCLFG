@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.tab_create.*
 import org.griffin.sclfg.Models.Group
@@ -55,7 +56,7 @@ class CreateFragment : Fragment()
                 locSearchBox.text.isBlank() || roleBox.text.isBlank()))
             {
 
-                var newGroup = Group(groupBox.text.toString().trim(), System.currentTimeMillis(),
+                var newGroup = Group(groupBox.text.toString().trim(), "",System.currentTimeMillis(),
                     ArrayList<String>(), shipSearchBox.text.toString().trim(),
                     locSearchBox.text.toString().trim(),
                     playNumSelector.value, 1, true)
