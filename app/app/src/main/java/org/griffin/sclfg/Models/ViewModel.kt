@@ -137,6 +137,15 @@ class ViewModel : ViewModel()
             }
     }
 
+    fun leaveGroup(gid: String, hash: HashMap<String, Serializable>)
+    {
+        grpRef.document(gid)
+            .set(hash, SetOptions.merge())
+            .addOnSuccessListener {
+                loadGroups()
+            }
+    }
+
     fun getGroups(): LiveData<List<Group>>
     {
         return groups

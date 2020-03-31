@@ -30,6 +30,7 @@ class ListFragment : Fragment()
     private lateinit var rvManager : RecyclerView.LayoutManager
     private lateinit var rvAdapter : RecyclerView.Adapter<*>
 
+    /* closures for joining and leaving groups. passed to list adapters */
     private val joinGroup = fun (g : Group, uid : String)
     {
         if(g.currCount + 1 < g.maxPlayers)
@@ -43,6 +44,20 @@ class ListFragment : Fragment()
         }
     }
 
+    private val leaveGroup = fun (g : Group, uid : String)
+    {
+        if(g.currCount - 1 >= 0)
+        {
+            g.playerList.remove(uid)
+            val hash = hashMapOf(
+                "playerList" to g.playerList,
+                "currCount" to g.currCount - 1
+            )
+            vm.leaveGroup(g.gid, hash)
+        }
+    }
+
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View?
     {
@@ -52,7 +67,11 @@ class ListFragment : Fragment()
         rv = view.listView
         rvManager = LinearLayoutManager(context)
 
-        rvAdapter = GroupListAdapter(ArrayList(), ArrayList(), user, joinGroup)
+        rvAdapter = GroupListAdapter(ArrayList(),
+            ArrayList(),
+            user,
+            joinGroup,
+            leaveGroup)
 
 
         /* Bind everything together */
@@ -64,7 +83,8 @@ class ListFragment : Fragment()
         return view
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
+    override fun onActivityCreated(savedInstanceState: Bundle?)
+    {
         super.onActivityCreated(savedInstanceState)
         setupVM()
     }
@@ -73,6 +93,11 @@ class ListFragment : Fragment()
     {
         vm.getUser().observe(viewLifecycleOwner, Observer {
             user = it!!
+
+            /*
+                possible in the future to just make local
+                call to function for getGroups instead of vm call
+             */
             vm.update()
         })
 
@@ -86,7 +111,8 @@ class ListFragment : Fragment()
                 userLists.add(userList)
             }
 
-            var newAdapter = GroupListAdapter(ArrayList(groupsList), userLists, user, joinGroup)
+            var newAdapter = GroupListAdapter(ArrayList(groupsList), userLists, user,
+                joinGroup, leaveGroup)
             rv.adapter = newAdapter
         })
     }
@@ -105,6 +131,18 @@ class ListFragment : Fragment()
     }
 }
 
+
+/*           _             _
+    /\      | |           | |
+   /  \   __| | __ _ _ __ | |_ ___ _ __ ___
+  / /\ \ / _` |/ _` | '_ \| __/ _ \ '__/ __|
+ / ____ \ (_| | (_| | |_) | ||  __/ |  \__ \
+/_/    \_\__,_|\__,_| .__/ \__\___|_|  |___/
+                    | |
+                    |_|
+*/
+
+/* Adapter for user sub list view */
 class UserListAdapter(val userList: ArrayList<User>)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>()
 {
@@ -139,7 +177,8 @@ class UserListAdapter(val userList: ArrayList<User>)
 class GroupListAdapter(val groupList: ArrayList<Group>,
                        val userLists: ArrayList<ArrayList<User>>,
                        val authUser: User,
-                       val joinGroup: (grp: Group, uid: String) -> Unit)
+                       val joinGroup: (grp: Group, uid: String) -> Unit,
+                       val leaveGroup: (grp: Group, uid: String) -> Unit )
     : RecyclerView.Adapter<RecyclerView.ViewHolder>()
 {
     class ViewHolder(val cellView : LinearLayout) : RecyclerView.ViewHolder(cellView)
@@ -176,9 +215,15 @@ class GroupListAdapter(val groupList: ArrayList<Group>,
             adapter = grvAdapter
         }
 
+        val isMember = groupList[position].playerList.contains(authUser.uid)
+
+        /* TODO check for ownership of group!! */
+
+
         /* check if authUser is in current group */
-        if(!groupList[position].playerList.contains(authUser.uid))
+        if(!isMember)
         {
+            item.leaveButton.visibility = View.GONE
             item.joinButton.visibility = View.VISIBLE
             item.joinButton.setOnClickListener {
                 joinGroup(groupList[position], authUser.uid)
@@ -187,9 +232,13 @@ class GroupListAdapter(val groupList: ArrayList<Group>,
         else
         {
             item.joinButton.visibility = View.GONE
+            item.leaveButton.visibility = View.VISIBLE
+            item.leaveButton.setOnClickListener {
+                leaveGroup(groupList[position], authUser.uid)
+            }
         }
 
-
+        /* TODO persisting list of whats expanded */
         item.expander.setOnClickListener {
             onExpand(item, curr)
         }
