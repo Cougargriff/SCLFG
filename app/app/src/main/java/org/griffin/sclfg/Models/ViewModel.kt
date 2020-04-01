@@ -211,7 +211,7 @@ class ViewModel : ViewModel()
                     {
                         var initUser = hashMapOf(
                             "timeCreated" to System.currentTimeMillis().toString(),
-                            "screenName" to ""
+                            "screenName" to "ANONYMOUS"
                         )
                         userRef.document(auth.uid!!).set(initUser)
                     }

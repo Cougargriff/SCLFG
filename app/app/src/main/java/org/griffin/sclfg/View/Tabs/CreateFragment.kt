@@ -8,15 +8,12 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.tab_create.*
 import org.griffin.sclfg.Models.Group
 import org.griffin.sclfg.Models.Location
 import org.griffin.sclfg.Models.Ship
 import org.griffin.sclfg.Models.ViewModel
-import org.griffin.sclfg.Models.ViewModel.Companion.findLoc
-import org.griffin.sclfg.Models.ViewModel.Companion.findShip
 import org.griffin.sclfg.R
 
 class CreateFragment : Fragment()
@@ -53,7 +50,7 @@ class CreateFragment : Fragment()
         groupCreateButton.setOnClickListener {
             /* Check for empty box field */
             if(!(groupBox.text.isBlank() || shipSearchBox.text.isBlank() ||
-                locSearchBox.text.isBlank() || roleBox.text.isBlank()))
+                locSearchBox.text.isBlank() || descriptionBox.text.isBlank()))
             {
 
                 var newGroup = Group(groupBox.text.toString().trim(), "",System.currentTimeMillis(),
@@ -71,7 +68,7 @@ class CreateFragment : Fragment()
             groupBox.text.clear()
             shipSearchBox.text.clear()
             locSearchBox.text.clear()
-            roleBox.text.clear()
+            descriptionBox.text.clear()
         }
     }
 
@@ -95,7 +92,7 @@ class CreateFragment : Fragment()
             android.R.layout.simple_dropdown_item_1line, SHIPS)
         shipSearchBox.setAdapter(shipAdapter)
 
-        locSearchBox.nextFocusForwardId = roleBox.id
+        locSearchBox.nextFocusForwardId = descriptionBox.id
         locAdapter = ArrayAdapter<String>(this.requireContext(),
             android.R.layout.simple_dropdown_item_1line, LOCS)
         locSearchBox.setAdapter(locAdapter)
