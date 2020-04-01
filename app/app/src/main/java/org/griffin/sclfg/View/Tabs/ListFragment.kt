@@ -183,12 +183,14 @@ class GroupListAdapter(val groupList: ArrayList<Group>,
 {
     class ViewHolder(val cellView : LinearLayout) : RecyclerView.ViewHolder(cellView)
     private lateinit var grvManager: RecyclerView.LayoutManager
+    private lateinit var vParent: ViewGroup
 
     /* Inflates and creates the actual cell view for our groups list */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder
     {
         val cellView = LayoutInflater.from(parent.context).inflate(R.layout.group_cell,
             parent, false) as LinearLayout
+        vParent = parent
 
         grvManager = LinearLayoutManager(parent.context)
 
@@ -206,6 +208,7 @@ class GroupListAdapter(val groupList: ArrayList<Group>,
         item.shiploc.text = curr.ship + " - " + curr.loc
 
         /* BIND USER LIST */
+        grvManager = LinearLayoutManager(vParent.context)
         var gRV = item.userListView
         var grvAdapter = UserListAdapter(userLists[position])
 

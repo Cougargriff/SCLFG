@@ -90,10 +90,12 @@ class CreateFragment : Fragment()
 
     private fun setupAutoComplete()
     {
+        shipSearchBox.nextFocusForwardId = locSearchBox.id
         shipAdapter = ArrayAdapter<String>(this.requireContext(),
             android.R.layout.simple_dropdown_item_1line, SHIPS)
         shipSearchBox.setAdapter(shipAdapter)
 
+        locSearchBox.nextFocusForwardId = roleBox.id
         locAdapter = ArrayAdapter<String>(this.requireContext(),
             android.R.layout.simple_dropdown_item_1line, LOCS)
         locSearchBox.setAdapter(locAdapter)
