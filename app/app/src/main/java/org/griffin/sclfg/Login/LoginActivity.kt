@@ -3,54 +3,91 @@ package org.griffin.sclfg.Login
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_login.*
+import org.griffin.sclfg.Cache.LocalCache
 import org.griffin.sclfg.View.MainActivity
 import org.griffin.sclfg.R
 
-class LoginActivity : AppCompatActivity()
-{
-    private val BUTTON_ELEVATION = 20f
 
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
+class LoginActivity : AppCompatActivity() {
+    private val BUTTON_ELEVATION = 20f
+    lateinit var localCache: LocalCache
+
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        /* if credentials exist in cache, login with cb method */
+        localCache = getCache().apply {
+            retrieveCredentials(cachedLogin, fun() {
+                /* un-hide sign in tools */
+                textView2.visibility = View.VISIBLE
+                email.visibility = View.VISIBLE
+                password.visibility = View.VISIBLE
+                login_button.visibility = View.VISIBLE
+                register_button.visibility = View.VISIBLE
+            })
+        }
 
         setup_login_onclick()
     }
 
+
+    private fun getCache() : LocalCache
+    {
+        return LocalCache(this)
+    }
+
+    var cachedLogin = fun (user : String, psw : String)
+    {
+        LoginHandler(LoginHandler.User(user, psw), err_cb).apply {
+            login(already_cache_cb)
+        }
+    }
+
     /*
-        Callback function to pass to login_handler.
+        Callback functions to pass to login_handler.
         Decouples the context logic with logging in for intent purposes
      */
-    private var login_cb = object : (() -> Unit) {
-        override fun invoke()
-        {
-            var intent = Intent(this@LoginActivity, MainActivity::class.java)
-            ContextCompat.startActivity(this@LoginActivity, intent, null)
-        }
+    var login_cb = fun ()
+    {
+        var intent = Intent(this@LoginActivity, MainActivity::class.java)
+        ContextCompat.startActivity(this@LoginActivity, intent, null)
+    }
+
+    var cache_register_cb = fun (user : LoginHandler.User)
+    {
+        localCache.cacheCredentials(user)
+        register_cb()
+    }
+
+    var cache_login_cb = fun (user : LoginHandler.User)
+    {
+        localCache.cacheCredentials(user)
+        login_cb()
+    }
+
+    var already_cache_cb = fun (user : LoginHandler.User)
+    {
+        login_cb()
     }
 
     /* register screen to immediately set screen name */
-    private var register_cb = object : (() -> Unit) {
-        override fun invoke()
-        {
-            var intent = Intent(this@LoginActivity, MainActivity::class.java)
-            ContextCompat.startActivity(this@LoginActivity, intent, null)
-        }
+    private var register_cb = fun ()
+    {
+        var intent = Intent(this@LoginActivity, MainActivity::class.java)
+        ContextCompat.startActivity(this@LoginActivity, intent, null)
     }
 
-    private var err_cb = object : (() -> Unit) {
-        override fun invoke()
-        {
-            /* reset button heights on failed attempt */
-            login_button.elevation = BUTTON_ELEVATION
-            register.elevation = BUTTON_ELEVATION
-        }
+    private var err_cb = fun ()
+    {
+        /* reset button heights on failed attempt */
+        login_button.elevation = BUTTON_ELEVATION
+        register_button.elevation = BUTTON_ELEVATION
     }
-
 
     private fun setup_login_onclick()
     {
@@ -80,14 +117,14 @@ class LoginActivity : AppCompatActivity()
             {
                 Toast.makeText(this, "Logging in...", Toast.LENGTH_SHORT)
 
-                var handler =
-                    LoginHandler(lpacket, login_cb, err_cb)
-                handler.login()
+                LoginHandler(lpacket, err_cb).apply {
+                    login(cache_login_cb)
+                }
             }
         }
 
-        register.setOnClickListener {
-            register.elevation = 0f
+        register_button.setOnClickListener {
+            register_button.elevation = 0f
             var lpacket = LoginHandler.User(email = "", password = "")
             var err = false;
 
@@ -98,7 +135,7 @@ class LoginActivity : AppCompatActivity()
             }
             else
             {
-                err = true;
+                err = true
             }
 
             if(err)
@@ -110,9 +147,9 @@ class LoginActivity : AppCompatActivity()
             {
                 Toast.makeText(this, "Registering...", Toast.LENGTH_SHORT)
 
-                var handler =
-                    LoginHandler(lpacket, register_cb, err_cb)
-                handler.register()
+                LoginHandler(lpacket, err_cb).apply {
+                    register(cache_register_cb)
+                }
             }
         }
     }

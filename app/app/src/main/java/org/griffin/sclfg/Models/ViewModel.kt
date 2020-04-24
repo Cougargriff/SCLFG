@@ -59,10 +59,12 @@ class ViewModel : ViewModel()
             var currCnt = result["currCount"].toString()
             var playerList = result["playerList"] as ArrayList<String>
             var active = result["active"] as Boolean
+            var createdBy = result["createdBy"] as String
+            var description = result["description"] as String
 
             return Group(name, result.id, time, playerList, ship,
                 loc, maxPlyr.toInt(), currCnt.toInt(),
-                active)
+                active, createdBy, description)
         }
 
     }
@@ -166,12 +168,14 @@ class ViewModel : ViewModel()
         var grpHash = hashMapOf(
             "name" to grp.name,
             "timeCreated" to grp.timeCreated,
+            "createdBy" to auth.uid,
             "ship" to grp.ship,
             "location" to grp.loc,
             "maxPlayers" to grp.maxPlayers,
             "currCount" to grp.currCount,
             "playerList" to listOf(auth.uid),
-            "active" to grp.active
+            "active" to grp.active,
+            "description" to grp.description
         )
 
         grpRef.add(grpHash)

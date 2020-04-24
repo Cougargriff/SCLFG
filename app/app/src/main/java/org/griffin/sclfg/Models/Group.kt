@@ -12,4 +12,6 @@ data class Group(var name: String,
                  var loc: String,
                  var maxPlayers: Int,
                  var currCount: Int,
-                 var active : Boolean) : Parcelable
+                 var active : Boolean,
+                 var createdBy : String,
+                 var description: String) : Parcelable

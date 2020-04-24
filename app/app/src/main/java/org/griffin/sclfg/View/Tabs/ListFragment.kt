@@ -206,6 +206,7 @@ class GroupListAdapter(val groupList: ArrayList<Group>,
         item.currCount.text = curr.currCount.toString()
         item.maxCount.text = curr.maxPlayers.toString() + "  ...  Players Joined"
         item.shiploc.text = curr.ship + " - " + curr.loc
+        item.descriptionBox.text = groupList[position].description
 
         /* BIND USER LIST */
         grvManager = LinearLayoutManager(vParent.context)
@@ -220,7 +221,7 @@ class GroupListAdapter(val groupList: ArrayList<Group>,
 
         val isMember = groupList[position].playerList.contains(authUser.uid)
 
-        /* TODO check for ownership of group!! */
+        /* TODO check for ownership of group!! before leaving */
 
 
         /* check if authUser is in current group */
