@@ -44,7 +44,7 @@ class LoginActivity : AppCompatActivity() {
     var cachedLogin = fun (user : String, psw : String)
     {
         LoginHandler(LoginHandler.User(user, psw), err_cb).apply {
-            login(already_cache_cb)
+            login(already_cached_cb)
         }
     }
 
@@ -70,7 +70,7 @@ class LoginActivity : AppCompatActivity() {
         login_cb()
     }
 
-    var already_cache_cb = fun (user : LoginHandler.User)
+    var already_cached_cb = fun (user : LoginHandler.User)
     {
         login_cb()
     }

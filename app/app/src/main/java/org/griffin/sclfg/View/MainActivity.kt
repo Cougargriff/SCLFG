@@ -18,6 +18,9 @@ import org.griffin.sclfg.View.Tabs.ListFragment
 import org.griffin.sclfg.View.Tabs.ProfileFragment
 import org.griffin.sclfg.View.Tabs.CreateFragment
 
+/* TODO sign out button (make sure works with existing cache
+*   clear pref after sign out
+*/
 
 class MainActivity : AppCompatActivity()
 {
