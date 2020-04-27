@@ -22,6 +22,11 @@ class LocalCache(context : Context)
         }
     }
 
+    fun clearCache(cb : () -> Unit)
+    {
+        cb()
+    }
+
     fun retrieveCredentials(cb : (user : String, psw : String) -> Unit,
                             err_cb : () -> Unit)
     {

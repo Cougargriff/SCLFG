@@ -1,11 +1,14 @@
 package org.griffin.sclfg.View
 
+import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import com.google.firebase.auth.FirebaseAuth
@@ -13,6 +16,8 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activty_main.*
+import org.griffin.sclfg.Cache.LocalCache
+import org.griffin.sclfg.Login.LoginActivity
 import org.griffin.sclfg.Models.*
 import org.griffin.sclfg.R
 import org.griffin.sclfg.View.Tabs.ListFragment
@@ -53,17 +58,24 @@ class MainActivity : AppCompatActivity()
         lateSetup()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean
-    {
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.action_menu, menu)
-        return super.onCreateOptionsMenu(menu)
+        return true
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean
     {
-        if(item.itemId == R.id.refresh)
+        if(item.itemId == R.id.action_sign_out)
         {
-            vm.update()
+            /* clear cache and sign out */
+            LocalCache(this).apply {
+                clearCache {
+                    /* callback after cache clear */
+                    val intent = Intent(this@MainActivity, LoginActivity::class.java)
+                    ContextCompat.startActivity(this@MainActivity, intent, null)
+                }
+            }
         }
 
         return super.onOptionsItemSelected(item)
@@ -79,8 +91,10 @@ class MainActivity : AppCompatActivity()
         lfg_toolbar.apply {
             title = "SCLFG"
             setTitleTextColor(Color.WHITE)
+            this.inflateMenu(R.menu.action_menu)
         }
     }
+
     private fun lateSetup()
     {
         paSetup()
@@ -130,7 +144,7 @@ class MainActivity : AppCompatActivity()
         pa = PageAdapter(supportFragmentManager)
 
         /* Create and add fragments to page adapter */
-        pa.addFragments(CreateFragment(), "Search")
+        pa.addFragments(CreateFragment(), "Create")
         pa.addFragments(ListFragment(), "List")
         pa.addFragments(ProfileFragment(), "Profile")
     }

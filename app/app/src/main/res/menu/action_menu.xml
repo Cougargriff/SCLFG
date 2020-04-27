@@ -3,20 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/refresh"
-            style="@android:style/Widget.Material.ImageButton"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_weight="1"
-            android:background="@color/rsiHeader"
-            android:backgroundTint="@color/rsiWall"
-            android:tint="#00FFFFFF"
-            app:srcCompat="@drawable/baseline_refresh_white_18dp" />
-    </LinearLayout>
+    <item
+        android:id="@+id/action_sign_out"
+        android:enabled="true"
+        android:icon="@drawable/logout_256"
+        android:title="Sign Out"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
 </menu>
