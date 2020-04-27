@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toolbar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -88,11 +89,14 @@ class MainActivity : AppCompatActivity()
 
     private fun setupActionbar()
     {
-        lfg_toolbar.apply {
+        var toolbar = (lfg_toolbar as Toolbar).apply {
             title = "SCLFG"
-            setTitleTextColor(Color.WHITE)
             this.inflateMenu(R.menu.action_menu)
         }
+
+        /* enables interation with menu */
+        /* TODO icon not appearing!! */
+        setActionBar(toolbar)
     }
 
     private fun lateSetup()

@@ -24,7 +24,12 @@ class LocalCache(context : Context)
 
     fun clearCache(cb : () -> Unit)
     {
-        cb()
+        sharedPref.edit().apply {
+            clear()
+            commit()
+        }.also {
+            cb()
+        }
     }
 
     fun retrieveCredentials(cb : (user : String, psw : String) -> Unit,

@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <item
         android:id="@+id/action_sign_out"
         android:enabled="true"
-        android:icon="@drawable/logout_256"
+        android:icon="@drawable/ic_signout"
         android:title="Sign Out"
         android:visible="true"
         app:showAsAction="ifRoom" />
+    <!-- Sub menu items, arrow is white... for some reason
+    <item
+        android:id="@+id/item2"
+        android:title="Item 2"
+        app:showAsAction="never">
+        <menu>
+            <item
+                android:id="@+id/sub_item"
+                android:title="Sub Item 1" />
+
+        </menu>
+    </item>
+    -->
 </menu>
