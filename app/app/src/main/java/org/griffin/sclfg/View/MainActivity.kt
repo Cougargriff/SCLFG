@@ -1,5 +1,6 @@
 package org.griffin.sclfg.View
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -48,7 +49,7 @@ class MainActivity : AppCompatActivity()
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activty_main)
-
+        setupActionbar()
         lateSetup()
     }
 
@@ -68,10 +69,18 @@ class MainActivity : AppCompatActivity()
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onBackPressed() {
+    override fun onBackPressed()
+    {
         /* do nothing */
     }
 
+    private fun setupActionbar()
+    {
+        lfg_toolbar.apply {
+            title = "SCLFG"
+            setTitleTextColor(Color.WHITE)
+        }
+    }
     private fun lateSetup()
     {
         paSetup()

@@ -22,6 +22,7 @@ class LoginActivity : AppCompatActivity() {
 
         /* if credentials exist in cache, login with cb method */
         localCache = getCache().apply {
+            /* lambda function to update UI after checking cache */
             retrieveCredentials(cachedLogin, fun() {
                 /* un-hide sign in tools */
                 textView2.visibility = View.VISIBLE
@@ -29,6 +30,8 @@ class LoginActivity : AppCompatActivity() {
                 password.visibility = View.VISIBLE
                 login_button.visibility = View.VISIBLE
                 register_button.visibility = View.VISIBLE
+
+                login_bar.visibility = View.INVISIBLE
             })
         }
 
