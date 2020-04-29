@@ -6,6 +6,4 @@
     android:background="@color/rsiWall"
     android:theme="@style/ToolBarTheme"
     android:titleTextColor="@color/white">
-
-
 </Toolbar>

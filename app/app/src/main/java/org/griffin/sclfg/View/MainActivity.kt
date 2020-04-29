@@ -67,18 +67,19 @@ class MainActivity : AppCompatActivity()
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean
     {
-        if(item.itemId == R.id.action_sign_out)
+        when (item.itemId)
         {
-            /* clear cache and sign out */
-            LocalCache(this).apply {
-                clearCache {
-                    /* callback after cache clear */
-                    val intent = Intent(this@MainActivity, LoginActivity::class.java)
-                    ContextCompat.startActivity(this@MainActivity, intent, null)
+            (R.id.action_sign_out) -> {
+                LocalCache(this).apply {
+                    /* clear cache and sign out */
+                    clearCache {
+                        /* callback after cache clear */
+                        val intent = Intent(this@MainActivity, LoginActivity::class.java)
+                        ContextCompat.startActivity(this@MainActivity, intent, null)
+                    }
                 }
             }
         }
-
         return super.onOptionsItemSelected(item)
     }
 

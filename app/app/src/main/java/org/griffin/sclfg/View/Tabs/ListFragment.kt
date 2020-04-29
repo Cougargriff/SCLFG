@@ -10,7 +10,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.group_cell.*
 import kotlinx.android.synthetic.main.group_cell.view.*
+import kotlinx.android.synthetic.main.group_cell.view.sub_item
 import kotlinx.android.synthetic.main.tab_list.view.*
 import kotlinx.android.synthetic.main.user_cell.view.*
 import org.griffin.sclfg.Models.Group
@@ -79,6 +81,9 @@ class ListFragment : Fragment()
             layoutManager = rvManager
             adapter = rvAdapter
         }
+
+        /* Toggle the expanded view off */
+        sub_item.visibility = View.GONE
 
         return view
     }
