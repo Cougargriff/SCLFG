@@ -35,7 +35,7 @@ class ListFragment : Fragment()
     /* closures for joining and leaving groups. passed to list adapters */
     private val joinGroup = fun (g : Group, uid : String)
     {
-        if(g.currCount + 1 < g.maxPlayers)
+        if(g.currCount + 1 <= g.maxPlayers)
         {
             g.playerList.add(uid)
             val hash = hashMapOf(
@@ -188,7 +188,7 @@ class GroupListAdapter(val groupList: ArrayList<Group>,
     private lateinit var grvManager: RecyclerView.LayoutManager
     private lateinit var vParent: ViewGroup
 
-    fun hideGoneElements(itemView : View)
+    private fun hideGoneElements(itemView : View)
     {
         /* Toggle the views that should be GONE at start */
         itemView.sub_item.visibility = View.GONE

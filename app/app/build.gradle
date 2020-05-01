@@ -64,6 +64,9 @@ dependencies {
     /* Number Picker UI ELEMENT */
     implementation 'com.shawnlin:number-picker:2.4.9'
 
+    /* image cropping lib */
+    implementation 'com.soundcloud.android:android-crop:1.0.1@aar'
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.0.2'
