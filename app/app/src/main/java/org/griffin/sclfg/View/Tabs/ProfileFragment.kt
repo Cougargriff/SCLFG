@@ -56,11 +56,11 @@ class ProfileFragment : Fragment()
         {
             if(data == null)
                 return
+
             val imgInputStream = requireContext().contentResolver.openInputStream(data.data!!)
 
-            Firebase.storage.reference.apply {
-                child("profile_pic") /* TODO finish upload img */
-            }
+            Firebase.storage.reference.child(vm.getUser().value!!.uid).putStream(imgInputStream!!)
+
         }
 
     }
