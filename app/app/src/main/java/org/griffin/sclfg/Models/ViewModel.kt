@@ -10,6 +10,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import io.grpc.Context
 import java.io.Serializable
 
 /* Need to pass Ship and Loc db ref to get lists */
@@ -73,6 +74,7 @@ class ViewModel : ViewModel()
     private lateinit var locRef: CollectionReference
     private lateinit var grpRef: CollectionReference
     private lateinit var userRef: CollectionReference
+
 
     private val db = Firebase.firestore
     private val auth = FirebaseAuth.getInstance()

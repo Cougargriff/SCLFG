@@ -82,10 +82,17 @@ class ListFragment : Fragment()
             adapter = rvAdapter
         }
 
-        /* Toggle the expanded view off */
-        sub_item.visibility = View.GONE
+        hidGoneElements()
 
         return view
+    }
+
+    fun hidGoneElements()
+    {
+        /* Toggle the views that should be GONE at start */
+        sub_item.visibility = View.GONE
+        joinButton.visibility = View.GONE
+        leaveButton.visibility = View.GONE
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?)
