@@ -82,22 +82,13 @@ class ListFragment : Fragment()
             adapter = rvAdapter
         }
 
-        hidGoneElements()
-
         return view
-    }
-
-    fun hidGoneElements()
-    {
-        /* Toggle the views that should be GONE at start */
-        sub_item.visibility = View.GONE
-        joinButton.visibility = View.GONE
-        leaveButton.visibility = View.GONE
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?)
     {
         super.onActivityCreated(savedInstanceState)
+
         setupVM()
     }
 
@@ -197,6 +188,14 @@ class GroupListAdapter(val groupList: ArrayList<Group>,
     private lateinit var grvManager: RecyclerView.LayoutManager
     private lateinit var vParent: ViewGroup
 
+    fun hideGoneElements(itemView : View)
+    {
+        /* Toggle the views that should be GONE at start */
+        itemView.sub_item.visibility = View.GONE
+        itemView.joinButton.visibility = View.GONE
+        itemView.leaveButton.visibility = View.GONE
+    }
+
     /* Inflates and creates the actual cell view for our groups list */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder
     {
@@ -230,6 +229,8 @@ class GroupListAdapter(val groupList: ArrayList<Group>,
             layoutManager = grvManager
             adapter = grvAdapter
         }
+
+        hideGoneElements(item)
 
         val isMember = groupList[position].playerList.contains(authUser.uid)
 

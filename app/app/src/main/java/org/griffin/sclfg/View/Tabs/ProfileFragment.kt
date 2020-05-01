@@ -44,7 +44,10 @@ class ProfileFragment : Fragment()
 
         setupVM()
         setupNameChange()
-        setupImagePicker()
+
+        profileImage.setOnClickListener {
+            doImagePicker()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -62,7 +65,7 @@ class ProfileFragment : Fragment()
 
     }
 
-    private fun setupImagePicker()
+    private fun doImagePicker()
     {
         val imgPicker = Intent(Intent.ACTION_GET_CONTENT)
         imgPicker.setType("image/*")
