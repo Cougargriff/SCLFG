@@ -33,9 +33,9 @@ import java.io.File
 import java.io.InputStream
 
 
-/* TODO put active joined groups in profile ?*/
+/* TODO put active joined groups in profile ? */
 /* TODO build out dedicated modal group screen */
-/* TODO add edit profile options? instead of existing change button? */
+
 /* TODO others joined group notification? */
 
 @GlideModule
@@ -71,8 +71,16 @@ class ProfileFragment : Fragment()
         super.onActivityCreated(savedInstanceState)
 
         setupVM()
-        setupNameChange()
 
+        asyncLoadProfileImg()
+
+        profileImage.setOnClickListener {
+            doImagePicker()
+        }
+    }
+
+    private fun asyncLoadProfileImg()
+    {
         /* create cache file to store profile pic */
         val storageRef = Firebase.storage.reference.child(vm.getUser().value!!.uid)
 
@@ -89,13 +97,7 @@ class ProfileFragment : Fragment()
             .placeholder(glidePlaceholder)
             .diskCacheStrategy(DiskCacheStrategy.NONE) /* TODO change to check each day */
             .into(profileImage)
-
-
-        profileImage.setOnClickListener {
-            doImagePicker()
-        }
     }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
     {
@@ -139,22 +141,11 @@ class ProfileFragment : Fragment()
         startActivityForResult(imgPicker, PICK_PHOTO_TO_CROP)
     }
 
-    private fun setupNameChange()
-    {
-        changeButton.setOnClickListener {
-            if(!nameChange.text.isBlank())
-            {
-                vm.updateScreenName(nameChange.text.toString())
-            }
-        }
-    }
-
     private fun setupVM()
     {
         vm.getUser().observe(viewLifecycleOwner, Observer {
             user = it!!
-            nameChange.text.replace(0,nameChange.text.toString().length,
-                user.screenName)
+            nameChange.text = user.screenName
         })
     }
 }

@@ -1,6 +1,8 @@
 package org.griffin.sclfg.View
 
 import android.app.Activity
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.Drawable
@@ -8,12 +10,15 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Toolbar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
+import com.google.api.Distribution
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
@@ -44,6 +49,7 @@ class MainActivity : AppCompatActivity()
     private var auth = FirebaseAuth.getInstance()
     private var db = Firebase.firestore
     private val FTAG = "FIRESTORE -> "
+    private val NAME_CHANGE_TITLE = "Change Your Screen Name"
 
     /* Fragment Frameworks */
     private lateinit var pa : PageAdapter
@@ -82,6 +88,28 @@ class MainActivity : AppCompatActivity()
                         ContextCompat.startActivity(this@MainActivity, intent, null)
                     }
                 }
+            }
+
+            (R.id.action_change_name) -> {
+                /* alert dialog to change screen name */
+                val nameEditBox = EditText(this).apply {
+                    highlightColor = ContextCompat.getColor(context, R.color.rsiWall)
+
+                }
+                var lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT)
+                nameEditBox.layoutParams = lp
+
+                val dialogBuilder = AlertDialog.Builder(this).apply {
+                    setTitle(NAME_CHANGE_TITLE)
+                    setCancelable(true)
+                    setPositiveButton("Change") { dialog, which ->
+                        vm.updateScreenName(nameEditBox.text.toString())
+                    }
+                    setView(nameEditBox)
+                }
+
+                dialogBuilder.show()
             }
         }
         return super.onOptionsItemSelected(item)

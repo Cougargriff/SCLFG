@@ -5,12 +5,22 @@
     android:layout_height="match_parent">
 
     <item
-        android:id="@+id/action_sign_out"
+    android:id="@+id/action_sign_out"
+    android:enabled="true"
+    android:icon="@drawable/ic_signout"
+    android:title="Sign Out"
+    android:visible="true"
+    app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_change_name"
         android:enabled="true"
-        android:icon="@drawable/ic_signout"
-        android:title="Sign Out"
+        android:icon="@drawable/ic_change_name"
+        android:title="Change Screen Name"
         android:visible="true"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
+
+
     <!-- Sub menu items, arrow is white... for some reason
     <item
         android:id="@+id/item2"
