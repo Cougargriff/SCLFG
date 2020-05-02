@@ -4,26 +4,23 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
-import android.renderscript.Allocation
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import com.bumptech.glide.Glide
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.soundcloud.android.crop.Crop
 import kotlinx.android.synthetic.main.tab_profile.*
-import org.griffin.sclfg.Models.Group
 import org.griffin.sclfg.Models.User
 import org.griffin.sclfg.Models.ViewModel
 import org.griffin.sclfg.R
 import java.io.File
-import java.io.FileInputStream
-import java.io.InputStream
 
 /* TODO put active joined groups in profile */
 /* TODO build out dedicated modal group screen */
@@ -51,6 +48,17 @@ class ProfileFragment : Fragment()
         setupVM()
         setupNameChange()
 
+        /* create cache file to store profile pic */
+        val storageRef = Firebase.storage.reference.apply {
+            child(vm.getUser().value!!.uid)
+        }
+
+        /* image caching and loading lib */
+        Glide.with(this)
+            .load(storageRef)
+            .into(profileImage)
+
+
         profileImage.setOnClickListener {
             doImagePicker()
         }
@@ -67,24 +75,29 @@ class ProfileFragment : Fragment()
                 PICK_PHOTO_TO_CROP -> {
                     startImgCrop(data.data!!)
                 }
+
                 Crop.REQUEST_CROP -> {
-                    profileImage.setImageURI(data.data)
-                    pushImageToStorage(data!!.data!!)
+                    /* handle cropped photo push to storage */
+                    /* important to use Crop.getOutput(...) NOT data.data.... */
+                    profileImage.setImageURI(Crop.getOutput(data))
+                    pushImageToStorage(Crop.getOutput(data))
                 }
             }
         }
-    }
-
-    private fun startImgCrop(inputURI : Uri)
-    {
-        val outputURI = Uri.fromFile(File(requireContext().cacheDir, "croppedProfPic"))
-        Crop.of(inputURI, outputURI).asSquare().start(requireActivity())
     }
 
     private fun pushImageToStorage(uri: Uri)
     {
         val imgInputStream = requireContext().contentResolver.openInputStream(uri)
         Firebase.storage.reference.child(vm.getUser().value!!.uid).putStream(imgInputStream!!)
+    }
+
+    private fun startImgCrop(inputURI : Uri)
+    {
+        /* TODO fix outputURI?? is this whats wrong??? */
+        val outputURI = Uri.fromFile(File(requireActivity().externalCacheDir, "cropped"))
+        var cropIntent = Crop.of(inputURI, outputURI).asSquare().getIntent(requireContext())
+        startActivityForResult(cropIntent, Crop.REQUEST_CROP)
     }
 
     private fun doImagePicker()

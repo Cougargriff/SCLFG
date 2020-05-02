@@ -1,8 +1,10 @@
 package org.griffin.sclfg.View
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -16,7 +18,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
+import com.soundcloud.android.crop.Crop
 import kotlinx.android.synthetic.main.activty_main.*
+import kotlinx.android.synthetic.main.tab_profile.*
 import org.griffin.sclfg.Cache.LocalCache
 import org.griffin.sclfg.Login.LoginActivity
 import org.griffin.sclfg.Models.*
