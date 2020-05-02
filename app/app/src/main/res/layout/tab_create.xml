@@ -26,7 +26,7 @@
                     android:id="@+id/textView4"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Create a Group"
+                    android:text="Create A Group"
                     android:textAlignment="center"
                     android:textColor="#FFFFFF"
                     android:textSize="36sp" />
@@ -46,7 +46,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="29dp"
-                        android:text="Group Name"
+                        android:text="Crew Name"
                         android:textColor="@color/rsiWall"
                         android:textSize="18sp"
                         app:layout_constraintEnd_toEndOf="parent"

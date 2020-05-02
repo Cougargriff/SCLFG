@@ -33,8 +33,10 @@ import java.io.File
 import java.io.InputStream
 
 
-/* TODO put active joined groups in profile */
+/* TODO put active joined groups in profile ?*/
 /* TODO build out dedicated modal group screen */
+/* TODO add edit profile options? instead of existing change button? */
+/* TODO others joined group notification? */
 
 @GlideModule
 class MyAppGlideModule : AppGlideModule() {
@@ -74,16 +76,14 @@ class ProfileFragment : Fragment()
         /* create cache file to store profile pic */
         val storageRef = Firebase.storage.reference.child(vm.getUser().value!!.uid)
 
-        /* TODO not loading!!
-        *   could be -> (See MyAppGlideModule for Loader registration)*/
         /* image caching and loading lib */
-
         val glidePlaceholder = CircularProgressDrawable(requireContext()).apply {
             strokeWidth = 5f
             setColorSchemeColors(Color.WHITE)
             centerRadius = 30f
             start()
         }
+
         Glide.with(requireContext())
             .load(storageRef)
             .placeholder(glidePlaceholder)
@@ -127,7 +127,6 @@ class ProfileFragment : Fragment()
 
     private fun startImgCrop(inputURI : Uri)
     {
-        /* TODO fix outputURI?? is this whats wrong??? */
         val outputURI = Uri.fromFile(File(requireActivity().externalCacheDir, "cropped"))
         var cropIntent = Crop.of(inputURI, outputURI).asSquare().getIntent(requireContext())
         startActivityForResult(cropIntent, Crop.REQUEST_CROP)
