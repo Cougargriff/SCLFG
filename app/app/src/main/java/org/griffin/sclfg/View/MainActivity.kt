@@ -18,7 +18,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
 import com.soundcloud.android.crop.Crop
 import kotlinx.android.synthetic.main.activty_main.*
 import kotlinx.android.synthetic.main.tab_profile.*
