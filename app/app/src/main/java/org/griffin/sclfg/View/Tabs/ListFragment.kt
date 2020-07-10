@@ -234,9 +234,6 @@ class GroupListAdapter(val groupList: ArrayList<Group>,
 
         val isMember = groupList[position].playerList.contains(authUser.uid)
 
-        /* TODO check for ownership of group!! before leaving */
-
-
         /* check if authUser is in current group */
         if(!isMember)
         {
@@ -255,7 +252,6 @@ class GroupListAdapter(val groupList: ArrayList<Group>,
             }
         }
 
-        /* TODO persisting list of whats expanded */
         item.expander.setOnClickListener {
             onExpand(item, curr)
         }

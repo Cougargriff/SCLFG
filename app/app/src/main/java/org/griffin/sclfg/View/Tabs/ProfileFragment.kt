@@ -32,12 +32,6 @@ import org.griffin.sclfg.R
 import java.io.File
 import java.io.InputStream
 
-
-/* TODO put active joined groups in profile ? */
-/* TODO build out dedicated modal group screen */
-
-/* TODO others joined group notification? */
-
 @GlideModule
 class MyAppGlideModule : AppGlideModule() {
     override fun registerComponents(context: Context, glide: Glide, registry: Registry) {
@@ -95,7 +89,7 @@ class ProfileFragment : Fragment()
         Glide.with(requireContext())
             .load(storageRef)
             .placeholder(glidePlaceholder)
-            .diskCacheStrategy(DiskCacheStrategy.NONE) /* TODO change to check each day */
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
             .into(profileImage)
     }
 

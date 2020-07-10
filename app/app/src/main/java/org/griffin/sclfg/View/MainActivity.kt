@@ -14,6 +14,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toolbar
 import androidx.activity.viewModels
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -33,10 +34,6 @@ import org.griffin.sclfg.R
 import org.griffin.sclfg.View.Tabs.ListFragment
 import org.griffin.sclfg.View.Tabs.ProfileFragment
 import org.griffin.sclfg.View.Tabs.CreateFragment
-
-/*
-*  TODO update styling, color scheme modularity?
-*/
 
 class MainActivity : AppCompatActivity()
 {
@@ -128,7 +125,6 @@ class MainActivity : AppCompatActivity()
         }
 
         /* enables interation with menu */
-        /* TODO icon not appearing!! */
         setActionBar(toolbar)
     }
 
