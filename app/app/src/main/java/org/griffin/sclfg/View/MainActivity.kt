@@ -63,6 +63,7 @@ class MainActivity : AppCompatActivity()
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activty_main)
+
         setupActionbar()
         lateSetup()
     }
@@ -71,7 +72,6 @@ class MainActivity : AppCompatActivity()
         menuInflater.inflate(R.menu.action_menu, menu)
         return true
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean
     {
@@ -133,14 +133,24 @@ class MainActivity : AppCompatActivity()
         vpSetup()
         firestoreSetup()
         vmSetup()
-
         viewPager.setCurrentItem(0, true)
+
+        /* if from register, update screen name */
+        register_screen_name()
+
+    }
+
+    private fun register_screen_name() {
+        if(intent.extras != null)
+        {
+            val screen_name = intent.extras!!.get("display_name") as String
+            vm.updateScreenName(screen_name)
+        }
     }
 
     private fun vmSetup()
     {
         /* View Model Setup */
-
         /* UI Updaters on Observation Changes from FireStore */
 
         vm.getLocs().observe(this, Observer {

@@ -26,12 +26,12 @@ class LoginHandler(var lPacket : User, val failCb : () -> Unit)
         }
     }
 
-    fun register(cache_cb : (user : User) -> Unit)
+    fun register(cache_cb : (user : User, uid : String) -> Unit)
     {
         mAuth.createUserWithEmailAndPassword(email, psw).addOnCompleteListener {
             if(it.isSuccessful)
             {
-                cache_cb(lPacket)
+                cache_cb(lPacket, mAuth.currentUser!!.uid)
             }
             else
             {

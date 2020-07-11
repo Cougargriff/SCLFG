@@ -33,6 +33,7 @@ import org.griffin.sclfg.Models.ViewModel
 import org.griffin.sclfg.R
 import java.io.File
 import java.io.InputStream
+import java.lang.NullPointerException
 
 @GlideModule
 class MyAppGlideModule : AppGlideModule() {
@@ -67,8 +68,12 @@ class ProfileFragment : Fragment()
         super.onActivityCreated(savedInstanceState)
 
         setupVM()
-        asyncLoadProfileImg()
+        try {
+            asyncLoadProfileImg()
+        }
+        catch (err : NullPointerException) {
 
+        }
         profileImage.setOnClickListener {
 
             /* Confirm selection with alertDialog */
