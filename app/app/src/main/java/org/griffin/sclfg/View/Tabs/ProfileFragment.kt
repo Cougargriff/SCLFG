@@ -82,6 +82,11 @@ class ProfileFragment : Fragment()
 
         rvAdapter = GListAdapter(ArrayList(), user)
 
+        rv.apply {
+            layoutManager = rvManager
+            adapter = rvAdapter
+        }
+
         return view
     }
 
@@ -206,6 +211,8 @@ class ProfileFragment : Fragment()
         })
     }
 }
+
+/* TODO only show groups where auth_user is owner */
 
 class GListAdapter(val groupList: ArrayList<Group>,
                        val authUser: User)
