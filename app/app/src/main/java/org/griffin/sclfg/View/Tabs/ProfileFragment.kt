@@ -11,9 +11,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.MemoryCategory
@@ -27,7 +30,15 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import com.soundcloud.android.crop.Crop
+import kotlinx.android.synthetic.main.group_cell.view.*
+import kotlinx.android.synthetic.main.profile_group_cell.view.*
+import kotlinx.android.synthetic.main.profile_group_cell.view.currCount
+import kotlinx.android.synthetic.main.profile_group_cell.view.groupName
+import kotlinx.android.synthetic.main.profile_group_cell.view.maxCount
+import kotlinx.android.synthetic.main.profile_group_cell.view.shiploc
 import kotlinx.android.synthetic.main.tab_profile.*
+import kotlinx.android.synthetic.main.tab_profile.view.*
+import org.griffin.sclfg.Models.Group
 import org.griffin.sclfg.Models.User
 import org.griffin.sclfg.Models.ViewModel
 import org.griffin.sclfg.R
@@ -51,9 +62,14 @@ class ProfileFragment : Fragment()
 {
     private val PICK_PHOTO_TO_CROP = 0
     private val vm : ViewModel by activityViewModels()
-    private lateinit var user : User
-    private val userRef = Firebase.firestore.collection("users")
+    private var user = User("", "", 0)
 
+    /* Recycler View Setup */
+    private lateinit var rv : RecyclerView
+    private lateinit var rvManager : RecyclerView.LayoutManager
+    private lateinit var rvAdapter : RecyclerView.Adapter<*>
+
+    private lateinit var groupsList : List<Group>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View?
@@ -61,6 +77,10 @@ class ProfileFragment : Fragment()
         var view = inflater.inflate(R.layout.tab_profile, container, false)
 
         /* Setup Fragment View here */
+        rv = view.my_groups
+        rvManager = LinearLayoutManager(context)
+
+        rvAdapter = GListAdapter(ArrayList(), user)
 
         return view
     }
@@ -89,6 +109,29 @@ class ProfileFragment : Fragment()
                 }
             }.show()
         }
+
+        VMsetup()
+    }
+
+    private fun VMsetup()
+    {
+        vm.getUser().observe(viewLifecycleOwner, Observer {
+            user = it!!
+
+            /*
+                possible in the future to just make local
+                call to function for getGroups instead of vm call
+             */
+            vm.update()
+        })
+
+        vm.getGroups().observe(viewLifecycleOwner, Observer {
+            groupsList = it!!
+
+
+            var newAdapter = GListAdapter(ArrayList(groupsList), user)
+            rv.adapter = newAdapter
+        })
     }
 
     private fun asyncLoadProfileImg()
@@ -162,4 +205,37 @@ class ProfileFragment : Fragment()
             nameChange.text = user.screenName
         })
     }
+}
+
+class GListAdapter(val groupList: ArrayList<Group>,
+                       val authUser: User)
+    : RecyclerView.Adapter<RecyclerView.ViewHolder>()
+{
+    class ViewHolder(val cellView : LinearLayout) : RecyclerView.ViewHolder(cellView)
+    private lateinit var vParent : ViewGroup
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val cellView = LayoutInflater.from(parent.context).inflate(R.layout.profile_group_cell,
+        parent, false) as LinearLayout
+
+        vParent = parent
+
+        return ViewHolder(cellView)
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val curr = groupList[position]
+        var item = holder.itemView
+
+        item.groupName.text = curr.name
+        item.currCount.text = curr.currCount.toString()
+        item.maxCount.text = curr.maxPlayers.toString() + "  ...  Players Joined"
+        item.shiploc.text = curr.ship + " - " + curr.loc
+
+    }
+
+    override fun getItemCount(): Int {
+        return groupList.size
+    }
+
 }
