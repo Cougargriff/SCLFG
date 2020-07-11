@@ -33,6 +33,7 @@ import org.griffin.sclfg.Models.ViewModel
 import org.griffin.sclfg.R
 import java.io.File
 import java.io.InputStream
+import java.lang.Exception
 import java.lang.NullPointerException
 
 @GlideModule
@@ -71,8 +72,8 @@ class ProfileFragment : Fragment()
         try {
             asyncLoadProfileImg()
         }
-        catch (err : NullPointerException) {
-
+        catch (err : Exception) {
+            profileImage.setImageResource(R.drawable.astro_prof)
         }
         profileImage.setOnClickListener {
 
@@ -107,7 +108,9 @@ class ProfileFragment : Fragment()
             .load(storageRef)
             .placeholder(glidePlaceholder)
             .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .error(R.drawable.astro_prof)
             .into(profileImage)
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)

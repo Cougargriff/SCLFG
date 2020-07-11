@@ -75,7 +75,6 @@ class ViewModel : ViewModel()
     private lateinit var grpRef: CollectionReference
     private lateinit var userRef: CollectionReference
 
-
     private val db = Firebase.firestore
     private val auth = FirebaseAuth.getInstance()
 
