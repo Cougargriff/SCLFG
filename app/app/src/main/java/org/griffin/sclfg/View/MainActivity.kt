@@ -14,8 +14,10 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toolbar
 import androidx.activity.viewModels
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.marginLeft
 import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import com.google.api.Distribution
@@ -33,10 +35,6 @@ import org.griffin.sclfg.R
 import org.griffin.sclfg.View.Tabs.ListFragment
 import org.griffin.sclfg.View.Tabs.ProfileFragment
 import org.griffin.sclfg.View.Tabs.CreateFragment
-
-/*
-*  TODO update styling, color scheme modularity?
-*/
 
 class MainActivity : AppCompatActivity()
 {
@@ -65,6 +63,7 @@ class MainActivity : AppCompatActivity()
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activty_main)
+
         setupActionbar()
         lateSetup()
     }
@@ -73,7 +72,6 @@ class MainActivity : AppCompatActivity()
         menuInflater.inflate(R.menu.action_menu, menu)
         return true
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean
     {
@@ -94,22 +92,20 @@ class MainActivity : AppCompatActivity()
                 /* alert dialog to change screen name */
                 val nameEditBox = EditText(this).apply {
                     highlightColor = ContextCompat.getColor(context, R.color.rsiWall)
-
                 }
                 var lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT)
                 nameEditBox.layoutParams = lp
 
-                val dialogBuilder = AlertDialog.Builder(this).apply {
+                AlertDialog.Builder(this).apply {
                     setTitle(NAME_CHANGE_TITLE)
                     setCancelable(true)
                     setPositiveButton("Change") { dialog, which ->
                         vm.updateScreenName(nameEditBox.text.toString())
                     }
                     setView(nameEditBox)
-                }
+                }.show()
 
-                dialogBuilder.show()
             }
         }
         return super.onOptionsItemSelected(item)
@@ -128,7 +124,6 @@ class MainActivity : AppCompatActivity()
         }
 
         /* enables interation with menu */
-        /* TODO icon not appearing!! */
         setActionBar(toolbar)
     }
 
@@ -138,14 +133,24 @@ class MainActivity : AppCompatActivity()
         vpSetup()
         firestoreSetup()
         vmSetup()
-
         viewPager.setCurrentItem(0, true)
+
+        /* if from register, update screen name */
+        register_screen_name()
+
+    }
+
+    private fun register_screen_name() {
+        if(intent.extras != null)
+        {
+            val screen_name = intent.extras!!.get("display_name") as String
+            vm.updateScreenName(screen_name)
+        }
     }
 
     private fun vmSetup()
     {
         /* View Model Setup */
-
         /* UI Updaters on Observation Changes from FireStore */
 
         vm.getLocs().observe(this, Observer {

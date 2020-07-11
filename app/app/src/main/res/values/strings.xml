@@ -4,5 +4,23 @@
     <string name="tab1">Search</string>
     <string name="tab2">Group Listings</string>
     <string name="tab3">Profile</string>
+    <string name="change_screen_name">Change Screen Name</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="slash">/</string>
+    <string name="e_mail">E-mail</string>
+    <string name="password">Password</string>
+    <string name="password_confirm">Confirm Password</string>
+    <string name="login">Login</string>
+    <string name="sign_up">or Sign Up!</string>
+    <string name="register">Register</string>
+    <string name="create_a_group">Create A Group</string>
+    <string name="crew_name">Crew Name</string>
+    <string name="ship">Ship</string>
+    <string name="how_many_players">How many players?</string>
+    <string name="location">Location</string>
+    <string name="description">Description</string>
+    <string name="create_group">Create Group</string>
+    <string name="my_groups">My Groups</string>
+    <string name="display_name">Display Name</string>
 
 </resources>

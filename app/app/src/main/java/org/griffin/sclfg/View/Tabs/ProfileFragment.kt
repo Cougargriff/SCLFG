@@ -1,7 +1,9 @@
 package org.griffin.sclfg.View.Tabs
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
@@ -31,12 +33,8 @@ import org.griffin.sclfg.Models.ViewModel
 import org.griffin.sclfg.R
 import java.io.File
 import java.io.InputStream
-
-
-/* TODO put active joined groups in profile ? */
-/* TODO build out dedicated modal group screen */
-
-/* TODO others joined group notification? */
+import java.lang.Exception
+import java.lang.NullPointerException
 
 @GlideModule
 class MyAppGlideModule : AppGlideModule() {
@@ -71,11 +69,25 @@ class ProfileFragment : Fragment()
         super.onActivityCreated(savedInstanceState)
 
         setupVM()
-
-        asyncLoadProfileImg()
-
+        try {
+            asyncLoadProfileImg()
+        }
+        catch (err : Exception) {
+            profileImage.setImageResource(R.drawable.astro_prof)
+        }
         profileImage.setOnClickListener {
-            doImagePicker()
+
+            /* Confirm selection with alertDialog */
+            AlertDialog.Builder(this.requireContext()).apply {
+                setTitle("Choose a new profile image?")
+                setPositiveButton("Yes") { dialog, which ->
+                    /* Continue to image picker on confirm */
+                    doImagePicker()
+                }
+                setNegativeButton("Cancel") { dialog, which ->
+                    /* Do nothing and return to profile fragment*/
+                }
+            }.show()
         }
     }
 
@@ -95,8 +107,10 @@ class ProfileFragment : Fragment()
         Glide.with(requireContext())
             .load(storageRef)
             .placeholder(glidePlaceholder)
-            .diskCacheStrategy(DiskCacheStrategy.NONE) /* TODO change to check each day */
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .error(R.drawable.astro_prof)
             .into(profileImage)
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)

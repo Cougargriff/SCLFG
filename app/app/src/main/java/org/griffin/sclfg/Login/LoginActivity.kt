@@ -13,8 +13,10 @@ import org.griffin.sclfg.R
 
 
 class LoginActivity : AppCompatActivity() {
-    private val BUTTON_ELEVATION = 20f
-    lateinit var localCache: LocalCache
+    private val BUTTON_ELEVATION by lazy {
+        applicationContext.resources.displayMetrics.density * 20
+    }
+    private lateinit var localCache: LocalCache
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,12 +63,6 @@ class LoginActivity : AppCompatActivity() {
         ContextCompat.startActivity(this@LoginActivity, intent, null)
     }
 
-    var cache_register_cb = fun (user : LoginHandler.User)
-    {
-        localCache.cacheCredentials(user)
-        register_cb()
-    }
-
     var cache_login_cb = fun (user : LoginHandler.User)
     {
         localCache.cacheCredentials(user)
@@ -78,18 +74,11 @@ class LoginActivity : AppCompatActivity() {
         login_cb()
     }
 
-    /* register screen to immediately set screen name */
-    private var register_cb = fun ()
-    {
-        var intent = Intent(this@LoginActivity, MainActivity::class.java)
-        ContextCompat.startActivity(this@LoginActivity, intent, null)
-    }
 
     private var err_cb = fun ()
     {
         /* reset button heights on failed attempt */
         login_button.elevation = BUTTON_ELEVATION
-        register_button.elevation = BUTTON_ELEVATION
     }
 
     private fun setup_login_onclick()
@@ -115,6 +104,7 @@ class LoginActivity : AppCompatActivity() {
             {
                 Toast.makeText(this,
                     "Either email or password was incorrect!", Toast.LENGTH_SHORT)
+                err_cb()
             }
             else /* Handle Login Request */
             {
@@ -126,34 +116,12 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
+        /*
+            Go To modal registration screen
+         */
         register_button.setOnClickListener {
-            register_button.elevation = 0f
-            var lpacket = LoginHandler.User(email = "", password = "")
-            var err = false;
-
-            if(email.text.isNotBlank() && password.text.isNotBlank())
-            {
-                lpacket.email = email.text.toString()
-                lpacket.password = password.text.toString()
-            }
-            else
-            {
-                err = true
-            }
-
-            if(err)
-            {
-                Toast.makeText(this,
-                    "Either email or password was incorrect!", Toast.LENGTH_SHORT)
-            }
-            else /* Handle Login Request */
-            {
-                Toast.makeText(this, "Registering...", Toast.LENGTH_SHORT)
-
-                LoginHandler(lpacket, err_cb).apply {
-                    register(cache_register_cb)
-                }
-            }
+            var intent = Intent(this@LoginActivity, RegisterActivity::class.java)
+            ContextCompat.startActivity(this@LoginActivity, intent, null)
         }
     }
 

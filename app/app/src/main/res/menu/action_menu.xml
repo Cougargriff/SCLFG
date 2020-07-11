@@ -8,7 +8,7 @@
     android:id="@+id/action_sign_out"
     android:enabled="true"
     android:icon="@drawable/ic_signout"
-    android:title="Sign Out"
+    android:title="@string/sign_out"
     android:visible="true"
     app:showAsAction="ifRoom" />
 
@@ -16,7 +16,7 @@
         android:id="@+id/action_change_name"
         android:enabled="true"
         android:icon="@drawable/ic_change_name"
-        android:title="Change Screen Name"
+        android:title="@string/change_screen_name"
         android:visible="true"
         app:showAsAction="ifRoom" />
 
