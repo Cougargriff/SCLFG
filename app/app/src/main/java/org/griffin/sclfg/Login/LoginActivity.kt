@@ -103,12 +103,12 @@ class LoginActivity : AppCompatActivity() {
             if(err)
             {
                 Toast.makeText(this,
-                    "Either email or password was incorrect!", Toast.LENGTH_SHORT)
+                    "Either email or password was incorrect!", Toast.LENGTH_SHORT).show()
                 err_cb()
             }
             else /* Handle Login Request */
             {
-                Toast.makeText(this, "Logging in...", Toast.LENGTH_SHORT)
+                Toast.makeText(this, "Logging in...", Toast.LENGTH_SHORT).show()
 
                 LoginHandler(lpacket, err_cb).apply {
                     login(cache_login_cb)

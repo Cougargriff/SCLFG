@@ -97,9 +97,9 @@ class RegisterActivity : AppCompatActivity() {
                 Toast.makeText(
                     this,
                     "Either email or password was incorrect!", Toast.LENGTH_SHORT
-                )
+                ).show()
             } else {
-                Toast.makeText(this, "Registering...", Toast.LENGTH_SHORT)
+                Toast.makeText(this, "Registering...", Toast.LENGTH_SHORT).show()
                 LoginHandler(rpacket, err_cb).apply {
                     register(cache_register_cb)
                 }

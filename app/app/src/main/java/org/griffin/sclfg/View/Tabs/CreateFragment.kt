@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -60,6 +61,8 @@ class CreateFragment : Fragment()
                     descriptionBox.text.toString())
 
                 vm.pushGroup(newGroup, resetTextBoxes)
+                Toast.makeText(requireContext(), newGroup.name + " Created!", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }
