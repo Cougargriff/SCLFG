@@ -1,7 +1,9 @@
 package org.griffin.sclfg.View.Tabs
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
@@ -65,11 +67,21 @@ class ProfileFragment : Fragment()
         super.onActivityCreated(savedInstanceState)
 
         setupVM()
-
         asyncLoadProfileImg()
 
         profileImage.setOnClickListener {
-            doImagePicker()
+
+            /* Confirm selection with alertDialog */
+            AlertDialog.Builder(this.requireContext()).apply {
+                setTitle("Choose a new profile image?")
+                setPositiveButton("Yes") { dialog, which ->
+                    /* Continue to image picker on confirm */
+                    doImagePicker()
+                }
+                setNegativeButton("Cancel") { dialog, which ->
+                    /* Do nothing and return to profile fragment*/
+                }
+            }.show()
         }
     }
 

@@ -17,6 +17,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.marginLeft
 import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import com.google.api.Distribution
@@ -91,22 +92,20 @@ class MainActivity : AppCompatActivity()
                 /* alert dialog to change screen name */
                 val nameEditBox = EditText(this).apply {
                     highlightColor = ContextCompat.getColor(context, R.color.rsiWall)
-
                 }
                 var lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT)
                 nameEditBox.layoutParams = lp
 
-                val dialogBuilder = AlertDialog.Builder(this).apply {
+                AlertDialog.Builder(this).apply {
                     setTitle(NAME_CHANGE_TITLE)
                     setCancelable(true)
                     setPositiveButton("Change") { dialog, which ->
                         vm.updateScreenName(nameEditBox.text.toString())
                     }
                     setView(nameEditBox)
-                }
+                }.show()
 
-                dialogBuilder.show()
             }
         }
         return super.onOptionsItemSelected(item)
