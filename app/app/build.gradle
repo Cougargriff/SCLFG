@@ -38,6 +38,7 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-kapt'
 
 dependencies {
+    androidTestImplementation 'androidx.test:rules:1.3.0-alpha03'
     def lifecycle_version = "2.2.0"
     def fragment_version = "1.2.3"
 
