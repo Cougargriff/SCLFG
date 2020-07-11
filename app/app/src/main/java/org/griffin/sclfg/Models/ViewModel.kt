@@ -164,6 +164,24 @@ class ViewModel : ViewModel()
         return locations
     }
 
+    fun groupExists(gid: String, err: () -> Unit, cb: () -> Unit) {
+        grpRef.document(gid).get().addOnCompleteListener {
+            if(it.isSuccessful)
+            {
+                var result = it.result!! /* QuerySnapshot */
+                var grpDoc = result /* Ships in collection */
+                if(grpDoc.exists()) {
+                    cb()
+                }
+                else
+                {
+                    loadGroups()
+                    err()
+                }
+            }
+        }
+    }
+
     fun pushGroup(grp : Group, cb : () -> Unit)
     {
         var grpHash = hashMapOf(
@@ -235,10 +253,10 @@ class ViewModel : ViewModel()
             .get()
             .addOnCompleteListener {
                 /* Sanity Check */
-                if(it.isSuccessful && !it.result!!.isEmpty)
+                if(it.isSuccessful)
                 {
                     var result = it.result!! /* QuerySnapshot */
-                    var grpDocs = result.documents /* Ships in collection */
+                    var grpDocs = result.documents
                     var grpList = ArrayList<Group>()
                     for(grp in grpDocs)
                     {

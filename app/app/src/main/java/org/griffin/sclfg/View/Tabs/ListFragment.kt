@@ -5,15 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.android.synthetic.main.group_cell.*
 import kotlinx.android.synthetic.main.group_cell.view.*
 import kotlinx.android.synthetic.main.group_cell.view.sub_item
+import kotlinx.android.synthetic.main.tab_list.*
 import kotlinx.android.synthetic.main.tab_list.view.*
+import kotlinx.android.synthetic.main.tab_list.view.swipe_layout
 import kotlinx.android.synthetic.main.user_cell.view.*
 import org.griffin.sclfg.Models.Group
 import org.griffin.sclfg.Models.User
@@ -32,31 +36,42 @@ class ListFragment : Fragment()
     private lateinit var rvManager : RecyclerView.LayoutManager
     private lateinit var rvAdapter : RecyclerView.Adapter<*>
 
+    private val err_cb = fun () {
+        Toast.makeText(requireContext(), "Group No Longer Exists", Toast.LENGTH_LONG)
+            .show()
+    }
+
     /* closures for joining and leaving groups. passed to list adapters */
     private val joinGroup = fun (g : Group, uid : String)
     {
-        if(g.currCount + 1 <= g.maxPlayers)
-        {
-            g.playerList.add(uid)
-            val hash = hashMapOf(
-                "playerList" to g.playerList,
-                "currCount" to g.currCount + 1
-            )
-            vm.joinGroup(g.gid, hash)
+        vm.groupExists(g.gid, err_cb) {
+            if(g.currCount + 1 <= g.maxPlayers )
+            {
+                g.playerList.add(uid)
+                val hash = hashMapOf(
+                    "playerList" to g.playerList,
+                    "currCount" to g.currCount + 1
+                )
+                vm.joinGroup(g.gid, hash)
+            }
         }
+
     }
 
     private val leaveGroup = fun (g : Group, uid : String)
     {
-        if(g.currCount - 1 >= 0)
-        {
-            g.playerList.remove(uid)
-            val hash = hashMapOf(
-                "playerList" to g.playerList,
-                "currCount" to g.currCount - 1
-            )
-            vm.leaveGroup(g.gid, hash)
+        vm.groupExists(g.gid, err_cb) {
+            if(g.currCount - 1 >= 0)
+            {
+                g.playerList.remove(uid)
+                val hash = hashMapOf(
+                    "playerList" to g.playerList,
+                    "currCount" to g.currCount - 1
+                )
+                vm.leaveGroup(g.gid, hash)
+            }
         }
+
     }
 
 
@@ -82,14 +97,26 @@ class ListFragment : Fragment()
             adapter = rvAdapter
         }
 
+
         return view
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?)
     {
         super.onActivityCreated(savedInstanceState)
-
+        setupSwipeRefresh()
         setupVM()
+    }
+
+    private fun setupSwipeRefresh() {
+        swipe_layout.setOnRefreshListener {
+            /*
+                Updates group list in view model.
+                Observer in fragment will update local list.
+             */
+            vm.update()
+            swipe_layout.isRefreshing = false
+        }
     }
 
     private fun setupVM()
