@@ -102,25 +102,6 @@ class ViewModel : ViewModel()
         }
     }
 
-    /* if auth user is owner of given group, invoke callback method */
-    fun isOwner(gid : String, cb: () -> Unit)
-    {
-        /*
-            Check if the current authenticated user
-            is the owner of the associated group with id 'gid'
-        */
-        grpRef.document(gid).get().addOnCompleteListener {
-            if(it.isSuccessful) {
-                var doc = it.result!!
-                var creator = doc["createdBy"] as String
-                if(creator.compareTo(user.value!!.uid) == 0)
-                {
-                    cb()
-                }
-            }
-        }
-    }
-
     fun getUser(): LiveData<User>
     {
         return user
@@ -167,21 +148,27 @@ class ViewModel : ViewModel()
 
     }
 
-    fun joinGroup(gid : String, hash : HashMap<String, Serializable>)
+    fun joinGroup(gid : String, hash : HashMap<String, Serializable>, cb: () -> Unit)
     {
         grpRef.document(gid)
             .set(hash, SetOptions.merge())
             .addOnSuccessListener {
                 loadGroups()
             }
+            .addOnCompleteListener {
+                cb()
+            }
     }
 
-    fun leaveGroup(gid: String, hash: HashMap<String, Serializable>)
+    fun leaveGroup(gid: String, hash: HashMap<String, Serializable>, cb: () -> Unit)
     {
         grpRef.document(gid)
             .set(hash, SetOptions.merge())
             .addOnSuccessListener {
                 loadGroups()
+            }
+            .addOnCompleteListener {
+                cb()
             }
     }
 
@@ -200,18 +187,20 @@ class ViewModel : ViewModel()
         return locations
     }
 
-    fun groupExists(gid: String, err: () -> Unit, cb: () -> Unit) {
+    fun groupExists(gid: String, err: () -> Unit, cb: (DocumentSnapshot) -> Unit) {
         grpRef.document(gid).get().addOnCompleteListener {
             if(it.isSuccessful)
             {
                 var result = it.result!! /* QuerySnapshot */
                 var grpDoc = result
                 if(grpDoc.exists()) {
-                    cb()
+                    /* pass most current document to update */
+                    cb(grpDoc)
                 }
                 else
                 {
                     loadGroups()
+                    /* Error callback to alert user that group doesn't exist anymore */
                     err()
                 }
             }

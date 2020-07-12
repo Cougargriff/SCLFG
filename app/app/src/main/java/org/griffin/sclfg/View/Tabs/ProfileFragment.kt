@@ -94,12 +94,12 @@ class ProfileFragment : Fragment()
         super.onActivityCreated(savedInstanceState)
 
         setupVM()
-        try {
+//        try {
             asyncLoadProfileImg()
-        }
-        catch (err : Exception) {
-            profileImage.setImageResource(R.drawable.astro_prof)
-        }
+//        }
+//        catch (err : Exception) {
+//            profileImage.setImageResource(R.drawable.astro_prof)
+//        }
         profileImage.setOnClickListener {
 
             /* Confirm selection with alertDialog */
@@ -197,12 +197,11 @@ class ProfileFragment : Fragment()
                     checks if owner of group in db
                     appends item to list in callback
                  */
-                vm.isOwner(it.gid) {
+                if(it.createdBy.compareTo(user.uid) == 0) {
                     temp_list.add(it)
                 }
             }
 
-            /* TODO temp_list doesn't persist */
             groupsList = temp_list
 
             var newAdapter = GListAdapter(ArrayList(groupsList), user)
