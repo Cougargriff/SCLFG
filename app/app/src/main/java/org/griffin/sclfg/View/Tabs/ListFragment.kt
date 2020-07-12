@@ -48,6 +48,7 @@ class ListFragment : Fragment()
             if(g.currCount + 1 <= g.maxPlayers )
             {
                 g.playerList.add(uid)
+                /* only pass updated data due to nature of merging docs */
                 val hash = hashMapOf(
                     "playerList" to g.playerList,
                     "currCount" to g.currCount + 1
@@ -64,6 +65,7 @@ class ListFragment : Fragment()
             if(g.currCount - 1 >= 0)
             {
                 g.playerList.remove(uid)
+                /* only pass updated data due to nature of merging docs */
                 val hash = hashMapOf(
                     "playerList" to g.playerList,
                     "currCount" to g.currCount - 1

@@ -101,6 +101,24 @@ class ViewModel : ViewModel()
         }
     }
 
+    fun isOwner(gid : String, cb: () -> Unit)
+    {
+        /*
+            Check if the current authenticated user
+            is the owner of the associated group with id 'gid'
+        */
+        grpRef.document(gid).get().addOnCompleteListener {
+            if(it.isSuccessful) {
+                var doc = it.result!!
+                var creator = doc["createdBy"] as String
+                if(creator.compareTo(user.value!!.uid) == 0)
+                {
+                    cb()
+                }
+            }
+        }
+    }
+
     fun getUser(): LiveData<User>
     {
         return user
@@ -169,7 +187,7 @@ class ViewModel : ViewModel()
             if(it.isSuccessful)
             {
                 var result = it.result!! /* QuerySnapshot */
-                var grpDoc = result /* Ships in collection */
+                var grpDoc = result
                 if(grpDoc.exists()) {
                     cb()
                 }

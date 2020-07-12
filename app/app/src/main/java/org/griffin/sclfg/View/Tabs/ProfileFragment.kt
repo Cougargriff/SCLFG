@@ -114,29 +114,6 @@ class ProfileFragment : Fragment()
                 }
             }.show()
         }
-
-        VMsetup()
-    }
-
-    private fun VMsetup()
-    {
-        vm.getUser().observe(viewLifecycleOwner, Observer {
-            user = it!!
-
-            /*
-                possible in the future to just make local
-                call to function for getGroups instead of vm call
-             */
-            vm.update()
-        })
-
-        vm.getGroups().observe(viewLifecycleOwner, Observer {
-            groupsList = it!!
-
-
-            var newAdapter = GListAdapter(ArrayList(groupsList), user)
-            rv.adapter = newAdapter
-        })
     }
 
     private fun asyncLoadProfileImg()
@@ -209,10 +186,27 @@ class ProfileFragment : Fragment()
             user = it!!
             nameChange.text = user.screenName
         })
+
+        vm.getGroups().observe(viewLifecycleOwner, Observer {
+
+            var temp_list = ArrayList<Group>()
+            /* Filter out groups that user doesn't own */
+            it!!.forEach {
+                /*
+                    checks if owner of group in db
+                    appends item to list in callback
+                 */
+                vm.isOwner(it.gid) {
+                    temp_list.add(it)
+                }
+            }
+            groupsList = temp_list
+
+            var newAdapter = GListAdapter(ArrayList(groupsList), user)
+            rv.adapter = newAdapter
+        })
     }
 }
-
-/* TODO only show groups where auth_user is owner */
 
 class GListAdapter(val groupList: ArrayList<Group>,
                        val authUser: User)
@@ -238,7 +232,6 @@ class GListAdapter(val groupList: ArrayList<Group>,
         item.currCount.text = curr.currCount.toString()
         item.maxCount.text = curr.maxPlayers.toString() + "  ...  Players Joined"
         item.shiploc.text = curr.ship + " - " + curr.loc
-
     }
 
     override fun getItemCount(): Int {
