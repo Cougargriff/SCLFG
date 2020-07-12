@@ -62,7 +62,7 @@ class ProfileFragment : Fragment()
 {
     private val PICK_PHOTO_TO_CROP = 0
     private val vm : ViewModel by activityViewModels()
-    private var user = User("", "", 0)
+    private var user = User("", "", ArrayList(),0)
 
     /* Recycler View Setup */
     private lateinit var rv : RecyclerView
@@ -116,6 +116,7 @@ class ProfileFragment : Fragment()
         }
     }
 
+    /* TODO fallback image now shows. Check to see if upload will refresh */
     private fun asyncLoadProfileImg()
     {
         /* create cache file to store profile pic */
@@ -200,6 +201,8 @@ class ProfileFragment : Fragment()
                     temp_list.add(it)
                 }
             }
+
+            /* TODO temp_list doesn't persist */
             groupsList = temp_list
 
             var newAdapter = GListAdapter(ArrayList(groupsList), user)

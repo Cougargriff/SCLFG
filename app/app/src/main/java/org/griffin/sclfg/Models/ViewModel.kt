@@ -46,7 +46,8 @@ class ViewModel : ViewModel()
         {
             var time = result["timeCreated"].toString()
             var name = result["screenName"].toString()
-            return User(name, result.id ,time.toLong())
+            var inGroups = result["inGroups"] as ArrayList<String>
+            return User(name, result.id, inGroups, time.toLong())
         }
 
 
@@ -101,6 +102,7 @@ class ViewModel : ViewModel()
         }
     }
 
+    /* if auth user is owner of given group, invoke callback method */
     fun isOwner(gid : String, cb: () -> Unit)
     {
         /*
@@ -144,9 +146,25 @@ class ViewModel : ViewModel()
     {
         userRef.document(auth.uid!!).set(hashMapOf(
             "screenName" to name
-        ), SetOptions.merge())
-        loadUser()
-        loadGroups()
+        ), SetOptions.merge()).addOnCompleteListener {
+            loadUser().also {
+                loadGroups()
+            }
+        }
+    }
+
+    fun addGroupToUser(gid : String) {
+        var curr_inGroups = user.value!!.inGroups
+        curr_inGroups.add(gid)
+        userRef.document(user.value!!.uid)
+            .set(hashMapOf(
+                "inGroups" to curr_inGroups
+            ), SetOptions.merge())
+            .addOnCompleteListener {
+                loadUser()
+                loadGroups()
+            }
+
     }
 
     fun joinGroup(gid : String, hash : HashMap<String, Serializable>)
@@ -200,7 +218,7 @@ class ViewModel : ViewModel()
         }
     }
 
-    fun pushGroup(grp : Group, cb : () -> Unit)
+    fun pushGroup(grp : Group, ui_cb : () -> Unit, cb: (gid : String) -> Unit)
     {
         var grpHash = hashMapOf(
             "name" to grp.name,
@@ -210,14 +228,18 @@ class ViewModel : ViewModel()
             "location" to grp.loc,
             "maxPlayers" to grp.maxPlayers,
             "currCount" to grp.currCount,
-            "playerList" to listOf(auth.uid),
+            "playerList" to listOf(auth.uid), /* init group with creator as only user */
             "active" to grp.active,
             "description" to grp.description
         )
 
-        grpRef.add(grpHash)
+        grpRef.add(grpHash).addOnCompleteListener {
+            if(it.isSuccessful) {
+                cb(it.result!!.id)
+            }
+        }
         loadGroups()
-        cb()
+        ui_cb()
     }
 
     private fun loadUser()
@@ -252,6 +274,7 @@ class ViewModel : ViewModel()
                     {
                         var initUser = hashMapOf(
                             "timeCreated" to System.currentTimeMillis().toString(),
+                            "inGroups" to emptyList<String>(),
                             "screenName" to "ANONYMOUS"
                         )
                         userRef.document(auth.uid!!).set(initUser)

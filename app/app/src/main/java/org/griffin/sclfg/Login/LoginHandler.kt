@@ -24,6 +24,9 @@ class LoginHandler(var lPacket : User, val failCb : () -> Unit)
                 failCb()
             }
         }
+            .addOnFailureListener {
+
+            }
     }
 
     fun register(cache_cb : (user : User, uid : String) -> Unit)

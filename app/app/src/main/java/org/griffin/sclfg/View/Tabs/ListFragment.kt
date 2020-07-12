@@ -28,7 +28,7 @@ class ListFragment : Fragment()
 {
     private val vm : ViewModel by activityViewModels()
     private lateinit var groupsList : List<Group>
-    private var user = User("", "", 0)
+    private var user = User("", "", ArrayList(),0)
     private var userLists : ArrayList<ArrayList<User>> = ArrayList()
 
     /* Recycler View Setup */

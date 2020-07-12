@@ -60,21 +60,25 @@ class CreateFragment : Fragment()
                     playNumSelector.value, 1, true, "",
                     descriptionBox.text.toString())
 
-                vm.pushGroup(newGroup, resetTextBoxes)
+                /* resetTextBoxes -> UI update on success callback */
+                vm.pushGroup(newGroup, resetTextBoxes) {
+                    /* after pushing group, callback with new gid param */
+                    /* add group to inGroups under user */
+                    vm.addGroupToUser(it)
+                }
                 Toast.makeText(requireContext(), newGroup.name + " Created!", Toast.LENGTH_SHORT)
                     .show()
             }
         }
     }
 
-    private var resetTextBoxes = object : (() -> Unit) {
-        override fun invoke() {
+    private var resetTextBoxes = fun () {
             groupBox.text.clear()
             shipSearchBox.text.clear()
             locSearchBox.text.clear()
             descriptionBox.text.clear()
-        }
     }
+
 
     private fun setupVM()
     {
