@@ -258,6 +258,7 @@ class GListAdapter(val groupList: ArrayList<Group>, val authUser: User,
         item.maxCount.text = curr.maxPlayers.toString() + "  ...  Players Joined"
         item.shiploc.text = curr.ship + " - " + curr.loc
 
+        /* TODO is this not working!? */
         item.active_toggle.isActivated = !curr.active
 
         item.active_toggle.setOnClickListener {
