@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -39,6 +40,7 @@ import kotlinx.android.synthetic.main.profile_group_cell.view.shiploc
 import kotlinx.android.synthetic.main.tab_profile.*
 import kotlinx.android.synthetic.main.tab_profile.view.*
 import org.griffin.sclfg.Models.Group
+import org.griffin.sclfg.Models.GroupMod
 import org.griffin.sclfg.Models.User
 import org.griffin.sclfg.Models.ViewModel
 import org.griffin.sclfg.R
@@ -71,6 +73,26 @@ class ProfileFragment : Fragment()
 
     private lateinit var groupsList : List<Group>
 
+    private val modifyGroup = fun (gid: String, action : GroupMod) {
+        vm.groupExists(gid, err_cb) {
+            when(action)
+            {
+                GroupMod.MAKE_PRIVATE -> {
+                    vm.makePrivate(gid)
+                }
+                GroupMod.MAKE_PUBLIC -> {
+                    vm.makePublic(gid)
+                }
+            }
+        }
+
+    }
+
+    private val err_cb = fun () {
+        Toast.makeText(requireContext(), "Group No Longer Exists", Toast.LENGTH_LONG)
+            .show()
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View?
     {
@@ -80,7 +102,7 @@ class ProfileFragment : Fragment()
         rv = view.my_groups
         rvManager = LinearLayoutManager(context)
 
-        rvAdapter = GListAdapter(ArrayList(), user)
+        rvAdapter = GListAdapter(ArrayList(), user, modifyGroup)
 
         rv.apply {
             layoutManager = rvManager
@@ -204,14 +226,15 @@ class ProfileFragment : Fragment()
 
             groupsList = temp_list
 
-            var newAdapter = GListAdapter(ArrayList(groupsList), user)
+            var newAdapter = GListAdapter(ArrayList(groupsList), user, modifyGroup)
             rv.adapter = newAdapter
         })
     }
 }
 
-class GListAdapter(val groupList: ArrayList<Group>,
-                       val authUser: User)
+
+class GListAdapter(val groupList: ArrayList<Group>, val authUser: User,
+                   val modifyGroup : (gid: String, action : GroupMod) -> Unit)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>()
 {
     class ViewHolder(val cellView : LinearLayout) : RecyclerView.ViewHolder(cellView)
@@ -234,6 +257,19 @@ class GListAdapter(val groupList: ArrayList<Group>,
         item.currCount.text = curr.currCount.toString()
         item.maxCount.text = curr.maxPlayers.toString() + "  ...  Players Joined"
         item.shiploc.text = curr.ship + " - " + curr.loc
+
+        item.active_toggle.isActivated = !curr.active
+
+        item.active_toggle.setOnClickListener {
+            Toast.makeText(vParent.context, "Switch Toggled!", Toast.LENGTH_SHORT).show()
+
+            /* isActivated is state !BEFORE! switched */
+            when(it.isActivated) {
+                /* TODO toggles active boolean correct, switch DOESNT persist change tho */
+                false -> modifyGroup(curr.gid, GroupMod.MAKE_PRIVATE)
+                true -> modifyGroup(curr.gid, GroupMod.MAKE_PUBLIC)
+            }
+        }
     }
 
     override fun getItemCount(): Int {

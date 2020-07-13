@@ -187,6 +187,13 @@ class ViewModel : ViewModel()
         return locations
     }
 
+    /**
+        Checks to see if passed group with id (gid)  still exists in remote db.
+
+        @param gid the id of the group to check
+        @param err the callback function invoked when group doesn't exist
+        @param cb callback invoked when group does exist
+     */
     fun groupExists(gid: String, err: () -> Unit, cb: (DocumentSnapshot) -> Unit) {
         grpRef.document(gid).get().addOnCompleteListener {
             if(it.isSuccessful)
@@ -199,12 +206,35 @@ class ViewModel : ViewModel()
                 }
                 else
                 {
+                    /* load updated groups to flush out non-existent group entries locally */
                     loadGroups()
                     /* Error callback to alert user that group doesn't exist anymore */
                     err()
                 }
             }
         }
+    }
+
+    fun makePublic(gid : String) {
+        val hash = hashMapOf(
+            "active" to true
+        )
+        grpRef.document(gid)
+            .set(hash, SetOptions.merge())
+            .addOnSuccessListener {
+                loadGroups()
+            }
+    }
+
+    fun makePrivate(gid : String) {
+        val hash = hashMapOf(
+            "active" to false
+        )
+        grpRef.document(gid)
+            .set(hash, SetOptions.merge())
+            .addOnSuccessListener {
+                loadGroups()
+            }
     }
 
     fun pushGroup(grp : Group, ui_cb : () -> Unit, cb: (gid : String) -> Unit)

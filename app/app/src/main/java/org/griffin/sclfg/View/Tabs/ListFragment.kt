@@ -45,6 +45,7 @@ class ListFragment : Fragment()
     private val joinGroup = fun (gid : String, uid : String, cb : () -> Unit)
     {
         vm.groupExists(gid, err_cb) {
+            /* callback invoked after checking if group still exists on db */
             var g = ViewModel.groupFromHash(it)
             if(g.currCount + 1 <= g.maxPlayers )
             {
@@ -66,6 +67,7 @@ class ListFragment : Fragment()
     private val leaveGroup = fun (gid : String, uid : String, cb : () -> Unit)
     {
         vm.groupExists(gid, err_cb) {
+            /* callback invoked after checking if group still exists on db */
             var g = ViewModel.groupFromHash(it)
             if(g.currCount - 1 >= 0)
             {
@@ -84,7 +86,6 @@ class ListFragment : Fragment()
 
     }
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View?
     {
@@ -100,14 +101,11 @@ class ListFragment : Fragment()
             joinGroup,
             leaveGroup)
 
-
         /* Bind everything together */
         rv.apply {
             layoutManager = rvManager
             adapter = rvAdapter
         }
-
-
         return view
     }
 
@@ -141,12 +139,11 @@ class ListFragment : Fragment()
         })
 
         vm.getGroups().observe(viewLifecycleOwner, Observer {
-
             var tempList = ArrayList<Group>()
 
+            /* Spot to check for conditions on whether to show a specific group */
+            /* TODO possible to add filter checks for user inputted tags in the future */
             it!!.forEach {
-                /* Spot to check for conditions on whether to show a specific group */
-                /* TODO possible to add filter checks for user inputted tags in the future */
                 if(it.active)
                 {
                     tempList.add(it)
@@ -154,7 +151,8 @@ class ListFragment : Fragment()
             }
             userLists.clear()
             groupsList = tempList
-            /* retrieve user lists */
+
+            /* retrieve user lists for each group */
             groupsList.forEachIndexed { i, group ->
                 var userList = getUsersForGroup(group)
                 userLists.add(userList)
