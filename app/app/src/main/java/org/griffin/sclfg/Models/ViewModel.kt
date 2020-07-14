@@ -353,6 +353,8 @@ class ViewModel : ViewModel()
     private fun loadGroups()
     {
         grpRef = db.collection("groups")
+
+        /* Listens to db changes and reloads groups */
         grpRef.orderBy("timeCreated", Query.Direction.ASCENDING)
             .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
             /* Listen for changes and update groups list */
