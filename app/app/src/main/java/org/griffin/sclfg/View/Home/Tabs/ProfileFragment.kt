@@ -1,11 +1,10 @@
-package org.griffin.sclfg.View.Tabs
+package org.griffin.sclfg.View.Home.Tabs
 
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import android.graphics.*
-import android.graphics.drawable.ColorDrawable
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -39,6 +37,7 @@ import org.griffin.sclfg.Models.GroupMod
 import org.griffin.sclfg.Models.User
 import org.griffin.sclfg.Models.ViewModel
 import org.griffin.sclfg.R
+import org.griffin.sclfg.Utils.Gestures.SwipeToDeleteCallback
 import java.io.File
 import java.io.InputStream
 
@@ -53,99 +52,7 @@ class MyAppGlideModule : AppGlideModule() {
     }
 }
 
-/*
-    The SwipeToDelete implementation was snagged from this tutorial.
-    https://medium.com/nemanja-kovacevic/recyclerview-swipe-to-delete-no-3rd-party-lib-necessary-6bf6a6601214
- */
-abstract class SwipeToDeleteCallback(context: Context) :
-    ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
-    private val deleteIcon = ContextCompat.getDrawable(context, R.drawable.ic_baseline_delete_24)
-    private val intrinsicWidth = deleteIcon!!.intrinsicWidth
-    private val intrinsicHeight = deleteIcon!!.intrinsicHeight
-    private val background = ColorDrawable()
-    private val backgroundColor = Color.parseColor("#f44336")
-    private val clearPaint = Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR) }
-
-
-    override fun getMovementFlags(
-        recyclerView: RecyclerView,
-        viewHolder: RecyclerView.ViewHolder
-    ): Int {
-        /**
-         * To disable "swipe" for specific item return 0 here.
-         * For example:
-         * if (viewHolder?.itemViewType == YourAdapter.SOME_TYPE) return 0
-         * if (viewHolder?.adapterPosition == 0) return 0
-         */
-        var adapter = recyclerView.adapter as GListAdapter
-        var item = adapter.groupList[viewHolder.adapterPosition]
-        if (item.createdBy.compareTo(adapter.authUser.uid) != 0) return 0
-        return super.getMovementFlags(recyclerView, viewHolder)
-    }
-
-    override fun onMove(
-        recyclerView: RecyclerView,
-        viewHolder: RecyclerView.ViewHolder,
-        target: RecyclerView.ViewHolder
-    ): Boolean {
-        return false
-    }
-
-    override fun onChildDraw(
-        c: Canvas,
-        recyclerView: RecyclerView,
-        viewHolder: RecyclerView.ViewHolder,
-        dX: Float,
-        dY: Float,
-        actionState: Int,
-        isCurrentlyActive: Boolean
-    ) {
-
-        val itemView = viewHolder.itemView
-        val itemHeight = itemView.bottom - itemView.top
-        val isCanceled = dX == 0f && !isCurrentlyActive
-
-        if (isCanceled) {
-            clearCanvas(
-                c,
-                itemView.right + dX,
-                itemView.top.toFloat(),
-                itemView.right.toFloat(),
-                itemView.bottom.toFloat()
-            )
-            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-            return
-        }
-
-        // Draw the red delete background
-        background.color = backgroundColor
-        background.setBounds(
-            itemView.right + dX.toInt(),
-            itemView.top,
-            itemView.right,
-            itemView.bottom
-        )
-        background.draw(c)
-
-        // Calculate position of delete icon
-        val deleteIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
-        val deleteIconMargin = (itemHeight - intrinsicHeight) / 2
-        val deleteIconLeft = itemView.right - deleteIconMargin - intrinsicWidth
-        val deleteIconRight = itemView.right - deleteIconMargin
-        val deleteIconBottom = deleteIconTop + intrinsicHeight
-
-        // Draw the delete icon
-        deleteIcon!!.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
-        deleteIcon.draw(c)
-
-        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-    }
-
-    private fun clearCanvas(c: Canvas?, left: Float, top: Float, right: Float, bottom: Float) {
-        c?.drawRect(left, top, right, bottom, clearPaint)
-    }
-}
 
 class ProfileFragment : Fragment() {
     private val PICK_PHOTO_TO_CROP = 0
@@ -163,9 +70,7 @@ class ProfileFragment : Fragment() {
         vm.groupExists(gid, err_cb) {
             when (action) {
                 GroupMod.MAKE_PRIVATE -> vm.makePrivate(gid)
-
                 GroupMod.MAKE_PUBLIC -> vm.makePublic(gid)
-
                 GroupMod.DELETE -> vm.delete(gid)
             }
         }
@@ -353,8 +258,8 @@ class GListAdapter(
 
         item.groupName.text = curr.name
         item.currCount.text = curr.currCount.toString()
-        item.maxCount.text = curr.maxPlayers.toString() + "  ...  Players Joined"
-        item.shiploc.text = curr.ship + " - " + curr.loc
+        item.maxCount.text = "${curr.maxPlayers}  ...  Players Joined"
+        item.shiploc.text = "${curr.ship} - ${curr.loc}"
 
         if (curr.createdBy == authUser.uid) {
             item.active_toggle.isChecked = !curr.active

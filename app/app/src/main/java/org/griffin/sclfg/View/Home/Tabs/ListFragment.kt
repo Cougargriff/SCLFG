@@ -1,12 +1,16 @@
-package org.griffin.sclfg.View.Tabs
+package org.griffin.sclfg.View.Home.Tabs
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.core.app.ShareCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +23,7 @@ import org.griffin.sclfg.Models.Group
 import org.griffin.sclfg.Models.User
 import org.griffin.sclfg.Models.ViewModel
 import org.griffin.sclfg.R
+import org.griffin.sclfg.View.GroupView.ModalGroupActivity
 
 class ListFragment : Fragment() {
     private val vm: ViewModel by activityViewModels()
@@ -60,6 +65,11 @@ class ListFragment : Fragment() {
 
     }
 
+    private val openModal = fun (gid : String) {
+        var intent = Intent(requireActivity(), ModalGroupActivity::class.java)
+        requireActivity().startActivity(intent)
+    }
+
     private val leaveGroup = fun(gid: String, uid: String, cb: () -> Unit) {
         vm.groupExists(gid, err_cb) {
             /* callback invoked after checking if group still exists on db */
@@ -90,12 +100,13 @@ class ListFragment : Fragment() {
         rv = view.listView
         rvManager = LinearLayoutManager(context)
 
-        rvAdapter = GroupListAdapter(
+        rvAdapter = GroupListAdapter(requireActivity(),
             ArrayList(),
             ArrayList(),
             user,
             joinGroup,
-            leaveGroup
+            leaveGroup,
+            openModal
         )
 
         /* Bind everything together */
@@ -152,9 +163,9 @@ class ListFragment : Fragment() {
                 userLists.add(userList)
             }
 
-            val newAdapter = GroupListAdapter(
+            val newAdapter = GroupListAdapter(requireActivity(),
                 ArrayList(groupsList), userLists, user,
-                joinGroup, leaveGroup
+                joinGroup, leaveGroup, openModal
             )
             rv.adapter = newAdapter
         })
@@ -214,11 +225,13 @@ class UserListAdapter(val userList: ArrayList<User>) :
  Takes as argument Group list and array of user lists for particular group
  */
 class GroupListAdapter(
+    val activity : FragmentActivity,
     val groupList: ArrayList<Group>,
     val userLists: ArrayList<ArrayList<User>>,
     val authUser: User,
     val joinGroup: (gid: String, uid: String, cb: () -> Unit) -> Unit,
-    val leaveGroup: (gid: String, uid: String, cb: () -> Unit) -> Unit
+    val leaveGroup: (gid: String, uid: String, cb: () -> Unit) -> Unit,
+    val openModal: (gid: String) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     class ViewHolder(val cellView: LinearLayout) : RecyclerView.ViewHolder(cellView)
 
@@ -273,22 +286,32 @@ class GroupListAdapter(
         /* check if authUser is in current group */
         if (!isMember) {
             item.leaveButton.visibility = View.GONE
-            item.joinButton.visibility = View.VISIBLE
-            item.joinButton.setOnClickListener {
-                /* make button not clickable after starting joinGroup transaction */
-                item.joinButton.visibility = View.GONE
-                joinGroup(groupList[position].gid, authUser.uid) {
-                    /* Callback to happen after join group */
+            item.joinButton.apply {
+                visibility = View.VISIBLE
+                setOnClickListener {
+                    /* make button not clickable after starting joinGroup transaction */
+                    item.joinButton.visibility = View.GONE
+                    joinGroup(groupList[position].gid, authUser.uid) {
+                        /* Callback to happen after join group */
+                    }
                 }
             }
         } else {
             item.joinButton.visibility = View.GONE
-            item.leaveButton.visibility = View.VISIBLE
-            item.leaveButton.setOnClickListener {
-                /* make button not clickable after starting leaveGroup transaction */
-                item.leaveButton.visibility = View.GONE
-                leaveGroup(groupList[position].gid, authUser.uid) {
-                    /* Callback to happen after leave group */
+            item.leaveButton.apply {
+                visibility = View.VISIBLE
+                setOnClickListener {
+                    /* make button not clickable after starting leaveGroup transaction */
+                    item.leaveButton.visibility = View.GONE
+                    leaveGroup(groupList[position].gid, authUser.uid) {
+                        /* Callback to happen after leave group */
+                    }
+                }
+            }
+            item.openModalButton.apply {
+                visibility = View.VISIBLE
+                openModalButton.setOnClickListener {
+                    openModal(groupList[position].gid)
                 }
             }
         }

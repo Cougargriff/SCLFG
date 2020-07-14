@@ -2,53 +2,35 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:windowSoftInputMode="adjustResize"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Login.LoginActivity">
-
-    <include
-        android:id="@+id/lfg_toolbar"
-        layout="@layout/toolbar" />
+    tools:context=".View.GroupView.ModalGroupActivity">
 
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
+        android:id="@+id/messageTabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:elevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lfg_toolbar"
+        app:layout_constraintTop_toTopOf="parent"
         app:tabIndicatorColor="@color/rsiWall">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tab1" />
+            android:text="@string/message" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tab2" />
+            android:text="@string/about" />
 
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/tab3" />
     </com.google.android.material.tabs.TabLayout>
 
-    <Space
-        android:id="@+id/space"
-        android:layout_width="match_parent"
-        android:layout_height="16dp"
-        android:background="@color/white"
-        android:backgroundTint="@color/white"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/tabLayout" />
-
     <view
-        android:id="@+id/viewPager"
+        android:id="@+id/modalViewPager"
         class="androidx.viewpager.widget.ViewPager"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -56,6 +38,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/space" />
-
+        app:layout_constraintTop_toBottomOf="@+id/messageTabs" />
 </androidx.constraintlayout.widget.ConstraintLayout>

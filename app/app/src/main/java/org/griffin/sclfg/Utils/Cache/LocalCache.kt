@@ -1,4 +1,4 @@
-package org.griffin.sclfg.Cache
+package org.griffin.sclfg.Utils.Cache
 
 import android.content.Context
 import android.content.SharedPreferences

@@ -34,6 +34,8 @@ class ViewModel : ViewModel() {
             return null
         }
 
+
+
         fun userFromHash(result: DocumentSnapshot): User {
             var time = result["timeCreated"].toString()
             var name = result["screenName"].toString()
@@ -41,6 +43,20 @@ class ViewModel : ViewModel() {
             return User(name, result.id, inGroups, time.toLong())
         }
 
+        fun groupToHash(grp : Group, uid : String) : HashMap<String, Any> {
+            return hashMapOf(
+                "name" to grp.name,
+                "timeCreated" to grp.timeCreated,
+                "createdBy" to uid,
+                "ship" to grp.ship,
+                "location" to grp.loc,
+                "maxPlayers" to grp.maxPlayers,
+                "currCount" to grp.currCount,
+                "playerList" to listOf(uid), /* init group with creator as only user */
+                "active" to grp.active,
+                "description" to grp.description
+            )
+        }
 
         fun groupFromHash(result: DocumentSnapshot): Group {
             var name = result["name"].toString()
@@ -70,6 +86,8 @@ class ViewModel : ViewModel() {
 
     private val db = Firebase.firestore
     private val auth = FirebaseAuth.getInstance()
+
+
 
     private val user: MutableLiveData<User> by lazy {
         MutableLiveData<User>().also {
@@ -122,6 +140,8 @@ class ViewModel : ViewModel() {
             }
         }
     }
+
+
 
     fun addGroupToUser(gid: String) {
         var currIngroups = user.value!!.inGroups
@@ -232,8 +252,6 @@ class ViewModel : ViewModel() {
                     loadGroups()
                 }
         }
-
-
     }
 
     fun makePublic(gid: String) {
@@ -259,22 +277,13 @@ class ViewModel : ViewModel() {
     }
 
     fun pushGroup(grp: Group, uiCb: () -> Unit, cb: (gid: String) -> Unit) {
-        var grpHash = hashMapOf(
-            "name" to grp.name,
-            "timeCreated" to grp.timeCreated,
-            "createdBy" to auth.uid,
-            "ship" to grp.ship,
-            "location" to grp.loc,
-            "maxPlayers" to grp.maxPlayers,
-            "currCount" to grp.currCount,
-            "playerList" to listOf(auth.uid), /* init group with creator as only user */
-            "active" to grp.active,
-            "description" to grp.description
-        )
+
+       val grpHash = groupToHash(grp, auth.uid!!)
 
         grpRef.add(grpHash).addOnCompleteListener {
             if (it.isSuccessful) {
-                cb(it.result!!.id)
+                val resultId = it.result!!.id
+                cb(resultId)
             }
         }
         loadGroups()

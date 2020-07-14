@@ -8,9 +8,9 @@ import androidx.core.content.ContextCompat
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_register.*
-import org.griffin.sclfg.Cache.LocalCache
+import org.griffin.sclfg.Utils.Cache.LocalCache
 import org.griffin.sclfg.R
-import org.griffin.sclfg.View.MainActivity
+import org.griffin.sclfg.View.Home.MainActivity
 
 class RegisterActivity : AppCompatActivity() {
     private val BUTTON_ELEVATION by lazy {

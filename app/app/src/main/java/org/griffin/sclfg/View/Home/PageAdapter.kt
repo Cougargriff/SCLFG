@@ -1,4 +1,4 @@
-package org.griffin.sclfg.View
+package org.griffin.sclfg.View.Home
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

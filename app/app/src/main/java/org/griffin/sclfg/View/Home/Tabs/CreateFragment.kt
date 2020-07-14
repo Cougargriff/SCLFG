@@ -1,4 +1,4 @@
-package org.griffin.sclfg.View.Tabs
+package org.griffin.sclfg.View.Home.Tabs
 
 import android.os.Bundle
 import android.view.LayoutInflater

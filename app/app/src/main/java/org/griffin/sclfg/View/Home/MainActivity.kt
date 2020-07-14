@@ -1,4 +1,4 @@
-package org.griffin.sclfg.View
+package org.griffin.sclfg.View.Home
 
 import android.app.AlertDialog
 import android.content.Intent
@@ -18,13 +18,13 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activty_main.*
-import org.griffin.sclfg.Cache.LocalCache
+import org.griffin.sclfg.Utils.Cache.LocalCache
 import org.griffin.sclfg.Login.LoginActivity
 import org.griffin.sclfg.Models.*
 import org.griffin.sclfg.R
-import org.griffin.sclfg.View.Tabs.CreateFragment
-import org.griffin.sclfg.View.Tabs.ListFragment
-import org.griffin.sclfg.View.Tabs.ProfileFragment
+import org.griffin.sclfg.View.Home.Tabs.CreateFragment
+import org.griffin.sclfg.View.Home.Tabs.ListFragment
+import org.griffin.sclfg.View.Home.Tabs.ProfileFragment
 
 class MainActivity : AppCompatActivity() {
     /*
@@ -202,6 +202,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
         viewPager.adapter = pa
+
         tabLayout.setupWithViewPager(viewPager)
     }
 
