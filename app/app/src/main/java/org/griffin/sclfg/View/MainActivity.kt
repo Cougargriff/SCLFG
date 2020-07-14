@@ -1,12 +1,7 @@
 package org.griffin.sclfg.View
 
-import android.app.Activity
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -14,20 +9,15 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toolbar
 import androidx.activity.viewModels
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.marginLeft
 import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
-import com.google.api.Distribution
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.soundcloud.android.crop.Crop
 import kotlinx.android.synthetic.main.activty_main.*
-import kotlinx.android.synthetic.main.tab_profile.*
 import org.griffin.sclfg.Cache.LocalCache
 import org.griffin.sclfg.Login.LoginActivity
 import org.griffin.sclfg.Models.*
@@ -36,31 +26,29 @@ import org.griffin.sclfg.View.Tabs.ListFragment
 import org.griffin.sclfg.View.Tabs.ProfileFragment
 import org.griffin.sclfg.View.Tabs.CreateFragment
 
-class MainActivity : AppCompatActivity()
-{
+class MainActivity : AppCompatActivity() {
     /*
         Firebase / FireStore Setup
      */
-    private lateinit var userRef : CollectionReference
-    private lateinit var shipRef : CollectionReference
-    private lateinit var locRef  : CollectionReference
+    private lateinit var userRef: CollectionReference
+    private lateinit var shipRef: CollectionReference
+    private lateinit var locRef: CollectionReference
     private var auth = FirebaseAuth.getInstance()
     private var db = Firebase.firestore
     private val FTAG = "FIRESTORE -> "
     private val NAME_CHANGE_TITLE = "Change Your Screen Name"
 
     /* Fragment Frameworks */
-    private lateinit var pa : PageAdapter
-    private val vm : ViewModel by viewModels()
+    private lateinit var pa: PageAdapter
+    private val vm: ViewModel by viewModels()
 
-    private lateinit var shipList : List<Ship>
-    private lateinit var locList : List<Location>
-    private lateinit var grpList : List<Group>
-    private lateinit var user : User
+    private lateinit var shipList: List<Ship>
+    private lateinit var locList: List<Location>
+    private lateinit var grpList: List<Group>
+    private lateinit var user: User
 
 
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activty_main)
 
@@ -73,10 +61,8 @@ class MainActivity : AppCompatActivity()
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean
-    {
-        when (item.itemId)
-        {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             (R.id.action_sign_out) -> {
                 LocalCache(this).apply {
                     /* clear cache and sign out */
@@ -93,8 +79,10 @@ class MainActivity : AppCompatActivity()
                 val nameEditBox = EditText(this).apply {
                     highlightColor = ContextCompat.getColor(context, R.color.rsiWall)
                 }
-                var lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT)
+                var lp = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT
+                )
                 nameEditBox.layoutParams = lp
 
                 AlertDialog.Builder(this).apply {
@@ -111,13 +99,11 @@ class MainActivity : AppCompatActivity()
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onBackPressed()
-    {
+    override fun onBackPressed() {
         /* do nothing */
     }
 
-    private fun setupActionbar()
-    {
+    private fun setupActionbar() {
         var toolbar = (lfg_toolbar as Toolbar).apply {
             title = "SCLFG"
             this.inflateMenu(R.menu.action_menu)
@@ -127,8 +113,7 @@ class MainActivity : AppCompatActivity()
         setActionBar(toolbar)
     }
 
-    private fun lateSetup()
-    {
+    private fun lateSetup() {
         paSetup()
         vpSetup()
         firestoreSetup()
@@ -136,20 +121,18 @@ class MainActivity : AppCompatActivity()
         viewPager.setCurrentItem(0, true)
 
         /* if from register, update screen name */
-        register_screen_name()
+        registerScreenName()
 
     }
 
-    private fun register_screen_name() {
-        if(intent.extras != null)
-        {
-            val screen_name = intent.extras!!.get("display_name") as String
-            vm.updateScreenName(screen_name)
+    private fun registerScreenName() {
+        if (intent.extras != null) {
+            val screenName = intent.extras!!.get("display_name") as String
+            vm.updateScreenName(screenName)
         }
     }
 
-    private fun vmSetup()
-    {
+    private fun vmSetup() {
         /* View Model Setup */
         /* UI Updaters on Observation Changes from FireStore */
 
@@ -171,18 +154,15 @@ class MainActivity : AppCompatActivity()
         })
 
 
-
     }
 
-    private fun firestoreSetup()
-    {
+    private fun firestoreSetup() {
         userRef = db.collection("users")
         shipRef = db.collection("ships")
         locRef = db.collection("locations")
     }
 
-    private fun paSetup()
-    {
+    private fun paSetup() {
         pa = PageAdapter(supportFragmentManager)
 
         /* Create and add fragments to page adapter */
@@ -192,34 +172,29 @@ class MainActivity : AppCompatActivity()
     }
 
 
-    private fun vpSetup()
-    {
+    private fun vpSetup() {
         /* ViewPager Setup */
-        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener
-        {
-            override fun onPageScrollStateChanged(state: Int)
-            {
+        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
             }
-            override fun onPageScrolled(position: Int, positionOffset: Float,
-                                        positionOffsetPixels: Int)
-            {}
 
-            override fun onPageSelected(position: Int)
-            {
-                when(position)
-                {
-                    0 ->
-                    {
+            override fun onPageScrolled(
+                position: Int, positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                when (position) {
+                    0 -> {
                         /* when search is selected */
                     }
 
-                    1 ->
-                    {
+                    1 -> {
                         /* when list is selected */
                     }
 
-                    2 ->
-                    {
+                    2 -> {
                         /* when profile is selected */
                     }
 

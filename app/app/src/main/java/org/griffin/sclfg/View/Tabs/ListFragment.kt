@@ -24,31 +24,28 @@ import org.griffin.sclfg.Models.User
 import org.griffin.sclfg.Models.ViewModel
 import org.griffin.sclfg.R
 
-class ListFragment : Fragment()
-{
-    private val vm : ViewModel by activityViewModels()
-    private lateinit var groupsList : List<Group>
-    private var user = User("", "", ArrayList(),0)
-    private var userLists : ArrayList<ArrayList<User>> = ArrayList()
+class ListFragment : Fragment() {
+    private val vm: ViewModel by activityViewModels()
+    private lateinit var groupsList: List<Group>
+    private var user = User("", "", ArrayList(), 0)
+    private var userLists: ArrayList<ArrayList<User>> = ArrayList()
 
     /* Recycler View Setup */
-    private lateinit var rv : RecyclerView
-    private lateinit var rvManager : RecyclerView.LayoutManager
-    private lateinit var rvAdapter : RecyclerView.Adapter<*>
+    private lateinit var rv: RecyclerView
+    private lateinit var rvManager: RecyclerView.LayoutManager
+    private lateinit var rvAdapter: RecyclerView.Adapter<*>
 
-    private val err_cb = fun () {
+    private val err_cb = fun() {
         Toast.makeText(requireContext(), "Group No Longer Exists", Toast.LENGTH_LONG)
             .show()
     }
 
     /* closures for joining and leaving groups. passed to list adapters */
-    private val joinGroup = fun (gid : String, uid : String, cb : () -> Unit)
-    {
+    private val joinGroup = fun(gid: String, uid: String, cb: () -> Unit) {
         vm.groupExists(gid, err_cb) {
             /* callback invoked after checking if group still exists on db */
             var g = ViewModel.groupFromHash(it)
-            if(g.currCount + 1 <= g.maxPlayers )
-            {
+            if (g.currCount + 1 <= g.maxPlayers) {
                 g.playerList.add(uid)
                 /* only pass updated data due to nature of merging docs */
                 val hash = hashMapOf(
@@ -59,8 +56,7 @@ class ListFragment : Fragment()
                     /* after joining group make button clickable again */
                     cb()
                 }
-            }
-            else {
+            } else {
                 Toast.makeText(requireContext(), "Too many people already", Toast.LENGTH_LONG)
                     .show()
             }
@@ -68,13 +64,11 @@ class ListFragment : Fragment()
 
     }
 
-    private val leaveGroup = fun (gid : String, uid : String, cb : () -> Unit)
-    {
+    private val leaveGroup = fun(gid: String, uid: String, cb: () -> Unit) {
         vm.groupExists(gid, err_cb) {
             /* callback invoked after checking if group still exists on db */
             var g = ViewModel.groupFromHash(it)
-            if(g.currCount - 1 >= 0)
-            {
+            if (g.currCount - 1 >= 0) {
                 g.playerList.remove(uid)
                 /* only pass updated data due to nature of merging docs */
                 val hash = hashMapOf(
@@ -90,20 +84,23 @@ class ListFragment : Fragment()
 
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View?
-    {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         var view = inflater.inflate(R.layout.tab_list, container, false)
 
         /* Setup Fragment View here */
         rv = view.listView
         rvManager = LinearLayoutManager(context)
 
-        rvAdapter = GroupListAdapter(ArrayList(),
+        rvAdapter = GroupListAdapter(
+            ArrayList(),
             ArrayList(),
             user,
             joinGroup,
-            leaveGroup)
+            leaveGroup
+        )
 
         /* Bind everything together */
         rv.apply {
@@ -113,8 +110,7 @@ class ListFragment : Fragment()
         return view
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?)
-    {
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setupSwipeRefresh()
         setupVM()
@@ -131,8 +127,7 @@ class ListFragment : Fragment()
         }
     }
 
-    private fun setupVM()
-    {
+    private fun setupVM() {
         vm.getUser().observe(viewLifecycleOwner, Observer {
             user = it!!
             /*
@@ -148,8 +143,7 @@ class ListFragment : Fragment()
             /* Spot to check for conditions on whether to show a specific group */
             /* TODO possible to add filter checks for user inputted tags in the future */
             it!!.forEach {
-                if(it.active)
-                {
+                if (it.active) {
                     tempList.add(it)
                 }
             }
@@ -162,18 +156,18 @@ class ListFragment : Fragment()
                 userLists.add(userList)
             }
 
-            var newAdapter = GroupListAdapter(ArrayList(groupsList), userLists, user,
-                joinGroup, leaveGroup)
+            var newAdapter = GroupListAdapter(
+                ArrayList(groupsList), userLists, user,
+                joinGroup, leaveGroup
+            )
             rv.adapter = newAdapter
         })
     }
 
-    private fun getUsersForGroup(group : Group) : ArrayList<User>
-    {
+    private fun getUsersForGroup(group: Group): ArrayList<User> {
         var userList = ArrayList<User>()
-        for(uid in group.playerList)
-        {
-            var addUserToList = fun(user : User) {
+        for (uid in group.playerList) {
+            var addUserToList = fun(user: User) {
                 userList.add(user)
             }
             vm.findUser(uid, addUserToList)
@@ -194,20 +188,19 @@ class ListFragment : Fragment()
 */
 
 /* Adapter for user sub list view */
-class UserListAdapter(val userList: ArrayList<User>)
-    : RecyclerView.Adapter<RecyclerView.ViewHolder>()
-{
+class UserListAdapter(val userList: ArrayList<User>) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     class ViewHolder(val cellView: LinearLayout) : RecyclerView.ViewHolder(cellView)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder
-    {
-        val cellView = LayoutInflater.from(parent.context).inflate(R.layout.user_cell,
-            parent, false) as LinearLayout
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val cellView = LayoutInflater.from(parent.context).inflate(
+            R.layout.user_cell,
+            parent, false
+        ) as LinearLayout
         return ViewHolder(cellView)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int)
-    {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val curr = userList[position]
         var item = holder.itemView
         item.userName.text = curr.screenName
@@ -215,8 +208,7 @@ class UserListAdapter(val userList: ArrayList<User>)
         /* other setup for user list cell components */
     }
 
-    override fun getItemCount(): Int
-    {
+    override fun getItemCount(): Int {
         return userList.size
     }
 }
@@ -225,19 +217,19 @@ class UserListAdapter(val userList: ArrayList<User>)
  Adapter for our Group List Recycler View.
  Takes as argument Group list and array of user lists for particular group
  */
-class GroupListAdapter(val groupList: ArrayList<Group>,
-                       val userLists: ArrayList<ArrayList<User>>,
-                       val authUser: User,
-                       val joinGroup: (gid: String, uid: String, cb: () -> Unit) -> Unit,
-                       val leaveGroup: (gid: String, uid: String, cb: () -> Unit) -> Unit )
-    : RecyclerView.Adapter<RecyclerView.ViewHolder>()
-{
-    class ViewHolder(val cellView : LinearLayout) : RecyclerView.ViewHolder(cellView)
+class GroupListAdapter(
+    val groupList: ArrayList<Group>,
+    val userLists: ArrayList<ArrayList<User>>,
+    val authUser: User,
+    val joinGroup: (gid: String, uid: String, cb: () -> Unit) -> Unit,
+    val leaveGroup: (gid: String, uid: String, cb: () -> Unit) -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    class ViewHolder(val cellView: LinearLayout) : RecyclerView.ViewHolder(cellView)
+
     private lateinit var grvManager: RecyclerView.LayoutManager
     private lateinit var vParent: ViewGroup
 
-    private fun hideGoneElements(itemView : View)
-    {
+    private fun hideGoneElements(itemView: View) {
         /* Toggle the views that should be GONE at start */
         itemView.sub_item.visibility = View.GONE
         itemView.joinButton.visibility = View.GONE
@@ -245,10 +237,11 @@ class GroupListAdapter(val groupList: ArrayList<Group>,
     }
 
     /* Inflates and creates the actual cell view for our groups list */
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder
-    {
-        val cellView = LayoutInflater.from(parent.context).inflate(R.layout.group_cell,
-            parent, false) as LinearLayout
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val cellView = LayoutInflater.from(parent.context).inflate(
+            R.layout.group_cell,
+            parent, false
+        ) as LinearLayout
         vParent = parent
 
         grvManager = LinearLayoutManager(parent.context)
@@ -257,8 +250,7 @@ class GroupListAdapter(val groupList: ArrayList<Group>,
     }
 
     /* Set attributes to text in bind */
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int)
-    {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val curr = groupList[position]
         var item = holder.itemView
         item.groupName.text = curr.name
@@ -283,8 +275,7 @@ class GroupListAdapter(val groupList: ArrayList<Group>,
         val isMember = groupList[position].playerList.contains(authUser.uid)
 
         /* check if authUser is in current group */
-        if(!isMember)
-        {
+        if (!isMember) {
             item.leaveButton.visibility = View.GONE
             item.joinButton.visibility = View.VISIBLE
             item.joinButton.setOnClickListener {
@@ -294,9 +285,7 @@ class GroupListAdapter(val groupList: ArrayList<Group>,
                     /* Callback to happen after join group */
                 }
             }
-        }
-        else
-        {
+        } else {
             item.joinButton.visibility = View.GONE
             item.leaveButton.visibility = View.VISIBLE
             item.leaveButton.setOnClickListener {
@@ -309,20 +298,16 @@ class GroupListAdapter(val groupList: ArrayList<Group>,
         }
 
         item.expander.setOnClickListener {
-            onExpand(item, curr)
+            onExpand(item)
         }
     }
 
-    private fun onExpand(item: View, curr: Group)
-    {
-        when(item.sub_item.visibility)
-        {
-            View.GONE -> /* Already gone. Need to switch to Visible */
-            {
+    private fun onExpand(item: View) {
+        when (item.sub_item.visibility) {
+            View.GONE -> /* Already gone. Need to switch to Visible */ {
                 item.sub_item.visibility = View.VISIBLE
             }
-            View.VISIBLE -> /* Its visible. Need to toggle Gone */
-            {
+            View.VISIBLE -> /* Its visible. Need to toggle Gone */ {
                 item.sub_item.visibility = View.GONE
             }
         }
@@ -332,8 +317,7 @@ class GroupListAdapter(val groupList: ArrayList<Group>,
         return groupList.size
     }
 
-    fun removeAt(pos : Int)
-    {
+    fun removeAt(pos: Int) {
         groupList.removeAt(pos)
         notifyItemRemoved(pos)
     }

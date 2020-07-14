@@ -24,22 +24,20 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(R.layout.activity_register)
 
         localCache = LocalCache(this)
-        setup_register_onclick()
+        setupRegisterOnclick()
     }
 
-    private var err_cb = fun ()
-    {
+    private var err_cb = fun() {
         /* reset button heights on failed attempt */
         signup_button.elevation = BUTTON_ELEVATION
     }
 
-    var cache_register_cb = fun (user : LoginHandler.User, uid : String)
-    {
+    var cache_register_cb = fun(user: LoginHandler.User, uid: String) {
         localCache.cacheCredentials(user)
         register_cb(uid)
     }
 
-    var register_cb = fun (uid : String) {
+    var register_cb = fun(uid: String) {
         /* INIT USER w/ display name */
         initUser(uid) {
             var intent = Intent(this@RegisterActivity, MainActivity::class.java)
@@ -49,17 +47,14 @@ class RegisterActivity : AppCompatActivity() {
 
     }
 
-    private fun initUser(uid: String, cb : () -> Unit)
-    {
+    private fun initUser(uid: String, cb: () -> Unit) {
         val userRef = Firebase.firestore.collection("users")
         userRef.document(uid).get()
             .addOnCompleteListener {
-                if(it.isSuccessful)
-                {
+                if (it.isSuccessful) {
                     var result = it.result!!
                     /* create the user if they don't exist already */
-                    if(!result.exists())
-                    {
+                    if (!result.exists()) {
                         var initUser = hashMapOf(
                             "timeCreated" to System.currentTimeMillis().toString(),
                             "inGroups" to emptyList<String>(),
@@ -73,7 +68,7 @@ class RegisterActivity : AppCompatActivity() {
             }
     }
 
-    private fun setup_register_onclick() {
+    private fun setupRegisterOnclick() {
         signup_button.setOnClickListener {
             signup_button.elevation = 0f
             var rpacket = LoginHandler.User(email = "", password = "")
@@ -85,7 +80,7 @@ class RegisterActivity : AppCompatActivity() {
             if (emailR.text.isNotBlank() &&
                 (passwordR.text.isNotBlank() && passwordR_confirm.text.isNotBlank()) &&
                 (passwordR.text.toString().compareTo(passwordR_confirm.text.toString()) == 0) &&
-                        screen_name.text.isNotBlank()
+                screen_name.text.isNotBlank()
             ) {
                 rpacket.email = emailR.text.toString()
                 rpacket.password = passwordR.text.toString()

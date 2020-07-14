@@ -64,7 +64,12 @@ class MyAppGlideModule : AppGlideModule() {
     }
 }
 
-abstract class SwipeToDeleteCallback(context: Context) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+/*
+    The SwipeToDelete implementation was snagged from this tutorial.
+    https://medium.com/nemanja-kovacevic/recyclerview-swipe-to-delete-no-3rd-party-lib-necessary-6bf6a6601214
+ */
+abstract class SwipeToDeleteCallback(context: Context) :
+    ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
     private val deleteIcon = ContextCompat.getDrawable(context, R.drawable.ic_baseline_delete_24)
     private val intrinsicWidth = deleteIcon!!.intrinsicWidth
@@ -85,7 +90,8 @@ abstract class SwipeToDeleteCallback(context: Context) : ItemTouchHelper.SimpleC
          * if (viewHolder?.adapterPosition == 0) return 0
          */
         var adapter = recyclerView.adapter as GListAdapter
-        if (adapter.groupList[viewHolder?.adapterPosition].createdBy.compareTo(adapter.authUser.uid) != 0) return 0
+        var item = adapter.groupList[viewHolder.adapterPosition]
+        if (item.createdBy.compareTo(adapter.authUser.uid) != 0) return 0
         return super.getMovementFlags(recyclerView, viewHolder)
     }
 
@@ -112,14 +118,25 @@ abstract class SwipeToDeleteCallback(context: Context) : ItemTouchHelper.SimpleC
         val isCanceled = dX == 0f && !isCurrentlyActive
 
         if (isCanceled) {
-            clearCanvas(c, itemView.right + dX, itemView.top.toFloat(), itemView.right.toFloat(), itemView.bottom.toFloat())
+            clearCanvas(
+                c,
+                itemView.right + dX,
+                itemView.top.toFloat(),
+                itemView.right.toFloat(),
+                itemView.bottom.toFloat()
+            )
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
             return
         }
 
         // Draw the red delete background
         background.color = backgroundColor
-        background.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+        background.setBounds(
+            itemView.right + dX.toInt(),
+            itemView.top,
+            itemView.right,
+            itemView.bottom
+        )
         background.draw(c)
 
         // Calculate position of delete icon
@@ -141,40 +158,39 @@ abstract class SwipeToDeleteCallback(context: Context) : ItemTouchHelper.SimpleC
     }
 }
 
-class ProfileFragment : Fragment()
-{
+class ProfileFragment : Fragment() {
     private val PICK_PHOTO_TO_CROP = 0
-    private val vm : ViewModel by activityViewModels()
-    private var user = User("", "", ArrayList(),0)
+    private val vm: ViewModel by activityViewModels()
+    private var user = User("", "", ArrayList(), 0)
 
     /* Recycler View Setup */
-    private lateinit var rv : RecyclerView
-    private lateinit var rvManager : RecyclerView.LayoutManager
-    private lateinit var rvAdapter : RecyclerView.Adapter<*>
+    private lateinit var rv: RecyclerView
+    private lateinit var rvManager: RecyclerView.LayoutManager
+    private lateinit var rvAdapter: RecyclerView.Adapter<*>
 
     private var groupsList = emptyList<Group>()
 
-    private val modifyGroup = fun (gid: String, action : GroupMod) {
+    private val modifyGroup = fun(gid: String, action: GroupMod) {
         vm.groupExists(gid, err_cb) {
-            when(action)
-            {
+            when (action) {
                 GroupMod.MAKE_PRIVATE -> vm.makePrivate(gid)
 
-                GroupMod.MAKE_PUBLIC ->  vm.makePublic(gid)
+                GroupMod.MAKE_PUBLIC -> vm.makePublic(gid)
 
                 GroupMod.DELETE -> vm.delete(gid)
             }
         }
     }
 
-    private val err_cb = fun () {
+    private val err_cb = fun() {
         Toast.makeText(requireContext(), "Group No Longer Exists", Toast.LENGTH_LONG)
             .show()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View?
-    {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         var view = inflater.inflate(R.layout.tab_profile, container, false)
 
         /* Setup Fragment View here */
@@ -197,7 +213,7 @@ class ProfileFragment : Fragment()
                     setPositiveButton("Yes") { dialog, which ->
                         adapter.removeItem(group.gid)
                     }
-                    setNegativeButton("Cancel") {dialog, which ->
+                    setNegativeButton("Cancel") { dialog, which ->
 
                         vm.update()
                     }
@@ -216,8 +232,7 @@ class ProfileFragment : Fragment()
         setupVM()
         try {
             asyncLoadProfileImg()
-        }
-        catch (err : Exception) {
+        } catch (err: Exception) {
             profileImage.setImageResource(R.drawable.astro_prof)
         }
         profileImage.setOnClickListener {
@@ -237,8 +252,7 @@ class ProfileFragment : Fragment()
     }
 
     /* TODO fallback image now shows. Check to see if upload will refresh */
-    private fun asyncLoadProfileImg()
-    {
+    private fun asyncLoadProfileImg() {
         /* create cache file to store profile pic */
         val storageRef = Firebase.storage.reference.child(vm.getUser().value!!.uid)
 
@@ -259,14 +273,11 @@ class ProfileFragment : Fragment()
 
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
-    {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(resultCode == Activity.RESULT_OK && data != null)
-        {
-            when(requestCode)
-            {
+        if (resultCode == Activity.RESULT_OK && data != null) {
+            when (requestCode) {
                 PICK_PHOTO_TO_CROP -> {
                     startImgCrop(data.data!!)
                 }
@@ -281,28 +292,24 @@ class ProfileFragment : Fragment()
         }
     }
 
-    private fun pushImageToStorage(uri: Uri)
-    {
+    private fun pushImageToStorage(uri: Uri) {
         val imgInputStream = requireContext().contentResolver.openInputStream(uri)
         Firebase.storage.reference.child(vm.getUser().value!!.uid).putStream(imgInputStream!!)
     }
 
-    private fun startImgCrop(inputURI : Uri)
-    {
+    private fun startImgCrop(inputURI: Uri) {
         val outputURI = Uri.fromFile(File(requireActivity().externalCacheDir, "cropped"))
         var cropIntent = Crop.of(inputURI, outputURI).asSquare().getIntent(requireContext())
         startActivityForResult(cropIntent, Crop.REQUEST_CROP)
     }
 
-    private fun doImagePicker()
-    {
+    private fun doImagePicker() {
         val imgPicker = Intent(Intent.ACTION_GET_CONTENT)
-        imgPicker.setType("image/*")
+        imgPicker.type = "image/*"
         startActivityForResult(imgPicker, PICK_PHOTO_TO_CROP)
     }
 
-    private fun setupVM()
-    {
+    private fun setupVM() {
         vm.getUser().observe(viewLifecycleOwner, Observer {
             user = it!!
             nameChange.text = user.screenName
@@ -310,20 +317,20 @@ class ProfileFragment : Fragment()
 
         vm.getGroups().observe(viewLifecycleOwner, Observer {
 
-            var temp_list = ArrayList<Group>()
+            var tempList = ArrayList<Group>()
             /* Filter out groups that user doesn't own */
             it!!.forEach {
                 /*
                     checks if owner of group in db
                     appends item to list in callback
                  */
-                if(it.playerList.contains(user.uid)) {
-                    temp_list.add(it)
+                if (it.playerList.contains(user.uid)) {
+                    tempList.add(it)
                 }
 
             }
 
-            groupsList = temp_list
+            groupsList = tempList
 
             var newAdapter = GListAdapter(ArrayList(groupsList), user, modifyGroup)
             rv.adapter = newAdapter
@@ -332,16 +339,19 @@ class ProfileFragment : Fragment()
 }
 
 
-class GListAdapter(val groupList: ArrayList<Group>, val authUser: User,
-                   val modifyGroup : (gid: String, action : GroupMod) -> Unit)
-    : RecyclerView.Adapter<RecyclerView.ViewHolder>()
-{
-    class ViewHolder(val cellView : LinearLayout) : RecyclerView.ViewHolder(cellView)
-    private lateinit var vParent : ViewGroup
+class GListAdapter(
+    val groupList: ArrayList<Group>, val authUser: User,
+    val modifyGroup: (gid: String, action: GroupMod) -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    class ViewHolder(val cellView: LinearLayout) : RecyclerView.ViewHolder(cellView)
+
+    private lateinit var vParent: ViewGroup
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val cellView = LayoutInflater.from(parent.context).inflate(R.layout.profile_group_cell,
-        parent, false) as LinearLayout
+        val cellView = LayoutInflater.from(parent.context).inflate(
+            R.layout.profile_group_cell,
+            parent, false
+        ) as LinearLayout
 
         vParent = parent
 
@@ -357,24 +367,23 @@ class GListAdapter(val groupList: ArrayList<Group>, val authUser: User,
         item.maxCount.text = curr.maxPlayers.toString() + "  ...  Players Joined"
         item.shiploc.text = curr.ship + " - " + curr.loc
 
-        if(curr.createdBy == authUser.uid) {
+        if (curr.createdBy == authUser.uid) {
             item.active_toggle.isChecked = !curr.active
             item.active_toggle.isActivated = !curr.active
             item.active_toggle.setOnClickListener {
                 /* isActivated is state !BEFORE! switched */
-                when(it.isActivated) {
+                when (it.isActivated) {
                     false -> modifyGroup(curr.gid, GroupMod.MAKE_PRIVATE)
                     true -> modifyGroup(curr.gid, GroupMod.MAKE_PUBLIC)
                 }
             }
-        }
-        else {
+        } else {
             item.active_toggle.visibility = View.GONE
         }
 
     }
 
-    fun removeItem(gid : String) {
+    fun removeItem(gid: String) {
         modifyGroup(gid, GroupMod.DELETE)
     }
 

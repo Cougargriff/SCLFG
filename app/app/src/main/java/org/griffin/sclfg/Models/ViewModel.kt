@@ -2,7 +2,6 @@ package org.griffin.sclfg.Models
 
 import androidx.lifecycle.*
 import androidx.lifecycle.ViewModel
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
@@ -10,40 +9,31 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import io.grpc.Context
 import java.io.Serializable
 
 /* Need to pass Ship and Loc db ref to get lists */
-class ViewModel : ViewModel()
-{
+class ViewModel : ViewModel() {
     companion object {
 
-        fun findShip(searchName : String, shipList : List<Ship>) : Ship?
-        {
-            for(ship in shipList)
-            {
-                if(ship.name.compareTo(searchName) == 0)
-                {
+        fun findShip(searchName: String, shipList: List<Ship>): Ship? {
+            for (ship in shipList) {
+                if (ship.name.compareTo(searchName) == 0) {
                     return ship
                 }
             }
             return null
         }
 
-        fun findLoc(searchLoc : String, locList : List<Location>) : Location?
-        {
-            for(loc in locList)
-            {
-                if(loc.name.compareTo(searchLoc) == 0)
-                {
+        fun findLoc(searchLoc: String, locList: List<Location>): Location? {
+            for (loc in locList) {
+                if (loc.name.compareTo(searchLoc) == 0) {
                     return loc
                 }
             }
             return null
         }
 
-        fun userFromHash(result : DocumentSnapshot) : User
-        {
+        fun userFromHash(result: DocumentSnapshot): User {
             var time = result["timeCreated"].toString()
             var name = result["screenName"].toString()
             var inGroups = result["inGroups"] as ArrayList<String>
@@ -51,8 +41,7 @@ class ViewModel : ViewModel()
         }
 
 
-        fun groupFromHash(result : DocumentSnapshot) : Group
-        {
+        fun groupFromHash(result: DocumentSnapshot): Group {
             var name = result["name"].toString()
             var time = result["timeCreated"].toString().toLong()
             var ship = result["ship"].toString()
@@ -64,14 +53,16 @@ class ViewModel : ViewModel()
             var createdBy = result["createdBy"] as String
             var description = result["description"] as String
 
-            return Group(name, result.id, time, playerList, ship,
+            return Group(
+                name, result.id, time, playerList, ship,
                 loc, maxPlyr.toInt(), currCnt.toInt(),
-                active, createdBy, description)
+                active, createdBy, description
+            )
         }
 
     }
 
-    private lateinit var shipRef : CollectionReference
+    private lateinit var shipRef: CollectionReference
     private lateinit var locRef: CollectionReference
     private lateinit var grpRef: CollectionReference
     private lateinit var userRef: CollectionReference
@@ -102,62 +93,63 @@ class ViewModel : ViewModel()
         }
     }
 
-    fun getUser(): LiveData<User>
-    {
+    fun getUser(): LiveData<User> {
         return user
     }
 
-    fun update()
-    {
+    fun update() {
         loadGroups()
     }
 
-    fun findUser(UID : String, cb: (User) -> Unit)
-    {
-        userRef.document(UID).get()
+    fun findUser(uid: String, cb: (User) -> Unit) {
+        userRef.document(uid).get()
             .addOnCompleteListener {
-                if(it.isSuccessful && it.result!!.exists())
-                {
+                if (it.isSuccessful && it.result!!.exists()) {
                     cb(userFromHash(it.result!!))
                 }
             }
     }
 
-    fun updateScreenName(name : String)
-    {
-        userRef.document(auth.uid!!).set(hashMapOf(
-            "screenName" to name
-        ), SetOptions.merge()).addOnCompleteListener {
+    fun updateScreenName(name: String) {
+        userRef.document(auth.uid!!).set(
+            hashMapOf(
+                "screenName" to name
+            ), SetOptions.merge()
+        ).addOnCompleteListener {
             loadUser().also {
                 loadGroups()
             }
         }
     }
 
-    fun addGroupToUser(gid : String) {
-        var curr_inGroups = user.value!!.inGroups
-        curr_inGroups.add(gid)
+    fun addGroupToUser(gid: String) {
+        var currIngroups = user.value!!.inGroups
+        currIngroups.add(gid)
         userRef.document(user.value!!.uid)
-            .set(hashMapOf(
-                "inGroups" to curr_inGroups
-            ), SetOptions.merge())
+            .set(
+                hashMapOf(
+                    "inGroups" to currIngroups
+                ), SetOptions.merge()
+            )
             .addOnCompleteListener {
                 loadUser()
                 loadGroups()
             }
     }
 
-    fun removeGroupFromUser(gid : String, uid : String = user.value!!.uid) {
-        var new_inGroups = ArrayList<String>()
+    fun removeGroupFromUser(gid: String, uid: String = user.value!!.uid) {
+        var newIngroups = ArrayList<String>()
         user.value!!.inGroups.forEach {
             if (it.compareTo(gid) != 0) {
-                new_inGroups.add(it)
+                newIngroups.add(it)
             }
         }
         userRef.document(uid)
-            .set(hashMapOf(
-                "inGroups" to new_inGroups
-            ), SetOptions.merge())
+            .set(
+                hashMapOf(
+                    "inGroups" to newIngroups
+                ), SetOptions.merge()
+            )
             .addOnCompleteListener {
                 loadUser()
                 loadGroups()
@@ -165,9 +157,7 @@ class ViewModel : ViewModel()
     }
 
 
-
-    fun joinGroup(gid : String, hash : HashMap<String, Serializable>, cb: () -> Unit)
-    {
+    fun joinGroup(gid: String, hash: HashMap<String, Serializable>, cb: () -> Unit) {
         grpRef.document(gid)
             .set(hash, SetOptions.merge())
             .addOnSuccessListener {
@@ -179,8 +169,7 @@ class ViewModel : ViewModel()
             }
     }
 
-    fun leaveGroup(gid: String, hash: HashMap<String, Serializable>, cb: () -> Unit)
-    {
+    fun leaveGroup(gid: String, hash: HashMap<String, Serializable>, cb: () -> Unit) {
         grpRef.document(gid)
             .set(hash, SetOptions.merge())
             .addOnSuccessListener {
@@ -192,40 +181,34 @@ class ViewModel : ViewModel()
             }
     }
 
-    fun getGroups(): LiveData<List<Group>>
-    {
+    fun getGroups(): LiveData<List<Group>> {
         return groups
     }
 
-    fun getShips(): LiveData<List<Ship>>
-    {
+    fun getShips(): LiveData<List<Ship>> {
         return ships
     }
 
-    fun getLocs(): LiveData<List<Location>>
-    {
+    fun getLocs(): LiveData<List<Location>> {
         return locations
     }
 
     /**
-        Checks to see if passed group with id (gid)  still exists in remote db.
+    Checks to see if passed group with id (gid)  still exists in remote db.
 
-        @param gid the id of the group to check
-        @param err the callback function invoked when group doesn't exist
-        @param cb callback invoked when group does exist
+    @param gid the id of the group to check
+    @param err the callback function invoked when group doesn't exist
+    @param cb callback invoked when group does exist
      */
     fun groupExists(gid: String, err: () -> Unit, cb: (DocumentSnapshot) -> Unit) {
         grpRef.document(gid).get().addOnCompleteListener {
-            if(it.isSuccessful)
-            {
+            if (it.isSuccessful) {
                 var result = it.result!! /* QuerySnapshot */
                 var grpDoc = result
-                if(grpDoc.exists()) {
+                if (grpDoc.exists()) {
                     /* pass most current document to update */
                     cb(grpDoc)
-                }
-                else
-                {
+                } else {
                     /* load updated groups to flush out non-existent group entries locally */
                     loadGroups()
                     /* Error callback to alert user that group doesn't exist anymore */
@@ -235,7 +218,7 @@ class ViewModel : ViewModel()
         }
     }
 
-    fun delete(gid : String) {
+    fun delete(gid: String) {
 
         grpRef.document(gid).get().addOnSuccessListener {
             var grp = groupFromHash(it)
@@ -250,10 +233,9 @@ class ViewModel : ViewModel()
         }
 
 
-
     }
 
-    fun makePublic(gid : String) {
+    fun makePublic(gid: String) {
         val hash = hashMapOf(
             "active" to true
         )
@@ -264,7 +246,7 @@ class ViewModel : ViewModel()
             }
     }
 
-    fun makePrivate(gid : String) {
+    fun makePrivate(gid: String) {
         val hash = hashMapOf(
             "active" to false
         )
@@ -275,8 +257,7 @@ class ViewModel : ViewModel()
             }
     }
 
-    fun pushGroup(grp : Group, ui_cb : () -> Unit, cb: (gid : String) -> Unit)
-    {
+    fun pushGroup(grp: Group, uiCb: () -> Unit, cb: (gid: String) -> Unit) {
         var grpHash = hashMapOf(
             "name" to grp.name,
             "timeCreated" to grp.timeCreated,
@@ -291,44 +272,36 @@ class ViewModel : ViewModel()
         )
 
         grpRef.add(grpHash).addOnCompleteListener {
-            if(it.isSuccessful) {
+            if (it.isSuccessful) {
                 cb(it.result!!.id)
             }
         }
         loadGroups()
-        ui_cb()
+        uiCb()
     }
 
-    private fun loadUser()
-    {
+    private fun loadUser() {
         userRef = db.collection("users")
         userRef.document(auth.uid!!).get()
             .addOnCompleteListener {
-                if(it.isSuccessful)
-                {
+                if (it.isSuccessful) {
                     var result = it.result!!
-                    if(result.exists())
-                    {
+                    if (result.exists()) {
                         user.value = userFromHash(result)
-                    }
-                    else
-                    {
+                    } else {
                         initUser()
                     }
                 }
             }
     }
 
-    private fun initUser()
-    {
+    private fun initUser() {
         userRef.document(auth.uid!!).get()
             .addOnCompleteListener {
-                if(it.isSuccessful)
-                {
+                if (it.isSuccessful) {
                     var result = it.result!!
                     /* create the user if they don't exist already */
-                    if(!result.exists())
-                    {
+                    if (!result.exists()) {
                         var initUser = hashMapOf(
                             "timeCreated" to System.currentTimeMillis().toString(),
                             "inGroups" to emptyList<String>(),
@@ -341,34 +314,32 @@ class ViewModel : ViewModel()
         getUser()
     }
 
-    private fun groupListFromDocs(grpDocs: MutableList<DocumentSnapshot>) : ArrayList<Group> {
+    private fun groupListFromDocs(grpDocs: MutableList<DocumentSnapshot>): ArrayList<Group> {
         var grpList = ArrayList<Group>()
-        for(grp in grpDocs)
-        {
+        for (grp in grpDocs) {
             grpList.add(groupFromHash(grp))
         }
         return grpList
     }
+
     /* loads oldest first */
-    private fun loadGroups()
-    {
+    private fun loadGroups() {
         grpRef = db.collection("groups")
 
         /* Listens to db changes and reloads groups */
         grpRef.orderBy("timeCreated", Query.Direction.ASCENDING)
             .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-            /* Listen for changes and update groups list */
-            val docs = querySnapshot!!.documents
-            var grpList = groupListFromDocs(docs)
-            groups.value = grpList
-        }
+                /* Listen for changes and update groups list */
+                val docs = querySnapshot!!.documents
+                var grpList = groupListFromDocs(docs)
+                groups.value = grpList
+            }
 
         grpRef.orderBy("timeCreated", Query.Direction.ASCENDING)
             .get()
             .addOnCompleteListener {
                 /* Sanity Check */
-                if(it.isSuccessful)
-                {
+                if (it.isSuccessful) {
                     var result = it.result!! /* QuerySnapshot */
                     var grpDocs = result.documents
                     var grpList = groupListFromDocs(grpDocs)
@@ -378,20 +349,17 @@ class ViewModel : ViewModel()
             }
     }
 
-    private fun loadLocs()
-    {
+    private fun loadLocs() {
         locRef = db.collection("locations")
 
         locRef.get()
             .addOnCompleteListener {
                 /* Sanity Check */
-                if(it.isSuccessful && !it.result!!.isEmpty)
-                {
+                if (it.isSuccessful && !it.result!!.isEmpty) {
                     var result = it.result!! /* QuerySnapshot */
                     var locDocs = result.documents /* Ships in collection */
                     var locList = ArrayList<Location>()
-                    for(loc in locDocs)
-                    {
+                    for (loc in locDocs) {
                         var name = loc["name"] as String
                         /* Save the current ship to the list */
                         locList.add(Location(name))
@@ -402,20 +370,17 @@ class ViewModel : ViewModel()
             }
     }
 
-    private fun loadShips()
-    {
+    private fun loadShips() {
         shipRef = db.collection("ships")
         // Do an asynchronous operation to fetch users.
         shipRef.get()
             .addOnCompleteListener {
                 /* Sanity Check */
-                if(it.isSuccessful && !it.result!!.isEmpty)
-                {
+                if (it.isSuccessful && !it.result!!.isEmpty) {
                     var result = it.result!! /* QuerySnapshot */
                     var shipDocs = result.documents /* Ships in collection */
                     var shipList = ArrayList<Ship>()
-                    for(ship in shipDocs)
-                    {
+                    for (ship in shipDocs) {
                         var name = ship["name"] as String
                         var mass = ship["mass"] as String
                         var manu = ship["manufacturer"] as String
