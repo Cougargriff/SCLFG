@@ -22,9 +22,9 @@ import org.griffin.sclfg.Cache.LocalCache
 import org.griffin.sclfg.Login.LoginActivity
 import org.griffin.sclfg.Models.*
 import org.griffin.sclfg.R
+import org.griffin.sclfg.View.Tabs.CreateFragment
 import org.griffin.sclfg.View.Tabs.ListFragment
 import org.griffin.sclfg.View.Tabs.ProfileFragment
-import org.griffin.sclfg.View.Tabs.CreateFragment
 
 class MainActivity : AppCompatActivity() {
     /*

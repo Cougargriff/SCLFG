@@ -11,13 +11,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import kotlinx.android.synthetic.main.group_cell.*
 import kotlinx.android.synthetic.main.group_cell.view.*
-import kotlinx.android.synthetic.main.group_cell.view.sub_item
 import kotlinx.android.synthetic.main.tab_list.*
 import kotlinx.android.synthetic.main.tab_list.view.*
-import kotlinx.android.synthetic.main.tab_list.view.swipe_layout
 import kotlinx.android.synthetic.main.user_cell.view.*
 import org.griffin.sclfg.Models.Group
 import org.griffin.sclfg.Models.User
@@ -138,7 +134,7 @@ class ListFragment : Fragment() {
         })
 
         vm.getGroups().observe(viewLifecycleOwner, Observer {
-            var tempList = ArrayList<Group>()
+            val tempList = ArrayList<Group>()
 
             /* Spot to check for conditions on whether to show a specific group */
             /* TODO possible to add filter checks for user inputted tags in the future */
@@ -152,11 +148,11 @@ class ListFragment : Fragment() {
 
             /* retrieve user lists for each group */
             groupsList.forEachIndexed { i, group ->
-                var userList = getUsersForGroup(group)
+                val userList = getUsersForGroup(group)
                 userLists.add(userList)
             }
 
-            var newAdapter = GroupListAdapter(
+            val newAdapter = GroupListAdapter(
                 ArrayList(groupsList), userLists, user,
                 joinGroup, leaveGroup
             )
@@ -165,9 +161,9 @@ class ListFragment : Fragment() {
     }
 
     private fun getUsersForGroup(group: Group): ArrayList<User> {
-        var userList = ArrayList<User>()
+        val userList = ArrayList<User>()
         for (uid in group.playerList) {
-            var addUserToList = fun(user: User) {
+            val addUserToList = fun(user: User) {
                 userList.add(user)
             }
             vm.findUser(uid, addUserToList)
@@ -202,7 +198,7 @@ class UserListAdapter(val userList: ArrayList<User>) :
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val curr = userList[position]
-        var item = holder.itemView
+        val item = holder.itemView
         item.userName.text = curr.screenName
 
         /* other setup for user list cell components */
@@ -252,17 +248,17 @@ class GroupListAdapter(
     /* Set attributes to text in bind */
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val curr = groupList[position]
-        var item = holder.itemView
+        val item = holder.itemView
         item.groupName.text = curr.name
         item.currCount.text = curr.currCount.toString()
-        item.maxCount.text = curr.maxPlayers.toString() + "  ...  Players Joined"
-        item.shiploc.text = curr.ship + " - " + curr.loc
+        item.maxCount.text = "${curr.maxPlayers}  ...  Players Joined"
+        item.shiploc.text = "${curr.ship} - ${curr.loc}"
         item.descriptionBox.text = groupList[position].description
 
         /* BIND USER LIST */
         grvManager = LinearLayoutManager(vParent.context)
-        var gRV = item.userListView
-        var grvAdapter = UserListAdapter(userLists[position])
+        val gRV = item.userListView
+        val grvAdapter = UserListAdapter(userLists[position])
 
         /* Bind everything together */
         gRV.apply {

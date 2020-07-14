@@ -1,15 +1,15 @@
 package org.griffin.sclfg.Login
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_login.*
 import org.griffin.sclfg.Cache.LocalCache
-import org.griffin.sclfg.View.MainActivity
 import org.griffin.sclfg.R
+import org.griffin.sclfg.View.MainActivity
 
 
 class LoginActivity : AppCompatActivity() {

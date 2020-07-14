@@ -2,9 +2,7 @@ package org.griffin.sclfg.View.Tabs
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.*
 import android.graphics.drawable.ColorDrawable
@@ -24,23 +22,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
-import com.bumptech.glide.MemoryCategory
 import com.bumptech.glide.Registry
 import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.module.AppGlideModule
 import com.firebase.ui.storage.images.FirebaseImageLoader
-import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import com.soundcloud.android.crop.Crop
-import kotlinx.android.synthetic.main.group_cell.view.*
 import kotlinx.android.synthetic.main.profile_group_cell.view.*
-import kotlinx.android.synthetic.main.profile_group_cell.view.currCount
-import kotlinx.android.synthetic.main.profile_group_cell.view.groupName
-import kotlinx.android.synthetic.main.profile_group_cell.view.maxCount
-import kotlinx.android.synthetic.main.profile_group_cell.view.shiploc
 import kotlinx.android.synthetic.main.tab_profile.*
 import kotlinx.android.synthetic.main.tab_profile.view.*
 import org.griffin.sclfg.Models.Group
@@ -50,8 +41,6 @@ import org.griffin.sclfg.Models.ViewModel
 import org.griffin.sclfg.R
 import java.io.File
 import java.io.InputStream
-import java.lang.Exception
-import java.lang.NullPointerException
 
 @GlideModule
 class MyAppGlideModule : AppGlideModule() {
