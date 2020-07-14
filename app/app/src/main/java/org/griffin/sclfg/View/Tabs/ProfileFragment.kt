@@ -11,9 +11,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.MemoryCategory
@@ -27,7 +31,16 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import com.soundcloud.android.crop.Crop
+import kotlinx.android.synthetic.main.group_cell.view.*
+import kotlinx.android.synthetic.main.profile_group_cell.view.*
+import kotlinx.android.synthetic.main.profile_group_cell.view.currCount
+import kotlinx.android.synthetic.main.profile_group_cell.view.groupName
+import kotlinx.android.synthetic.main.profile_group_cell.view.maxCount
+import kotlinx.android.synthetic.main.profile_group_cell.view.shiploc
 import kotlinx.android.synthetic.main.tab_profile.*
+import kotlinx.android.synthetic.main.tab_profile.view.*
+import org.griffin.sclfg.Models.Group
+import org.griffin.sclfg.Models.GroupMod
 import org.griffin.sclfg.Models.User
 import org.griffin.sclfg.Models.ViewModel
 import org.griffin.sclfg.R
@@ -51,9 +64,33 @@ class ProfileFragment : Fragment()
 {
     private val PICK_PHOTO_TO_CROP = 0
     private val vm : ViewModel by activityViewModels()
-    private lateinit var user : User
-    private val userRef = Firebase.firestore.collection("users")
+    private var user = User("", "", ArrayList(),0)
 
+    /* Recycler View Setup */
+    private lateinit var rv : RecyclerView
+    private lateinit var rvManager : RecyclerView.LayoutManager
+    private lateinit var rvAdapter : RecyclerView.Adapter<*>
+
+    private lateinit var groupsList : List<Group>
+
+    private val modifyGroup = fun (gid: String, action : GroupMod) {
+        vm.groupExists(gid, err_cb) {
+            when(action)
+            {
+                GroupMod.MAKE_PRIVATE -> {
+                    vm.makePrivate(gid)
+                }
+                GroupMod.MAKE_PUBLIC -> {
+                    vm.makePublic(gid)
+                }
+            }
+        }
+    }
+
+    private val err_cb = fun () {
+        Toast.makeText(requireContext(), "Group No Longer Exists", Toast.LENGTH_LONG)
+            .show()
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View?
@@ -61,6 +98,15 @@ class ProfileFragment : Fragment()
         var view = inflater.inflate(R.layout.tab_profile, container, false)
 
         /* Setup Fragment View here */
+        rv = view.my_groups
+        rvManager = LinearLayoutManager(context)
+
+        rvAdapter = GListAdapter(ArrayList(), user, modifyGroup)
+
+        rv.apply {
+            layoutManager = rvManager
+            adapter = rvAdapter
+        }
 
         return view
     }
@@ -69,12 +115,12 @@ class ProfileFragment : Fragment()
         super.onActivityCreated(savedInstanceState)
 
         setupVM()
-        try {
+//        try {
             asyncLoadProfileImg()
-        }
-        catch (err : Exception) {
-            profileImage.setImageResource(R.drawable.astro_prof)
-        }
+//        }
+//        catch (err : Exception) {
+//            profileImage.setImageResource(R.drawable.astro_prof)
+//        }
         profileImage.setOnClickListener {
 
             /* Confirm selection with alertDialog */
@@ -91,6 +137,7 @@ class ProfileFragment : Fragment()
         }
     }
 
+    /* TODO fallback image now shows. Check to see if upload will refresh */
     private fun asyncLoadProfileImg()
     {
         /* create cache file to store profile pic */
@@ -161,5 +208,76 @@ class ProfileFragment : Fragment()
             user = it!!
             nameChange.text = user.screenName
         })
+
+        vm.getGroups().observe(viewLifecycleOwner, Observer {
+
+            var temp_list = ArrayList<Group>()
+            /* Filter out groups that user doesn't own */
+            it!!.forEach {
+                /*
+                    checks if owner of group in db
+                    appends item to list in callback
+                 */
+                temp_list.add(it)
+
+            }
+
+            groupsList = temp_list
+
+            var newAdapter = GListAdapter(ArrayList(groupsList), user, modifyGroup)
+            rv.adapter = newAdapter
+        })
     }
+}
+
+
+class GListAdapter(val groupList: ArrayList<Group>, val authUser: User,
+                   val modifyGroup : (gid: String, action : GroupMod) -> Unit)
+    : RecyclerView.Adapter<RecyclerView.ViewHolder>()
+{
+    class ViewHolder(val cellView : LinearLayout) : RecyclerView.ViewHolder(cellView)
+    private lateinit var vParent : ViewGroup
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val cellView = LayoutInflater.from(parent.context).inflate(R.layout.profile_group_cell,
+        parent, false) as LinearLayout
+
+        vParent = parent
+
+        return ViewHolder(cellView)
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val curr = groupList[position]
+        var item = holder.itemView
+
+        item.groupName.text = curr.name
+        item.currCount.text = curr.currCount.toString()
+        item.maxCount.text = curr.maxPlayers.toString() + "  ...  Players Joined"
+        item.shiploc.text = curr.ship + " - " + curr.loc
+
+        /* TODO is this not working!? */
+
+        if(curr.createdBy == authUser.uid) {
+            item.active_toggle.isChecked = !curr.active
+            item.active_toggle.isActivated = !curr.active
+            item.active_toggle.setOnClickListener {
+                /* isActivated is state !BEFORE! switched */
+                when(it.isActivated) {
+                    /* TODO toggles active boolean correct, switch DOESNT persist change tho */
+                    false -> modifyGroup(curr.gid, GroupMod.MAKE_PRIVATE)
+                    true -> modifyGroup(curr.gid, GroupMod.MAKE_PUBLIC)
+                }
+            }
+        }
+        else {
+            item.active_toggle.visibility = View.GONE
+        }
+
+    }
+
+    override fun getItemCount(): Int {
+        return groupList.size
+    }
+
 }

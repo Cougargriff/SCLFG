@@ -26,20 +26,23 @@ class LoginActivity : AppCompatActivity() {
         localCache = getCache().apply {
             /* lambda function to update UI after checking cache */
             retrieveCredentials(cachedLogin, fun() {
-                /* un-hide sign in tools */
-                textView2.visibility = View.VISIBLE
-                email.visibility = View.VISIBLE
-                password.visibility = View.VISIBLE
-                login_button.visibility = View.VISIBLE
-                register_button.visibility = View.VISIBLE
-
-                login_bar.visibility = View.INVISIBLE
+                unhideUI()
             })
         }
 
         setup_login_onclick()
     }
 
+    private fun unhideUI () {
+        /* un-hide sign in tools */
+        textView2.visibility = View.VISIBLE
+        email.visibility = View.VISIBLE
+        password.visibility = View.VISIBLE
+        login_button.visibility = View.VISIBLE
+        register_button.visibility = View.VISIBLE
+
+        login_bar.visibility = View.INVISIBLE
+    }
 
     private fun getCache() : LocalCache
     {
@@ -78,6 +81,11 @@ class LoginActivity : AppCompatActivity() {
     private var err_cb = fun ()
     {
         /* reset button heights on failed attempt */
+        LocalCache(this).apply {
+            clearCache {
+                unhideUI()
+            }
+        }
         login_button.elevation = BUTTON_ELEVATION
     }
 

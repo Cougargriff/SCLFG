@@ -62,6 +62,7 @@ class RegisterActivity : AppCompatActivity() {
                     {
                         var initUser = hashMapOf(
                             "timeCreated" to System.currentTimeMillis().toString(),
+                            "inGroups" to emptyList<String>(),
                             "screenName" to display_name
                         )
                         userRef.document(uid).set(initUser).also {

@@ -46,7 +46,8 @@ class ViewModel : ViewModel()
         {
             var time = result["timeCreated"].toString()
             var name = result["screenName"].toString()
-            return User(name, result.id ,time.toLong())
+            var inGroups = result["inGroups"] as ArrayList<String>
+            return User(name, result.id, inGroups, time.toLong())
         }
 
 
@@ -126,26 +127,68 @@ class ViewModel : ViewModel()
     {
         userRef.document(auth.uid!!).set(hashMapOf(
             "screenName" to name
-        ), SetOptions.merge())
-        loadUser()
-        loadGroups()
+        ), SetOptions.merge()).addOnCompleteListener {
+            loadUser().also {
+                loadGroups()
+            }
+        }
     }
 
-    fun joinGroup(gid : String, hash : HashMap<String, Serializable>)
-    {
-        grpRef.document(gid)
-            .set(hash, SetOptions.merge())
-            .addOnSuccessListener {
+    fun addGroupToUser(gid : String) {
+        var curr_inGroups = user.value!!.inGroups
+        curr_inGroups.add(gid)
+        userRef.document(user.value!!.uid)
+            .set(hashMapOf(
+                "inGroups" to curr_inGroups
+            ), SetOptions.merge())
+            .addOnCompleteListener {
+                loadUser()
                 loadGroups()
             }
     }
 
-    fun leaveGroup(gid: String, hash: HashMap<String, Serializable>)
+    fun removeGroupFromUser(gid : String) {
+        var new_inGroups = ArrayList<String>()
+        user.value!!.inGroups.forEach {
+            if (it.compareTo(gid) != 0) {
+                new_inGroups.add(it)
+            }
+        }
+        userRef.document(user.value!!.uid)
+            .set(hashMapOf(
+                "inGroups" to new_inGroups
+            ), SetOptions.merge())
+            .addOnCompleteListener {
+                loadUser()
+                loadGroups()
+            }
+    }
+
+
+
+    fun joinGroup(gid : String, hash : HashMap<String, Serializable>, cb: () -> Unit)
     {
         grpRef.document(gid)
             .set(hash, SetOptions.merge())
             .addOnSuccessListener {
+                addGroupToUser(gid)
                 loadGroups()
+            }
+            .addOnCompleteListener {
+                cb()
+            }
+    }
+
+    fun leaveGroup(gid: String, hash: HashMap<String, Serializable>, cb: () -> Unit)
+    {
+        grpRef.document(gid)
+            .set(hash, SetOptions.merge())
+            .addOnSuccessListener {
+                removeGroupFromUser(gid)
+                loadGroups()
+            }
+            .addOnCompleteListener {
+                cb()
             }
     }
 
@@ -164,25 +207,57 @@ class ViewModel : ViewModel()
         return locations
     }
 
-    fun groupExists(gid: String, err: () -> Unit, cb: () -> Unit) {
+    /**
+        Checks to see if passed group with id (gid)  still exists in remote db.
+
+        @param gid the id of the group to check
+        @param err the callback function invoked when group doesn't exist
+        @param cb callback invoked when group does exist
+     */
+    fun groupExists(gid: String, err: () -> Unit, cb: (DocumentSnapshot) -> Unit) {
         grpRef.document(gid).get().addOnCompleteListener {
             if(it.isSuccessful)
             {
                 var result = it.result!! /* QuerySnapshot */
-                var grpDoc = result /* Ships in collection */
+                var grpDoc = result
                 if(grpDoc.exists()) {
-                    cb()
+                    /* pass most current document to update */
+                    cb(grpDoc)
                 }
                 else
                 {
+                    /* load updated groups to flush out non-existent group entries locally */
                     loadGroups()
+                    /* Error callback to alert user that group doesn't exist anymore */
                     err()
                 }
             }
         }
     }
 
-    fun pushGroup(grp : Group, cb : () -> Unit)
+    fun makePublic(gid : String) {
+        val hash = hashMapOf(
+            "active" to true
+        )
+        grpRef.document(gid)
+            .set(hash, SetOptions.merge())
+            .addOnSuccessListener {
+                loadGroups()
+            }
+    }
+
+    fun makePrivate(gid : String) {
+        val hash = hashMapOf(
+            "active" to false
+        )
+        grpRef.document(gid)
+            .set(hash, SetOptions.merge())
+            .addOnSuccessListener {
+                loadGroups()
+            }
+    }
+
+    fun pushGroup(grp : Group, ui_cb : () -> Unit, cb: (gid : String) -> Unit)
     {
         var grpHash = hashMapOf(
             "name" to grp.name,
@@ -192,14 +267,18 @@ class ViewModel : ViewModel()
             "location" to grp.loc,
             "maxPlayers" to grp.maxPlayers,
             "currCount" to grp.currCount,
-            "playerList" to listOf(auth.uid),
+            "playerList" to listOf(auth.uid), /* init group with creator as only user */
             "active" to grp.active,
             "description" to grp.description
         )
 
-        grpRef.add(grpHash)
+        grpRef.add(grpHash).addOnCompleteListener {
+            if(it.isSuccessful) {
+                cb(it.result!!.id)
+            }
+        }
         loadGroups()
-        cb()
+        ui_cb()
     }
 
     private fun loadUser()
@@ -234,6 +313,7 @@ class ViewModel : ViewModel()
                     {
                         var initUser = hashMapOf(
                             "timeCreated" to System.currentTimeMillis().toString(),
+                            "inGroups" to emptyList<String>(),
                             "screenName" to "ANONYMOUS"
                         )
                         userRef.document(auth.uid!!).set(initUser)

@@ -28,7 +28,7 @@ class ListFragment : Fragment()
 {
     private val vm : ViewModel by activityViewModels()
     private lateinit var groupsList : List<Group>
-    private var user = User("", "", 0)
+    private var user = User("", "", ArrayList(),0)
     private var userLists : ArrayList<ArrayList<User>> = ArrayList()
 
     /* Recycler View Setup */
@@ -42,38 +42,55 @@ class ListFragment : Fragment()
     }
 
     /* closures for joining and leaving groups. passed to list adapters */
-    private val joinGroup = fun (g : Group, uid : String)
+    private val joinGroup = fun (gid : String, uid : String, cb : () -> Unit)
     {
-        vm.groupExists(g.gid, err_cb) {
+        vm.groupExists(gid, err_cb) {
+            /* callback invoked after checking if group still exists on db */
+            var g = ViewModel.groupFromHash(it)
             if(g.currCount + 1 <= g.maxPlayers )
             {
                 g.playerList.add(uid)
+                /* only pass updated data due to nature of merging docs */
                 val hash = hashMapOf(
                     "playerList" to g.playerList,
                     "currCount" to g.currCount + 1
                 )
-                vm.joinGroup(g.gid, hash)
+                vm.joinGroup(g.gid, hash) {
+                    /* after joining group make button clickable again */
+                    cb()
+                }
+            }
+            else {
+                Toast.makeText(requireContext(), "Too many people already", Toast.LENGTH_LONG)
+                    .show()
             }
         }
 
     }
 
-    private val leaveGroup = fun (g : Group, uid : String)
+    private val leaveGroup = fun (gid : String, uid : String, cb : () -> Unit)
     {
-        vm.groupExists(g.gid, err_cb) {
+        vm.groupExists(gid, err_cb) {
+            /* callback invoked after checking if group still exists on db */
+            var g = ViewModel.groupFromHash(it)
             if(g.currCount - 1 >= 0)
             {
                 g.playerList.remove(uid)
+                /* only pass updated data due to nature of merging docs */
                 val hash = hashMapOf(
                     "playerList" to g.playerList,
                     "currCount" to g.currCount - 1
                 )
-                vm.leaveGroup(g.gid, hash)
+                vm.leaveGroup(g.gid, hash) {
+                    /* after leaving group make button clickable again */
+                    cb()
+                }
+            }
+            else {
             }
         }
 
     }
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View?
@@ -90,14 +107,11 @@ class ListFragment : Fragment()
             joinGroup,
             leaveGroup)
 
-
         /* Bind everything together */
         rv.apply {
             layoutManager = rvManager
             adapter = rvAdapter
         }
-
-
         return view
     }
 
@@ -123,7 +137,6 @@ class ListFragment : Fragment()
     {
         vm.getUser().observe(viewLifecycleOwner, Observer {
             user = it!!
-
             /*
                 possible in the future to just make local
                 call to function for getGroups instead of vm call
@@ -132,10 +145,20 @@ class ListFragment : Fragment()
         })
 
         vm.getGroups().observe(viewLifecycleOwner, Observer {
-            groupsList = it!!
-            userLists.clear()
+            var tempList = ArrayList<Group>()
 
-            /* retrieve user lists */
+            /* Spot to check for conditions on whether to show a specific group */
+            /* TODO possible to add filter checks for user inputted tags in the future */
+            it!!.forEach {
+                if(it.active)
+                {
+                    tempList.add(it)
+                }
+            }
+            userLists.clear()
+            groupsList = tempList
+
+            /* retrieve user lists for each group */
             groupsList.forEachIndexed { i, group ->
                 var userList = getUsersForGroup(group)
                 userLists.add(userList)
@@ -207,8 +230,8 @@ class UserListAdapter(val userList: ArrayList<User>)
 class GroupListAdapter(val groupList: ArrayList<Group>,
                        val userLists: ArrayList<ArrayList<User>>,
                        val authUser: User,
-                       val joinGroup: (grp: Group, uid: String) -> Unit,
-                       val leaveGroup: (grp: Group, uid: String) -> Unit )
+                       val joinGroup: (gid: String, uid: String, cb: () -> Unit) -> Unit,
+                       val leaveGroup: (gid: String, uid: String, cb: () -> Unit) -> Unit )
     : RecyclerView.Adapter<RecyclerView.ViewHolder>()
 {
     class ViewHolder(val cellView : LinearLayout) : RecyclerView.ViewHolder(cellView)
@@ -267,7 +290,11 @@ class GroupListAdapter(val groupList: ArrayList<Group>,
             item.leaveButton.visibility = View.GONE
             item.joinButton.visibility = View.VISIBLE
             item.joinButton.setOnClickListener {
-                joinGroup(groupList[position], authUser.uid)
+                /* make button not clickable after starting joinGroup transaction */
+                item.joinButton.visibility = View.GONE
+                joinGroup(groupList[position].gid, authUser.uid) {
+                    /* Callback to happen after join group */
+                }
             }
         }
         else
@@ -275,7 +302,11 @@ class GroupListAdapter(val groupList: ArrayList<Group>,
             item.joinButton.visibility = View.GONE
             item.leaveButton.visibility = View.VISIBLE
             item.leaveButton.setOnClickListener {
-                leaveGroup(groupList[position], authUser.uid)
+                /* make button not clickable after starting leaveGroup transaction */
+                item.leaveButton.visibility = View.GONE
+                leaveGroup(groupList[position].gid, authUser.uid) {
+                    /* Callback to happen after leave group */
+                }
             }
         }
 
