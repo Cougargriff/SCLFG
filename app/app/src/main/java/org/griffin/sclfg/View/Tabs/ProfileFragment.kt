@@ -85,7 +85,6 @@ class ProfileFragment : Fragment()
                 }
             }
         }
-
     }
 
     private val err_cb = fun () {
@@ -219,9 +218,8 @@ class ProfileFragment : Fragment()
                     checks if owner of group in db
                     appends item to list in callback
                  */
-                if(it.createdBy.compareTo(user.uid) == 0) {
-                    temp_list.add(it)
-                }
+                temp_list.add(it)
+
             }
 
             groupsList = temp_list
@@ -259,18 +257,24 @@ class GListAdapter(val groupList: ArrayList<Group>, val authUser: User,
         item.shiploc.text = curr.ship + " - " + curr.loc
 
         /* TODO is this not working!? */
-        item.active_toggle.isActivated = !curr.active
 
-        item.active_toggle.setOnClickListener {
-            Toast.makeText(vParent.context, "Switch Toggled!", Toast.LENGTH_SHORT).show()
+        if(curr.createdBy == authUser.uid) {
+            item.active_toggle.isActivated = !curr.active
+            item.active_toggle.setOnClickListener {
+                Toast.makeText(vParent.context, "Switch Toggled!", Toast.LENGTH_SHORT).show()
 
-            /* isActivated is state !BEFORE! switched */
-            when(it.isActivated) {
-                /* TODO toggles active boolean correct, switch DOESNT persist change tho */
-                false -> modifyGroup(curr.gid, GroupMod.MAKE_PRIVATE)
-                true -> modifyGroup(curr.gid, GroupMod.MAKE_PUBLIC)
+                /* isActivated is state !BEFORE! switched */
+                when(it.isActivated) {
+                    /* TODO toggles active boolean correct, switch DOESNT persist change tho */
+                    false -> modifyGroup(curr.gid, GroupMod.MAKE_PRIVATE)
+                    true -> modifyGroup(curr.gid, GroupMod.MAKE_PUBLIC)
+                }
             }
         }
+        else {
+            item.active_toggle.visibility = View.GONE
+        }
+
     }
 
     override fun getItemCount(): Int {

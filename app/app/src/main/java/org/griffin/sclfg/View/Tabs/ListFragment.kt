@@ -60,6 +60,10 @@ class ListFragment : Fragment()
                     cb()
                 }
             }
+            else {
+                Toast.makeText(requireContext(), "Too many people already", Toast.LENGTH_LONG)
+                    .show()
+            }
         }
 
     }
@@ -81,6 +85,8 @@ class ListFragment : Fragment()
                     /* after leaving group make button clickable again */
                     cb()
                 }
+            }
+            else {
             }
         }
 

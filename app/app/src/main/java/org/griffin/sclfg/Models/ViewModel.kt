@@ -145,14 +145,33 @@ class ViewModel : ViewModel()
                 loadUser()
                 loadGroups()
             }
-
     }
+
+    fun removeGroupFromUser(gid : String) {
+        var new_inGroups = ArrayList<String>()
+        user.value!!.inGroups.forEach {
+            if (it.compareTo(gid) != 0) {
+                new_inGroups.add(it)
+            }
+        }
+        userRef.document(user.value!!.uid)
+            .set(hashMapOf(
+                "inGroups" to new_inGroups
+            ), SetOptions.merge())
+            .addOnCompleteListener {
+                loadUser()
+                loadGroups()
+            }
+    }
+
+
 
     fun joinGroup(gid : String, hash : HashMap<String, Serializable>, cb: () -> Unit)
     {
         grpRef.document(gid)
             .set(hash, SetOptions.merge())
             .addOnSuccessListener {
+                addGroupToUser(gid)
                 loadGroups()
             }
             .addOnCompleteListener {
@@ -165,6 +184,7 @@ class ViewModel : ViewModel()
         grpRef.document(gid)
             .set(hash, SetOptions.merge())
             .addOnSuccessListener {
+                removeGroupFromUser(gid)
                 loadGroups()
             }
             .addOnCompleteListener {
