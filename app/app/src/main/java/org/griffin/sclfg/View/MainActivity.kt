@@ -188,7 +188,7 @@ class MainActivity : AppCompatActivity()
         /* Create and add fragments to page adapter */
         pa.addFragments(CreateFragment(), "Create")
         pa.addFragments(ListFragment(), "List")
-        pa.addFragments(ProfileFragment(), "Profile")
+        pa.addFragments(ProfileFragment(), "Me")
     }
 
 
