@@ -351,8 +351,7 @@ class ViewModel : ViewModel()
     }
     /* loads oldest first */
     private fun loadGroups()
-    {
-
+    
         grpRef = db.collection("groups")
         grpRef.orderBy("timeCreated", Query.Direction.ASCENDING)
             .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
