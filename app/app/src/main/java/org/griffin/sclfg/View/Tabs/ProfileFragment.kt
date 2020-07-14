@@ -259,10 +259,9 @@ class GListAdapter(val groupList: ArrayList<Group>, val authUser: User,
         /* TODO is this not working!? */
 
         if(curr.createdBy == authUser.uid) {
+            item.active_toggle.isChecked = !curr.active
             item.active_toggle.isActivated = !curr.active
             item.active_toggle.setOnClickListener {
-                Toast.makeText(vParent.context, "Switch Toggled!", Toast.LENGTH_SHORT).show()
-
                 /* isActivated is state !BEFORE! switched */
                 when(it.isActivated) {
                     /* TODO toggles active boolean correct, switch DOESNT persist change tho */
