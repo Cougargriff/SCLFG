@@ -86,8 +86,6 @@ class ListFragment : Fragment()
                     cb()
                 }
             }
-            else {
-            }
         }
 
     }
