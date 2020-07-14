@@ -147,14 +147,14 @@ class ViewModel : ViewModel()
             }
     }
 
-    fun removeGroupFromUser(gid : String) {
+    fun removeGroupFromUser(gid : String, uid : String = user.value!!.uid) {
         var new_inGroups = ArrayList<String>()
         user.value!!.inGroups.forEach {
             if (it.compareTo(gid) != 0) {
                 new_inGroups.add(it)
             }
         }
-        userRef.document(user.value!!.uid)
+        userRef.document(uid)
             .set(hashMapOf(
                 "inGroups" to new_inGroups
             ), SetOptions.merge())
@@ -233,6 +233,24 @@ class ViewModel : ViewModel()
                 }
             }
         }
+    }
+
+    fun delete(gid : String) {
+
+        grpRef.document(gid).get().addOnSuccessListener {
+            var grp = groupFromHash(it)
+            grpRef.document(gid).delete()
+                .addOnSuccessListener {
+                    /* remove group from possible in groups */
+                    grp.playerList.forEach {
+                        removeGroupFromUser(gid, it)
+                    }
+                    loadGroups()
+                }
+        }
+
+
+
     }
 
     fun makePublic(gid : String) {
@@ -323,11 +341,27 @@ class ViewModel : ViewModel()
         getUser()
     }
 
+    private fun groupListFromDocs(grpDocs: MutableList<DocumentSnapshot>) : ArrayList<Group> {
+        var grpList = ArrayList<Group>()
+        for(grp in grpDocs)
+        {
+            grpList.add(groupFromHash(grp))
+        }
+        return grpList
+    }
     /* loads oldest first */
     private fun loadGroups()
     {
-
         grpRef = db.collection("groups")
+
+        /* Listens to db changes and reloads groups */
+        grpRef.orderBy("timeCreated", Query.Direction.ASCENDING)
+            .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+            /* Listen for changes and update groups list */
+            val docs = querySnapshot!!.documents
+            var grpList = groupListFromDocs(docs)
+            groups.value = grpList
+        }
 
         grpRef.orderBy("timeCreated", Query.Direction.ASCENDING)
             .get()
@@ -337,11 +371,7 @@ class ViewModel : ViewModel()
                 {
                     var result = it.result!! /* QuerySnapshot */
                     var grpDocs = result.documents
-                    var grpList = ArrayList<Group>()
-                    for(grp in grpDocs)
-                    {
-                        grpList.add(groupFromHash(grp))
-                    }
+                    var grpList = groupListFromDocs(grpDocs)
                     /* Update our groups list */
                     groups.value = grpList
                 }
