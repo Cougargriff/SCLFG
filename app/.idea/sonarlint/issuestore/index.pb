@@ -25,3 +25,7 @@ s
 Capp/src/main/java/org/griffin/sclfg/View/GroupView/AboutFragment.kt,6\f\6ff6132c04882e71b6a6619cd5c73c38d5097cd6
 €
 Papp/src/main/java/org/griffin/sclfg/Utils/Gestures/SwipeToDeleteGroupCallback.kt,4\d\4d42cf8c4f023c21ea2237cd1fca8d5e603a80ac
+<
+build.gradle,f\0\f07866736216be0ee2aba49e392191aeae700a35
+@
+app/build.gradle,f\4\f4a01d6a4fcb971362ec00a83903fd3902f52164
