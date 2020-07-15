@@ -46,6 +46,9 @@ class MessageFragment(val gid : String) : Fragment() {
             layoutManager = rvManager
             adapter = rvAdapter
         }
+
+        
+
         rv.smoothScrollToPosition(0)
 
         return view
@@ -81,6 +84,7 @@ class MessageFragment(val gid : String) : Fragment() {
     private fun setupVM() {
         vm.getUser().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             user = it
+            (rv.adapter as MessageListAdapter).authUser = user
 
             msgVm.getMsgs().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
                 var temp = ArrayList<Message>()
@@ -88,22 +92,22 @@ class MessageFragment(val gid : String) : Fragment() {
                     temp.add(it)
                 }
 
+                var diff  = temp.minus(msgs)
+
+                diff.reversed().forEach {
+                    (rv.adapter as MessageListAdapter).addItem(it)
+                }
                 msgs = temp
-                var newAdapter = MessageListAdapter(msgs, user, retrieveName)
-                rv.adapter = newAdapter
+
                 /* TODO not scrolling to bottom of messages nicely... */
-                rv.smoothScrollToPosition(0)
+               rv.smoothScrollToPosition(0)
             })
-        })
-
-
-
+    })
     }
-
 }
 
 class MessageListAdapter(
-    val messageList: ArrayList<Message>, val authUser:  User,
+    val messageList: ArrayList<Message>, var authUser:  User,
     val retrieveName : (uid : String, cb : (name : String) -> Unit) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     class ViewHolder(val cellView: LinearLayout) : RecyclerView.ViewHolder(cellView)
@@ -129,23 +133,29 @@ class MessageListAdapter(
         ) as LinearLayout
 
         when(viewType) {
-                    TYPE_ME -> {
-                        cellView = LayoutInflater.from(parent.context).inflate(
-                            R.layout.message_cell_lb,
-                            parent, false
+            TYPE_ME -> {
+                cellView = LayoutInflater.from(parent.context).inflate(
+                    R.layout.message_cell_lb,
+                    parent, false
+                ) as LinearLayout
+            }
+            TYPE_OTHER -> {
+                cellView = LayoutInflater.from(parent.context).inflate((
+                        R.layout.message_cell_rg),
+                    parent, false
                         ) as LinearLayout
-                    }
-                    TYPE_OTHER -> {
-                        cellView = LayoutInflater.from(parent.context).inflate((
-                                R.layout.message_cell_rg),
-                            parent, false
-                                ) as LinearLayout
-                    }
-                }
+            }
+        }
 
         vParent = parent
 
         return ViewHolder(cellView)
+    }
+
+    fun addItem(msg: Message)
+    {
+        messageList.add(0, msg)
+        notifyDataSetChanged()
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
