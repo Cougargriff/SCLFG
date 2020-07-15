@@ -87,7 +87,13 @@ class ViewModel : ViewModel() {
     private val db = Firebase.firestore
     private val auth = FirebaseAuth.getInstance()
 
-
+    fun lookupUID(uid: String, cb: (name : String) -> Unit) {
+        db.collection("users").document(uid).get()
+            .addOnSuccessListener {
+                val result = userFromHash(it)
+                cb(result.screenName)
+            }
+    }
 
     private val user: MutableLiveData<User> by lazy {
         MutableLiveData<User>().also {

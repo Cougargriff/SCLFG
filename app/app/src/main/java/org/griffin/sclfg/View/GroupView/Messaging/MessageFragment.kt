@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -52,11 +53,12 @@ class MessageFragment(val gid : String) : Fragment() {
         rvManager = LinearLayoutManager(context).apply {
             reverseLayout = true
         }
-        rvAdapter = MessageListAdapter(ArrayList(), user)
+        rvAdapter = MessageListAdapter(ArrayList(), user, retrieveName)
         rv.apply {
             layoutManager = rvManager
             adapter = rvAdapter
         }
+        rv.smoothScrollToPosition(0)
 
         return view
     }
@@ -66,6 +68,13 @@ class MessageFragment(val gid : String) : Fragment() {
 
         setupVM()
         setupSendButton()
+    }
+
+    private val retrieveName =
+        fun (uid : String, cb: (name : String) -> Unit) {
+            vm.lookupUID(uid) {
+                cb(it)
+            }
     }
 
     private fun setupSendButton() {
@@ -94,15 +103,18 @@ class MessageFragment(val gid : String) : Fragment() {
             }
 
             msgs = temp
-            var newAdapter = MessageListAdapter(msgs, user)
+            var newAdapter = MessageListAdapter(msgs, user, retrieveName)
                 rv.adapter = newAdapter
+            /* TODO not scrolling to bottom of messages nicely... */
+            rv.smoothScrollToPosition(0)
         })
     }
 
 }
 
 class MessageListAdapter(
-    val messageList: ArrayList<Message>, val authUser:  User
+    val messageList: ArrayList<Message>, val authUser:  User,
+    val retrieveName : (uid : String, cb : (name : String) -> Unit) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     class ViewHolder(val cellView: LinearLayout) : RecyclerView.ViewHolder(cellView)
 
@@ -123,8 +135,36 @@ class MessageListAdapter(
         val curr = messageList[position]
         var item = holder.itemView
 
+        var leftSet = ConstraintSet()
+        var rightSet = ConstraintSet()
+
+        var cellLayout = item.msg_cell
+        leftSet.clone(cellLayout)
+        rightSet.clone(cellLayout)
+        rightSet.clear(R.id.author_box, ConstraintSet.LEFT)
+        rightSet.apply {
+            clear(R.id.author_card, ConstraintSet.LEFT)
+            clear(R.id.content_card, ConstraintSet.LEFT)
+            connect(R.id.content_card, ConstraintSet.RIGHT, R.id.msg_cell, ConstraintSet.RIGHT, 4)
+            connect(R.id.author_card, ConstraintSet.RIGHT, R.id.msg_cell, ConstraintSet.RIGHT, 4)
+        }
+
+        if(curr.author.compareTo(authUser.uid) == 0)
+        {
+            leftSet.applyTo(item.msg_cell)
+        }
+        else {
+            rightSet.applyTo(item.msg_cell)
+        }
         item.content_box.text = curr.content
-        item.author_box.text = curr.author
+
+        /* TODO slow on updates */
+        retrieveName(curr.author) {
+            item.author_box.text = it + position.toString()
+        }
+
+
+
     }
 
 

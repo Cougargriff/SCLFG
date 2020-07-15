@@ -16,7 +16,8 @@
             android:layout_height="47dp"
             android:ems="10"
             android:hint="Message..."
-            android:inputType="textPersonName"
+            android:inputType="textMultiLine"
+            android:singleLine="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/sendButton"
             app:layout_constraintHorizontal_bias="0.0"
@@ -38,7 +39,10 @@
             app:layout_constraintBottom_toTopOf="@+id/message_box"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" >
+
+
+        </androidx.recyclerview.widget.RecyclerView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
