@@ -72,14 +72,6 @@ class MessageViewModel() : ViewModel() {
                                 var initMsgs = msgListFromDocs(docs)
                                 msgs.value = initMsgs
                         }
-                db.collection("groups").document(gid)
-                        .collection("messages")
-                        .orderBy("time", Query.Direction.DESCENDING)
-                        .get().addOnSuccessListener {
-                                val docs = it!!.documents
-                                val initMsgs = msgListFromDocs(docs)
-                                msgs.value = initMsgs
-                        }
         }
 
 }
