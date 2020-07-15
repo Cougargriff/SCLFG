@@ -123,6 +123,20 @@ class ProfileFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        profile_animate.apply {
+            setAnimation("cell_animate.json")
+            loop(true)
+            playAnimation()
+        }
+
+        little_ship.apply {
+            setAnimation("stars_profile.json")
+            speed = 0.4f
+            loop(true)
+            playAnimation()
+        }
+
+
         setupVM()
         try {
             asyncLoadProfileImg()

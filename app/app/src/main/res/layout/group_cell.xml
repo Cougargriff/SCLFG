@@ -34,6 +34,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <view
+                android:id="@+id/space_animate"
+                class="com.airbnb.lottie.LottieAnimationView"
+                android:layout_width="200dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:lottie_enableMergePathsForKitKatAndAbove="true"
+                app:lottie_fileName="stars_profile.json" />
+
             <TextView
                 android:id="@+id/groupName"
                 android:layout_width="0dp"

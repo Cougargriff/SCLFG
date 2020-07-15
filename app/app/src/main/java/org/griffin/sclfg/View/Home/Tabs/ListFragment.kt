@@ -269,6 +269,12 @@ class GroupListAdapter(
         item.maxCount.text = "${curr.maxPlayers}  ...  Players Joined"
         item.shiploc.text = "${curr.ship} - ${curr.loc}"
         item.descriptionBox.text = groupList[position].description
+        item.space_animate.apply {
+            setAnimation("stars_profile.json")
+            speed = Math.random().toFloat()
+            loop(true)
+            playAnimation()
+        }
 
         /* BIND USER LIST */
         grvManager = LinearLayoutManager(vParent.context)

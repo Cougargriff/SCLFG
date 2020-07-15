@@ -21,8 +21,32 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout2"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+            <view
+                android:id="@+id/little_ship"
+                class="com.airbnb.lottie.LottieAnimationView"
+                android:layout_width="100dp"
+                android:layout_height="fill_parent"
+                android:layout_marginEnd="-15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:lottie_enableMergePathsForKitKatAndAbove="true"
+                app:lottie_fileName="stars_profile" />
+
+            <view
+                android:id="@+id/profile_animate"
+                class="com.airbnb.lottie.LottieAnimationView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="-250dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:lottie_enableMergePathsForKitKatAndAbove="true"
+                app:lottie_fileName="cell_animate.json" />
 
             <ImageView
                 android:id="@+id/profileImage"

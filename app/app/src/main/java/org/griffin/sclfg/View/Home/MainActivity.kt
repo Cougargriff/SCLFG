@@ -118,7 +118,7 @@ class MainActivity : AppCompatActivity() {
         vpSetup()
         firestoreSetup()
         vmSetup()
-        viewPager.setCurrentItem(0, true)
+        viewPager.setCurrentItem(2, true)
 
         /* if from register, update screen name */
         registerScreenName()

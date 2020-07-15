@@ -4,16 +4,22 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import com.airbnb.lottie.LottieComposition
 import kotlinx.android.synthetic.main.activity_login.*
+import org.griffin.sclfg.Models.ViewModel
 import org.griffin.sclfg.Utils.Cache.LocalCache
 import org.griffin.sclfg.R
 import org.griffin.sclfg.View.Home.MainActivity
 
 
 class LoginActivity : AppCompatActivity() {
+
+    private val vm : ViewModel  by viewModels()
+
     private val BUTTON_ELEVATION by lazy {
         applicationContext.resources.displayMetrics.density * 8
     }
@@ -84,8 +90,13 @@ class LoginActivity : AppCompatActivity() {
         Decouples the context logic with logging in for intent purposes
      */
     var login_cb = fun() {
-        var intent = Intent(this@LoginActivity, MainActivity::class.java)
-        ContextCompat.startActivity(this@LoginActivity, intent, null)
+
+        vm.getUser().observe(this, Observer {
+            var intent = Intent(this@LoginActivity, MainActivity::class.java)
+            ContextCompat.startActivity(this@LoginActivity, intent, null)
+        })
+
+
     }
 
     var cache_login_cb = fun(user: LoginHandler.User) {
