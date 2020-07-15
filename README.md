@@ -15,12 +15,12 @@ You can set groups that you own to private to not appear in the public group lis
 
 |                                       Login                                        |                                   Group Creation                                    |
 | :--------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------: |
-| <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgLogin.png" > | <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgSearch.png" > |
+| ![](.images/lfgLogin.png) | ![](.images/lfgSearch.png) |
 
 |                                 Star Citizen autocomplete                                 |                                   Group Listing                                   |
 | :---------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------: |
-| <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgAutoComplete.png" > | <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgList.png" > |
+| ![](.images/lfgAutoComplete.png | ![](.images/lfgList.png) |
 
 |                                  Group Messaging View                                  |                                       Profile                                        |
 | :------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------: |
-| ![](.images/lfgMessaging.png) | <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgProfile.png" > |
+| ![](.images/lfgMessaging.png) | ![](.images/lfgProfile.png) |
