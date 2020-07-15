@@ -23,4 +23,4 @@ You can set groups that you own to private to not appear in the public group lis
 
 |                                  Group Messaging View                                  |                                       Profile                                        |
 | :------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------: |
-| <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgMessaging.png" > | <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgProfile.png" > |
+| (!)[.images/lfgMessaging.png] | <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgProfile.png" > |
