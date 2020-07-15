@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import org.griffin.sclfg.Models.Message
@@ -19,7 +20,7 @@ class MessageViewModel() : ViewModel() {
                 }
 
                 fun messageFromHash(result: DocumentSnapshot) : Message {
-                        val time = result["timeCreated"] as Long
+                        val time = result["time"] as Long
                         val author = result["author"].toString()
                         var content = result["content"].toString()
                         val mid = result.id
@@ -44,6 +45,16 @@ class MessageViewModel() : ViewModel() {
                 return msgs
         }
 
+       fun sendMessage(msg: Message) {
+               db.collection("groups")
+                       .document(gid)
+                       .collection("messages")
+                       .add(messageToHash(msg))
+                       .addOnSuccessListener {
+                               /* should update on its own */
+                       }
+       }
+
         private fun msgListFromDocs(msgDocs : MutableList<DocumentSnapshot>) : ArrayList<Message> {
                 val msgList = ArrayList<Message>()
                 msgDocs.forEach {
@@ -55,13 +66,16 @@ class MessageViewModel() : ViewModel() {
         private fun initMsgs() {
                 db.collection("groups")
                         .document(gid).collection("messages")
+                        .orderBy("time", Query.Direction.DESCENDING)
                         .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                                 val docs = querySnapshot!!.documents
                                 var initMsgs = msgListFromDocs(docs)
                                 msgs.value = initMsgs
                         }
                 db.collection("groups").document(gid)
-                        .collection("messages").get().addOnSuccessListener {
+                        .collection("messages")
+                        .orderBy("time", Query.Direction.DESCENDING)
+                        .get().addOnSuccessListener {
                                 val docs = it!!.documents
                                 val initMsgs = msgListFromDocs(docs)
                                 msgs.value = initMsgs

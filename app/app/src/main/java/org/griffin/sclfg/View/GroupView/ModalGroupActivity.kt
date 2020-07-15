@@ -6,8 +6,11 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import kotlinx.android.synthetic.main.activity_modal_group.*
+import org.griffin.sclfg.Models.ViewModel
 import org.griffin.sclfg.R
 import org.griffin.sclfg.View.GroupView.Messaging.MessageFragment
 import org.griffin.sclfg.View.GroupView.Messaging.MessageViewModel
@@ -20,6 +23,7 @@ class ModalGroupActivity : AppCompatActivity() {
     private lateinit var pa : PageAdapter
     private var gid = ""
     private val msgVm : MessageViewModel by viewModels()
+    private val vm : ViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +33,6 @@ class ModalGroupActivity : AppCompatActivity() {
         try {
             gid = intent.extras!!.getString("gid", "")
             msgVm.setGid(gid)
-            System.out.println(gid)
         }
         catch(err : Exception) {
             /* If fail to get gid, return to main screen */
@@ -37,11 +40,19 @@ class ModalGroupActivity : AppCompatActivity() {
             ContextCompat.startActivity(this@ModalGroupActivity, intent, null)
         }
 
-
         paSetup()
         vpSetup()
+        initVMs()
         modalViewPager.setCurrentItem(0, true)
+    }
 
+    private fun initVMs() {
+        vm.getGroups().observe(this, Observer {
+
+        })
+        vm.getUser().observe(this, Observer {
+
+        })
     }
 
 
@@ -55,7 +66,6 @@ class ModalGroupActivity : AppCompatActivity() {
 
     private fun vpSetup() {
         /* ViewPager Setup */
-
         modalViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) = Unit
 
@@ -73,9 +83,6 @@ class ModalGroupActivity : AppCompatActivity() {
                     1 -> {
                         /* when list is selected */
                     }
-
-
-
                 }
             }
         })

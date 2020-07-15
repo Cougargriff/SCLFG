@@ -81,8 +81,8 @@ class ViewModel : ViewModel() {
 
     private lateinit var shipRef: CollectionReference
     private lateinit var locRef: CollectionReference
-    private lateinit var grpRef: CollectionReference
     private lateinit var userRef: CollectionReference
+    private lateinit var grpRef : CollectionReference
 
     private val db = Firebase.firestore
     private val auth = FirebaseAuth.getInstance()
