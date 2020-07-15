@@ -19,7 +19,7 @@ You can set groups that you own to private to not appear in the public group lis
 
 |                                 Star Citizen autocomplete                                 |                                   Group Listing                                   |
 | :---------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------: |
-| ![](.images/lfgAutoComplete.png | ![](.images/lfgList.png) |
+| ![](.images/lfgAutoComplete.png) | ![](.images/lfgList.png) |
 
 |                                  Group Messaging View                                  |                                       Profile                                        |
 | :------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------: |
