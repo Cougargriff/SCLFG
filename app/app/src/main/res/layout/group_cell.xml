@@ -31,20 +31,17 @@
             <TextView
                 android:id="@+id/groupName"
                 android:layout_width="0dp"
-                android:layout_height="35dp"
+                android:layout_height="50dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="46dp"
                 android:textAlignment="viewStart"
                 android:textColor="@color/rsiWall"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:typeface="monospace"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/shiploc"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/shiploc"
@@ -65,35 +62,38 @@
                 android:layout_width="wrap_content"
                 android:layout_height="19dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginBottom="4dp"
                 android:textColor="@color/rsiWall"
-                app:layout_constraintStart_toEndOf="@+id/textView10"
-                app:layout_constraintTop_toBottomOf="@+id/groupName" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textView10" />
 
             <TextView
                 android:id="@+id/currCount"
                 android:layout_width="wrap_content"
                 android:layout_height="19dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginBottom="4dp"
                 android:textColor="@color/rsiWall"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/groupName" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <ImageButton
                 android:id="@+id/expander"
                 android:layout_width="48dp"
                 android:layout_height="24dp"
+                android:layout_marginTop="27dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="9dp"
                 android:contentDescription="TODO"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/groupName" />
 
             <ImageButton
                 android:id="@+id/joinButton"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="4dp"
                 android:backgroundTint="@color/white"
@@ -102,12 +102,14 @@
                 android:scaleType="fitCenter"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/expander"
+                app:layout_constraintTop_toBottomOf="@+id/groupName"
                 tools:visibility="visible" />
 
             <ImageButton
                 android:id="@+id/leaveButton"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="4dp"
                 android:backgroundTint="@color/white"
@@ -116,6 +118,7 @@
                 android:scaleType="fitCenter"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/expander"
+                app:layout_constraintTop_toBottomOf="@+id/groupName"
                 tools:visibility="visible" />
 
             <TextView
@@ -123,12 +126,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginBottom="4dp"
                 android:text="@string/slash"
                 android:textAlignment="center"
                 android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@+id/currCount"
-                app:layout_constraintTop_toBottomOf="@+id/groupName" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/currCount" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

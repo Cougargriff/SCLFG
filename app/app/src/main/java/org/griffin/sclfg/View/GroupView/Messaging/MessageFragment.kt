@@ -160,7 +160,7 @@ class MessageListAdapter(
 
         /* TODO slow on updates */
         retrieveName(curr.author) {
-            item.author_box.text = it + position.toString()
+            item.author_box.text = it
         }
 
 
