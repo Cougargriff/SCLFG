@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:backgroundTint="@color/iosBlue"
     tools:context=".View.GroupView.ModalGroupActivity">
 
     <com.google.android.material.tabs.TabLayout
@@ -15,7 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tabIndicatorColor="@color/rsiWall">
+        app:tabIndicatorColor="@color/iosBlue">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
