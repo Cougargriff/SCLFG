@@ -31,6 +31,7 @@ import com.google.firebase.storage.ktx.storage
 import com.soundcloud.android.crop.Crop
 import kotlinx.android.synthetic.main.profile_group_cell.view.*
 import kotlinx.android.synthetic.main.tab_profile.*
+import kotlinx.android.synthetic.main.tab_profile.numIn
 import kotlinx.android.synthetic.main.tab_profile.view.*
 import org.griffin.sclfg.Models.Group
 import org.griffin.sclfg.Models.GroupMod
@@ -137,6 +138,7 @@ class ProfileFragment : Fragment() {
         }
 
 
+
         setupVM()
         try {
             asyncLoadProfileImg()
@@ -221,6 +223,8 @@ class ProfileFragment : Fragment() {
         vm.getUser().observe(viewLifecycleOwner, Observer {
             user = it!!
             nameChange.text = user.screenName
+            val num_in = user.inGroups.size
+            numIn.text = "In ${num_in} Groups"
         })
 
         vm.getGroups().observe(viewLifecycleOwner, Observer {
