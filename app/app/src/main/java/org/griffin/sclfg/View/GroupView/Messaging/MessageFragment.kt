@@ -5,29 +5,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.view.animation.LayoutAnimationController
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.fragment_message.*
 import kotlinx.android.synthetic.main.fragment_message.view.*
-import kotlinx.android.synthetic.main.message_cell.*
-import kotlinx.android.synthetic.main.message_cell.view.*
-import kotlinx.android.synthetic.main.profile_group_cell.view.*
+import kotlinx.android.synthetic.main.message_cell_lb.view.*
 import org.griffin.sclfg.Models.*
 import org.griffin.sclfg.R
-import org.griffin.sclfg.View.GroupView.ModalGroupActivity
-import org.griffin.sclfg.View.Home.Tabs.GListAdapter
-import java.time.LocalDateTime
-import java.time.ZoneOffset
-import java.util.Observer
 
 class MessageFragment(val gid : String) : Fragment() {
 
@@ -58,6 +48,11 @@ class MessageFragment(val gid : String) : Fragment() {
             layoutManager = rvManager
             adapter = rvAdapter
         }
+
+        val controller = AnimationUtils.loadLayoutAnimation(context, R.anim.bottom_up)
+        rv.layoutAnimation = controller
+        rv.scheduleLayoutAnimation()
+
         rv.smoothScrollToPosition(0)
 
         return view
@@ -93,78 +88,90 @@ class MessageFragment(val gid : String) : Fragment() {
     private fun setupVM() {
         vm.getUser().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             user = it
-        })
+            (rv.adapter as MessageListAdapter).authUser = user
 
+            msgVm.getMsgs().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+                var temp = ArrayList<Message>()
+                it.forEach{
+                    temp.add(it)
+                }
 
-        msgVm.getMsgs().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            var temp = ArrayList<Message>()
-            it.forEach{
-                temp.add(it)
-            }
+                var diff  = temp.minus(msgs)
 
-            msgs = temp
-            var newAdapter = MessageListAdapter(msgs, user, retrieveName)
-                rv.adapter = newAdapter
-            /* TODO not scrolling to bottom of messages nicely... */
-            rv.smoothScrollToPosition(0)
-        })
+                diff.reversed().forEach {
+                    (rv.adapter as MessageListAdapter).addItem(it)
+                }
+                msgs = temp
+
+                /* TODO not scrolling to bottom of messages nicely... */
+               rv.smoothScrollToPosition(0)
+            })
+    })
     }
-
 }
 
 class MessageListAdapter(
-    val messageList: ArrayList<Message>, val authUser:  User,
+    val messageList: ArrayList<Message>, var authUser:  User,
     val retrieveName : (uid : String, cb : (name : String) -> Unit) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     class ViewHolder(val cellView: LinearLayout) : RecyclerView.ViewHolder(cellView)
 
+    private val TYPE_ME = 1
+    private val TYPE_OTHER = 2
+
     private lateinit var vParent: ViewGroup
 
+    override fun getItemViewType(position: Int): Int {
+        if(messageList.get(position).author.compareTo(authUser.uid) == 0){
+            return TYPE_ME
+        }
+        else
+        {
+            return TYPE_OTHER
+        }
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val cellView = LayoutInflater.from(parent.context).inflate(
-            R.layout.message_cell,
+        var cellView = LayoutInflater.from(parent.context).inflate((
+                R.layout.message_cell_rg),
             parent, false
         ) as LinearLayout
+
+        when(viewType) {
+            TYPE_ME -> {
+                cellView = LayoutInflater.from(parent.context).inflate(
+                    R.layout.message_cell_lb,
+                    parent, false
+                ) as LinearLayout
+            }
+            TYPE_OTHER -> {
+                cellView = LayoutInflater.from(parent.context).inflate((
+                        R.layout.message_cell_rg),
+                    parent, false
+                        ) as LinearLayout
+            }
+        }
 
         vParent = parent
 
         return ViewHolder(cellView)
     }
 
+    fun addItem(msg: Message)
+    {
+        messageList.add(0, msg)
+        notifyDataSetChanged()
+    }
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val curr = messageList[position]
         var item = holder.itemView
 
-        var leftSet = ConstraintSet()
-        var rightSet = ConstraintSet()
-
-        var cellLayout = item.msg_cell
-        leftSet.clone(cellLayout)
-        rightSet.clone(cellLayout)
-        rightSet.clear(R.id.author_box, ConstraintSet.LEFT)
-        rightSet.apply {
-            clear(R.id.author_card, ConstraintSet.LEFT)
-            clear(R.id.content_card, ConstraintSet.LEFT)
-            connect(R.id.content_card, ConstraintSet.RIGHT, R.id.msg_cell, ConstraintSet.RIGHT, 4)
-            connect(R.id.author_card, ConstraintSet.RIGHT, R.id.msg_cell, ConstraintSet.RIGHT, 4)
-        }
-
-        if(curr.author.compareTo(authUser.uid) == 0)
-        {
-            leftSet.applyTo(item.msg_cell)
-        }
-        else {
-            rightSet.applyTo(item.msg_cell)
-        }
         item.content_box.text = curr.content
 
         /* TODO slow on updates */
         retrieveName(curr.author) {
             item.author_box.text = it
         }
-
-
-
     }
 
 
