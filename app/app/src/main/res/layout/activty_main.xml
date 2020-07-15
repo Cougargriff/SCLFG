@@ -15,6 +15,8 @@
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:elevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lfg_toolbar"
@@ -36,6 +38,15 @@
             android:text="@string/tab3" />
     </com.google.android.material.tabs.TabLayout>
 
+    <Space
+        android:id="@+id/space"
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:background="@color/white"
+        android:backgroundTint="@color/white"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout" />
+
     <view
         android:id="@+id/viewPager"
         class="androidx.viewpager.widget.ViewPager"
@@ -45,6 +56,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/space" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

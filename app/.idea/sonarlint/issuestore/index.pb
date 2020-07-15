@@ -1,0 +1,23 @@
+
+P
+ app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
+m
+=app/src/main/java/org/griffin/sclfg/View/Home/MainActivity.kt,5\6\56248767c722291264cc54423d6d5e02cd807cf1
+r
+Bapp/src/main/java/org/griffin/sclfg/View/Home/Tabs/ListFragment.kt,5\7\57831375590f6130b7b65e88e2edeb87e749b857
+m
+=app/src/main/java/org/griffin/sclfg/Login/RegisterActivity.kt,7\6\7686863ce84142a81cc9435957234eeac64711e1
+€
+Papp/src/main/java/org/griffin/sclfg/View/GroupView/Messaging/MessageViewModel.kt,6\d\6dc36b73c6c26641f3a598e0ad9cb363ba248944
+e
+5app/src/main/java/org/griffin/sclfg/Models/Message.kt,a\d\adc106e2e639d433bfbb8601f96ba5d652a35820
+g
+7app/src/main/java/org/griffin/sclfg/Models/ViewModel.kt,5\5\55f9ac8258909344445670462dba0ca3130a1bae
+x
+Happ/src/main/java/org/griffin/sclfg/View/GroupView/ModalGroupActivity.kt,b\1\b1aa71ed02162b22d93188c2f2d370c6b81e4e92
+u
+Eapp/src/main/java/org/griffin/sclfg/View/Home/Tabs/ProfileFragment.kt,9\d\9d7ea97a2c84ec138f9ca3b006e077537688b4d5
+j
+:app/src/main/java/org/griffin/sclfg/Login/LoginActivity.kt,2\6\26fe39be7de423d412b13972806a6151e2bd0b17
+
+Oapp/src/main/java/org/griffin/sclfg/View/GroupView/Messaging/MessageFragment.kt,c\3\c36a489e017ccf8de7e62a610ee8f89633c4f442

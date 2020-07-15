@@ -1,4 +1,4 @@
-package org.griffin.sclfg.Cache
+package org.griffin.sclfg.Utils.Cache
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -7,14 +7,12 @@ import org.griffin.sclfg.Login.LoginHandler
 private val USER_PROP = "USER_FIELD"
 private val PSW_PROP = "PSW_FIELD"
 
-class LocalCache(context : Context)
-{
-    val sharedPref : SharedPreferences by lazy {
+class LocalCache(context: Context) {
+    val sharedPref: SharedPreferences by lazy {
         context.getSharedPreferences("SCLFG", Context.MODE_PRIVATE)
     }
 
-    fun cacheCredentials(lpacket : LoginHandler.User)
-    {
+    fun cacheCredentials(lpacket: LoginHandler.User) {
         sharedPref.edit().apply {
             putString(USER_PROP, lpacket.email)
             putString(PSW_PROP, lpacket.password)
@@ -22,8 +20,7 @@ class LocalCache(context : Context)
         }
     }
 
-    fun clearCache(cb : () -> Unit)
-    {
+    fun clearCache(cb: () -> Unit) {
         sharedPref.edit().apply {
             clear()
             commit()
@@ -32,18 +29,16 @@ class LocalCache(context : Context)
         }
     }
 
-    fun retrieveCredentials(cb : (user : String, psw : String) -> Unit,
-                            err_cb : () -> Unit)
-    {
+    fun retrieveCredentials(
+        cb: (user: String, psw: String) -> Unit,
+        errCb: () -> Unit
+    ) {
         val user = sharedPref.getString(USER_PROP, "")
         val psw = sharedPref.getString(PSW_PROP, "")
-        if(!user!!.isBlank() && !psw!!.isBlank())
-        {
+        if (!user!!.isBlank() && !psw!!.isBlank()) {
             cb(user, psw)
-        }
-        else
-        {
-            err_cb()
+        } else {
+            errCb()
         }
     }
 }

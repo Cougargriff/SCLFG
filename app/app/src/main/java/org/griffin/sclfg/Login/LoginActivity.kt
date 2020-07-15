@@ -1,15 +1,15 @@
 package org.griffin.sclfg.Login
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_login.*
-import org.griffin.sclfg.Cache.LocalCache
-import org.griffin.sclfg.View.MainActivity
+import org.griffin.sclfg.Utils.Cache.LocalCache
 import org.griffin.sclfg.R
+import org.griffin.sclfg.View.Home.MainActivity
 
 
 class LoginActivity : AppCompatActivity() {
@@ -30,10 +30,10 @@ class LoginActivity : AppCompatActivity() {
             })
         }
 
-        setup_login_onclick()
+        setupLoginOnclick()
     }
 
-    private fun unhideUI () {
+    private fun unhideUI() {
         /* un-hide sign in tools */
         textView2.visibility = View.VISIBLE
         email.visibility = View.VISIBLE
@@ -44,13 +44,11 @@ class LoginActivity : AppCompatActivity() {
         login_bar.visibility = View.INVISIBLE
     }
 
-    private fun getCache() : LocalCache
-    {
+    private fun getCache(): LocalCache {
         return LocalCache(this)
     }
 
-    var cachedLogin = fun (user : String, psw : String)
-    {
+    var cachedLogin = fun(user: String, psw: String) {
         LoginHandler(LoginHandler.User(user, psw), err_cb).apply {
             login(already_cached_cb)
         }
@@ -60,26 +58,22 @@ class LoginActivity : AppCompatActivity() {
         Callback functions to pass to login_handler.
         Decouples the context logic with logging in for intent purposes
      */
-    var login_cb = fun ()
-    {
+    var login_cb = fun() {
         var intent = Intent(this@LoginActivity, MainActivity::class.java)
         ContextCompat.startActivity(this@LoginActivity, intent, null)
     }
 
-    var cache_login_cb = fun (user : LoginHandler.User)
-    {
+    var cache_login_cb = fun(user: LoginHandler.User) {
         localCache.cacheCredentials(user)
         login_cb()
     }
 
-    var already_cached_cb = fun (user : LoginHandler.User)
-    {
+    var already_cached_cb = fun(user: LoginHandler.User) {
         login_cb()
     }
 
 
-    private var err_cb = fun ()
-    {
+    private var err_cb = fun() {
         /* reset button heights on failed attempt */
         LocalCache(this).apply {
             clearCache {
@@ -89,33 +83,28 @@ class LoginActivity : AppCompatActivity() {
         login_button.elevation = BUTTON_ELEVATION
     }
 
-    private fun setup_login_onclick()
-    {
+    private fun setupLoginOnclick() {
         /* Setup Button OnClick Listeners */
 
         login_button.setOnClickListener {
             login_button.elevation = 0f
             var lpacket = LoginHandler.User(email = "", password = "")
-            var err = false;
+            var err = false
 
-            if(email.text.isNotBlank() && password.text.isNotBlank())
-            {
+            if (email.text.isNotBlank() && password.text.isNotBlank()) {
                 lpacket.email = email.text.toString()
                 lpacket.password = password.text.toString()
-            }
-            else
-            {
-                err = true;
+            } else {
+                err = true
             }
 
-            if(err)
-            {
-                Toast.makeText(this,
-                    "Either email or password was incorrect!", Toast.LENGTH_SHORT).show()
+            if (err) {
+                Toast.makeText(
+                    this,
+                    "Either email or password was incorrect!", Toast.LENGTH_SHORT
+                ).show()
                 err_cb()
-            }
-            else /* Handle Login Request */
-            {
+            } else /* Handle Login Request */ {
                 Toast.makeText(this, "Logging in...", Toast.LENGTH_SHORT).show()
 
                 LoginHandler(lpacket, err_cb).apply {

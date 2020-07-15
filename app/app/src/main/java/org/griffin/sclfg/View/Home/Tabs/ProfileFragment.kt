@@ -1,13 +1,10 @@
-package org.griffin.sclfg.View.Tabs
+package org.griffin.sclfg.View.Home.Tabs
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.*
-import android.graphics.drawable.ColorDrawable
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -24,23 +20,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
-import com.bumptech.glide.MemoryCategory
 import com.bumptech.glide.Registry
 import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.module.AppGlideModule
 import com.firebase.ui.storage.images.FirebaseImageLoader
-import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import com.soundcloud.android.crop.Crop
-import kotlinx.android.synthetic.main.group_cell.view.*
 import kotlinx.android.synthetic.main.profile_group_cell.view.*
-import kotlinx.android.synthetic.main.profile_group_cell.view.currCount
-import kotlinx.android.synthetic.main.profile_group_cell.view.groupName
-import kotlinx.android.synthetic.main.profile_group_cell.view.maxCount
-import kotlinx.android.synthetic.main.profile_group_cell.view.shiploc
 import kotlinx.android.synthetic.main.tab_profile.*
 import kotlinx.android.synthetic.main.tab_profile.view.*
 import org.griffin.sclfg.Models.Group
@@ -48,10 +37,9 @@ import org.griffin.sclfg.Models.GroupMod
 import org.griffin.sclfg.Models.User
 import org.griffin.sclfg.Models.ViewModel
 import org.griffin.sclfg.R
+import org.griffin.sclfg.Utils.Gestures.SwipeToDeleteCallback
 import java.io.File
 import java.io.InputStream
-import java.lang.Exception
-import java.lang.NullPointerException
 
 @GlideModule
 class MyAppGlideModule : AppGlideModule() {
@@ -64,117 +52,39 @@ class MyAppGlideModule : AppGlideModule() {
     }
 }
 
-abstract class SwipeToDeleteCallback(context: Context) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-
-    private val deleteIcon = ContextCompat.getDrawable(context, R.drawable.ic_baseline_delete_24)
-    private val intrinsicWidth = deleteIcon!!.intrinsicWidth
-    private val intrinsicHeight = deleteIcon!!.intrinsicHeight
-    private val background = ColorDrawable()
-    private val backgroundColor = Color.parseColor("#f44336")
-    private val clearPaint = Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR) }
 
 
-    override fun getMovementFlags(
-        recyclerView: RecyclerView,
-        viewHolder: RecyclerView.ViewHolder
-    ): Int {
-        /**
-         * To disable "swipe" for specific item return 0 here.
-         * For example:
-         * if (viewHolder?.itemViewType == YourAdapter.SOME_TYPE) return 0
-         * if (viewHolder?.adapterPosition == 0) return 0
-         */
-        var adapter = recyclerView.adapter as GListAdapter
-        if (adapter.groupList[viewHolder?.adapterPosition].createdBy.compareTo(adapter.authUser.uid) != 0) return 0
-        return super.getMovementFlags(recyclerView, viewHolder)
-    }
-
-    override fun onMove(
-        recyclerView: RecyclerView,
-        viewHolder: RecyclerView.ViewHolder,
-        target: RecyclerView.ViewHolder
-    ): Boolean {
-        return false
-    }
-
-    override fun onChildDraw(
-        c: Canvas,
-        recyclerView: RecyclerView,
-        viewHolder: RecyclerView.ViewHolder,
-        dX: Float,
-        dY: Float,
-        actionState: Int,
-        isCurrentlyActive: Boolean
-    ) {
-
-        val itemView = viewHolder.itemView
-        val itemHeight = itemView.bottom - itemView.top
-        val isCanceled = dX == 0f && !isCurrentlyActive
-
-        if (isCanceled) {
-            clearCanvas(c, itemView.right + dX, itemView.top.toFloat(), itemView.right.toFloat(), itemView.bottom.toFloat())
-            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-            return
-        }
-
-        // Draw the red delete background
-        background.color = backgroundColor
-        background.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
-        background.draw(c)
-
-        // Calculate position of delete icon
-        val deleteIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
-        val deleteIconMargin = (itemHeight - intrinsicHeight) / 2
-        val deleteIconLeft = itemView.right - deleteIconMargin - intrinsicWidth
-        val deleteIconRight = itemView.right - deleteIconMargin
-        val deleteIconBottom = deleteIconTop + intrinsicHeight
-
-        // Draw the delete icon
-        deleteIcon!!.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
-        deleteIcon.draw(c)
-
-        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-    }
-
-    private fun clearCanvas(c: Canvas?, left: Float, top: Float, right: Float, bottom: Float) {
-        c?.drawRect(left, top, right, bottom, clearPaint)
-    }
-}
-
-class ProfileFragment : Fragment()
-{
+class ProfileFragment : Fragment() {
     private val PICK_PHOTO_TO_CROP = 0
-    private val vm : ViewModel by activityViewModels()
-    private var user = User("", "", ArrayList(),0)
+    private val vm: ViewModel by activityViewModels()
+    private var user = User("", "", ArrayList(), 0)
 
     /* Recycler View Setup */
-    private lateinit var rv : RecyclerView
-    private lateinit var rvManager : RecyclerView.LayoutManager
-    private lateinit var rvAdapter : RecyclerView.Adapter<*>
+    private lateinit var rv: RecyclerView
+    private lateinit var rvManager: RecyclerView.LayoutManager
+    private lateinit var rvAdapter: RecyclerView.Adapter<*>
 
     private var groupsList = emptyList<Group>()
 
-    private val modifyGroup = fun (gid: String, action : GroupMod) {
+    private val modifyGroup = fun(gid: String, action: GroupMod) {
         vm.groupExists(gid, err_cb) {
-            when(action)
-            {
+            when (action) {
                 GroupMod.MAKE_PRIVATE -> vm.makePrivate(gid)
-
-                GroupMod.MAKE_PUBLIC ->  vm.makePublic(gid)
-
+                GroupMod.MAKE_PUBLIC -> vm.makePublic(gid)
                 GroupMod.DELETE -> vm.delete(gid)
             }
         }
     }
 
-    private val err_cb = fun () {
+    private val err_cb = fun() {
         Toast.makeText(requireContext(), "Group No Longer Exists", Toast.LENGTH_LONG)
             .show()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View?
-    {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         var view = inflater.inflate(R.layout.tab_profile, container, false)
 
         /* Setup Fragment View here */
@@ -197,7 +107,7 @@ class ProfileFragment : Fragment()
                     setPositiveButton("Yes") { dialog, which ->
                         adapter.removeItem(group.gid)
                     }
-                    setNegativeButton("Cancel") {dialog, which ->
+                    setNegativeButton("Cancel") { dialog, which ->
 
                         vm.update()
                     }
@@ -216,8 +126,7 @@ class ProfileFragment : Fragment()
         setupVM()
         try {
             asyncLoadProfileImg()
-        }
-        catch (err : Exception) {
+        } catch (err: Exception) {
             profileImage.setImageResource(R.drawable.astro_prof)
         }
         profileImage.setOnClickListener {
@@ -237,8 +146,7 @@ class ProfileFragment : Fragment()
     }
 
     /* TODO fallback image now shows. Check to see if upload will refresh */
-    private fun asyncLoadProfileImg()
-    {
+    private fun asyncLoadProfileImg() {
         /* create cache file to store profile pic */
         val storageRef = Firebase.storage.reference.child(vm.getUser().value!!.uid)
 
@@ -259,14 +167,11 @@ class ProfileFragment : Fragment()
 
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
-    {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(resultCode == Activity.RESULT_OK && data != null)
-        {
-            when(requestCode)
-            {
+        if (resultCode == Activity.RESULT_OK && data != null) {
+            when (requestCode) {
                 PICK_PHOTO_TO_CROP -> {
                     startImgCrop(data.data!!)
                 }
@@ -281,28 +186,24 @@ class ProfileFragment : Fragment()
         }
     }
 
-    private fun pushImageToStorage(uri: Uri)
-    {
+    private fun pushImageToStorage(uri: Uri) {
         val imgInputStream = requireContext().contentResolver.openInputStream(uri)
         Firebase.storage.reference.child(vm.getUser().value!!.uid).putStream(imgInputStream!!)
     }
 
-    private fun startImgCrop(inputURI : Uri)
-    {
+    private fun startImgCrop(inputURI: Uri) {
         val outputURI = Uri.fromFile(File(requireActivity().externalCacheDir, "cropped"))
         var cropIntent = Crop.of(inputURI, outputURI).asSquare().getIntent(requireContext())
         startActivityForResult(cropIntent, Crop.REQUEST_CROP)
     }
 
-    private fun doImagePicker()
-    {
+    private fun doImagePicker() {
         val imgPicker = Intent(Intent.ACTION_GET_CONTENT)
-        imgPicker.setType("image/*")
+        imgPicker.type = "image/*"
         startActivityForResult(imgPicker, PICK_PHOTO_TO_CROP)
     }
 
-    private fun setupVM()
-    {
+    private fun setupVM() {
         vm.getUser().observe(viewLifecycleOwner, Observer {
             user = it!!
             nameChange.text = user.screenName
@@ -310,20 +211,20 @@ class ProfileFragment : Fragment()
 
         vm.getGroups().observe(viewLifecycleOwner, Observer {
 
-            var temp_list = ArrayList<Group>()
+            var tempList = ArrayList<Group>()
             /* Filter out groups that user doesn't own */
             it!!.forEach {
                 /*
                     checks if owner of group in db
                     appends item to list in callback
                  */
-                if(it.playerList.contains(user.uid)) {
-                    temp_list.add(it)
+                if (it.playerList.contains(user.uid)) {
+                    tempList.add(it)
                 }
 
             }
 
-            groupsList = temp_list
+            groupsList = tempList
 
             var newAdapter = GListAdapter(ArrayList(groupsList), user, modifyGroup)
             rv.adapter = newAdapter
@@ -332,16 +233,19 @@ class ProfileFragment : Fragment()
 }
 
 
-class GListAdapter(val groupList: ArrayList<Group>, val authUser: User,
-                   val modifyGroup : (gid: String, action : GroupMod) -> Unit)
-    : RecyclerView.Adapter<RecyclerView.ViewHolder>()
-{
-    class ViewHolder(val cellView : LinearLayout) : RecyclerView.ViewHolder(cellView)
-    private lateinit var vParent : ViewGroup
+class GListAdapter(
+    val groupList: ArrayList<Group>, val authUser: User,
+    val modifyGroup: (gid: String, action: GroupMod) -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    class ViewHolder(val cellView: LinearLayout) : RecyclerView.ViewHolder(cellView)
+
+    private lateinit var vParent: ViewGroup
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val cellView = LayoutInflater.from(parent.context).inflate(R.layout.profile_group_cell,
-        parent, false) as LinearLayout
+        val cellView = LayoutInflater.from(parent.context).inflate(
+            R.layout.profile_group_cell,
+            parent, false
+        ) as LinearLayout
 
         vParent = parent
 
@@ -354,27 +258,26 @@ class GListAdapter(val groupList: ArrayList<Group>, val authUser: User,
 
         item.groupName.text = curr.name
         item.currCount.text = curr.currCount.toString()
-        item.maxCount.text = curr.maxPlayers.toString() + "  ...  Players Joined"
-        item.shiploc.text = curr.ship + " - " + curr.loc
+        item.maxCount.text = "${curr.maxPlayers}  ...  Players Joined"
+        item.shiploc.text = "${curr.ship} - ${curr.loc}"
 
-        if(curr.createdBy == authUser.uid) {
+        if (curr.createdBy == authUser.uid) {
             item.active_toggle.isChecked = !curr.active
             item.active_toggle.isActivated = !curr.active
             item.active_toggle.setOnClickListener {
                 /* isActivated is state !BEFORE! switched */
-                when(it.isActivated) {
+                when (it.isActivated) {
                     false -> modifyGroup(curr.gid, GroupMod.MAKE_PRIVATE)
                     true -> modifyGroup(curr.gid, GroupMod.MAKE_PUBLIC)
                 }
             }
-        }
-        else {
+        } else {
             item.active_toggle.visibility = View.GONE
         }
 
     }
 
-    fun removeItem(gid : String) {
+    fun removeItem(gid: String) {
         modifyGroup(gid, GroupMod.DELETE)
     }
 

@@ -1,20 +1,19 @@
-package org.griffin.sclfg.View
+package org.griffin.sclfg.View.Home
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 
-class PageAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm)
-{
+class PageAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
     var mfm = fm
-    var mFragmentItems : ArrayList<Fragment> = ArrayList()
+    var mFragmentItems: ArrayList<Fragment> = ArrayList()
     var mFragmentTitles: ArrayList<String> = ArrayList()
 
-    fun addFragments(fragmentItem: Fragment, fragmentTitle : String)
-    {
+    fun addFragments(fragmentItem: Fragment, fragmentTitle: String) {
         mFragmentItems.add(fragmentItem)
         mFragmentTitles.add(fragmentTitle)
     }
+
     override fun getCount(): Int {
         return mFragmentItems.size
     }

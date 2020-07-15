@@ -22,5 +22,9 @@
     <string name="create_group">Create Group</string>
     <string name="my_groups">My Groups</string>
     <string name="display_name">Display Name</string>
+    <string name="message">Message</string>
+    <string name="about">About</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
