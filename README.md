@@ -10,14 +10,18 @@ You can now click the bottom right of group listings to expand the player list v
 
 ## Preview
 
-|                                       Login                                        |                                   Group Creation                                    |
-| :--------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------: |
-| <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgLogin.png" > | <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgSearch.png" > |
+|                                       Login                                        |                                       Register                                        |
+| :--------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------: |
+| <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgLogin.png" > | <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgRegister.png" > |
 
-|                                 Star Citizen autocomplete                                 |                                   Group Listing                                   |
-| :---------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------: |
-| <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgAutoComplete.png" > | <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgList.png" > |
+|                                   Group Creation                                    |                                   Group Listing                                   |
+| :---------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------: |
+| <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgSearch.png" > | <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgList.png" > |
 
-|                                  Group Messaging View                                  |                                       Profile                                        |
-| :------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------: |
-| <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgMessaging.png" > | <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgProfile.png" > |
+|                                     Messaging View                                     |                                    Group About                                     |
+| :------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------: |
+| <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgMessaging.png" > | <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgAbout.png" > |
+
+|                                       Profile                                        |                                       AutoComplete                                        |
+| :----------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: |
+| <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgProfile.png" > | <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgAutoComplete.png" > |
