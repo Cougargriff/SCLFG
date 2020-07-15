@@ -7,4 +7,7 @@
     <color name="rsiHeader">#00e7ff</color>
     <color name="rsiWall">#08314c</color>
 
+    <color name="iosBlue">#2196F3</color>
+    <color name="iosGray">#CECFD1</color>
+
 </resources>
