@@ -45,13 +45,14 @@ class MessageViewModel() : ViewModel() {
                 return msgs
         }
 
-       fun sendMessage(msg: Message) {
+       fun sendMessage(msg: Message, cb :() -> Unit) {
                db.collection("groups")
                        .document(gid)
                        .collection("messages")
                        .add(messageToHash(msg))
                        .addOnSuccessListener {
                                /* should update on its own */
+                               cb()
                        }
        }
 

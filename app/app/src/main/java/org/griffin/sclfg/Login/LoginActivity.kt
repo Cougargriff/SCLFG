@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.airbnb.lottie.LottieComposition
 import kotlinx.android.synthetic.main.activity_login.*
 import org.griffin.sclfg.Utils.Cache.LocalCache
 import org.griffin.sclfg.R
@@ -22,6 +23,11 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        login_bar.imageAssetsFolder = "/assets/"
+        login_bar.setAnimation("spacecraft.json")
+        login_bar.playAnimation()
+        login_bar.loop(true)
+
         /* if credentials exist in cache, login with cb method */
         localCache = getCache().apply {
             /* lambda function to update UI after checking cache */
@@ -29,6 +35,8 @@ class LoginActivity : AppCompatActivity() {
                 unhideUI()
             })
         }
+
+
 
         setupLoginOnclick()
     }

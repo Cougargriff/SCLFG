@@ -108,17 +108,18 @@
             app:srcCompat="@drawable/logo" />
     </androidx.cardview.widget.CardView>
 
-    <ProgressBar
+    <view
         android:id="@+id/login_bar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="9dp"
-        android:progressTint="@color/rsiWall"
+        class="com.airbnb.lottie.LottieAnimationView"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginBottom="24dp"
         app:layout_constraintBottom_toTopOf="@+id/login_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:lottie_enableMergePathsForKitKatAndAbove="true"
+        app:lottie_fileName="spacecraft.json" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
