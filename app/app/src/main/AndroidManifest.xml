@@ -17,14 +17,16 @@
         <activity android:name=".View.GroupView.AboutFragment"></activity>
         <activity android:name=".View.GroupView.ModalGroupActivity"
             android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".Login.LoginActivity">
+        <activity android:name=".Login.LoginActivity"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Login.RegisterActivity" />
+        <activity android:name=".Login.RegisterActivity"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".View.Home.MainActivity"
             android:theme="@style/AppTheme" />

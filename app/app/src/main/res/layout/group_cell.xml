@@ -9,14 +9,20 @@
     android:orientation="vertical"
     android:visibility="visible">
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="25dp" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/title_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="3dp"
-        android:layout_marginEnd="3dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="3dp"
         android:visibility="visible"
+        app:cardBackgroundColor="@color/iosBlue"
+        app:cardCornerRadius="12dp"
         app:cardElevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -30,15 +36,15 @@
 
             <TextView
                 android:id="@+id/groupName"
-                android:maxEms="20"
-                android:ellipsize="end"
-                android:maxLines="2"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
+                android:ellipsize="end"
+                android:maxEms="20"
+                android:maxLines="2"
                 android:textAlignment="viewStart"
-                android:textColor="@color/rsiWall"
+                android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:typeface="monospace"
@@ -48,13 +54,13 @@
 
             <TextView
                 android:id="@+id/shiploc"
-                android:maxEms="10"
                 android:layout_width="wrap_content"
                 android:layout_height="35dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
+                android:maxEms="10"
                 android:textAlignment="textEnd"
-                android:textColor="@color/rsiWall"
+                android:textColor="@color/white"
                 android:textSize="14sp"
                 android:textStyle="italic"
                 android:typeface="monospace"
@@ -67,7 +73,7 @@
                 android:layout_height="19dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginBottom="4dp"
-                android:textColor="@color/rsiWall"
+                android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView10" />
 
@@ -77,18 +83,20 @@
                 android:layout_height="19dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginBottom="4dp"
-                android:textColor="@color/rsiWall"
+                android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <ImageButton
+            <Button
                 android:id="@+id/expander"
                 android:layout_width="48dp"
                 android:layout_height="24dp"
                 android:layout_marginTop="27dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="9dp"
+                android:background="@drawable/round_button"
                 android:contentDescription="TODO"
+                android:elevation="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/groupName" />
@@ -100,7 +108,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="4dp"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/iosBlue"
                 android:contentDescription="TODO"
                 android:foreground="@drawable/ic_group_add_black_24dp"
                 android:scaleType="fitCenter"
@@ -116,7 +124,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="4dp"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/iosBlue"
                 android:contentDescription="TODO"
                 android:foreground="@drawable/ic_close_black_24dp"
                 android:scaleType="fitCenter"
@@ -133,6 +141,8 @@
                 android:layout_marginBottom="4dp"
                 android:text="@string/slash"
                 android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="19sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/currCount" />
@@ -140,6 +150,10 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="25dp" />
 
     <LinearLayout
         android:id="@+id/sub_item"
@@ -176,6 +190,7 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="4dp"
                 android:layout_weight="1"
+                app:cardBackgroundColor="#00FFFFFF"
                 app:cardElevation="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -191,6 +206,7 @@
                         android:id="@+id/userListView"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
+                        android:background="#00FFFFFF"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
@@ -201,23 +217,26 @@
 
             </androidx.cardview.widget.CardView>
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
+            <Button
                 android:id="@+id/openModalButton"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
+                android:background="@drawable/round_button_blue"
                 android:clickable="true"
                 android:elevation="8dp"
                 android:fadingEdge="vertical"
+                android:text="View Group"
+                android:textColor="@color/white"
                 android:visibility="gone"
-                app:fabSize="normal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardView6"
-                app:srcCompat="@drawable/ic_baseline_emoji_people_24" />
+                app:layout_constraintTop_toBottomOf="@+id/cardView6" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

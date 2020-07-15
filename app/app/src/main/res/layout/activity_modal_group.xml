@@ -9,6 +9,7 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/messageTabs"
+        app:tabTextColor="@color/iosBlue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
