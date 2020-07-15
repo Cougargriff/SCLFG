@@ -81,7 +81,7 @@ class MessageFragment(val gid : String) : Fragment() {
     private fun setupSendButton() {
         sendButton.setOnClickListener {
             if(message_box.text.isNotBlank()) {
-                sendButton.visibility = View.GONE
+                sendButton.visibility = View.INVISIBLE
                 confirm_lottie.apply {
                     imageAssetsFolder = "/assets/"
                     setAnimation("confirm_lottie.json")
@@ -89,7 +89,7 @@ class MessageFragment(val gid : String) : Fragment() {
                     addAnimatorListener(object : Animator.AnimatorListener {
                         override fun onAnimationEnd(animation: Animator?) {
                             confirm_lottie.visibility = View.GONE
-                            sendButton.visibility = View.VISIBLE
+                            it.visibility = View.VISIBLE
                         }
                         override fun onAnimationCancel(animation: Animator?) = Unit
                         override fun onAnimationRepeat(animation: Animator?) = Unit
