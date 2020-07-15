@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.view.animation.LayoutAnimationController
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.activityViewModels
@@ -47,7 +49,9 @@ class MessageFragment(val gid : String) : Fragment() {
             adapter = rvAdapter
         }
 
-        
+        val controller = AnimationUtils.loadLayoutAnimation(context, R.anim.bottom_up)
+        rv.layoutAnimation = controller
+        rv.scheduleLayoutAnimation()
 
         rv.smoothScrollToPosition(0)
 
