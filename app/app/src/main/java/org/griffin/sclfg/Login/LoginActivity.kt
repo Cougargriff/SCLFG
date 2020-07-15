@@ -15,7 +15,7 @@ import org.griffin.sclfg.View.Home.MainActivity
 
 class LoginActivity : AppCompatActivity() {
     private val BUTTON_ELEVATION by lazy {
-        applicationContext.resources.displayMetrics.density * 20
+        applicationContext.resources.displayMetrics.density * 8
     }
     private lateinit var localCache: LocalCache
 
@@ -23,6 +23,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        hideUI()
         login_bar.imageAssetsFolder = "/assets/"
         login_bar.setAnimation("spacecraft.json")
         login_bar.playAnimation()
@@ -41,11 +42,27 @@ class LoginActivity : AppCompatActivity() {
         setupLoginOnclick()
     }
 
+    private fun hideUI() {
+        login_container.visibility = View.GONE
+        space_stars.visibility = View.GONE
+//        textView2.visibility = View.INVISIBLE
+//        email.visibility = View.GONE
+//        password.visibility = View.GONE
+        login_button.visibility = View.GONE
+        register_button.visibility = View.GONE
+    }
+
     private fun unhideUI() {
         /* un-hide sign in tools */
-        textView2.visibility = View.VISIBLE
-        email.visibility = View.VISIBLE
-        password.visibility = View.VISIBLE
+        login_container.visibility = View.VISIBLE
+        space_stars.visibility = View.VISIBLE
+        space_stars.setAnimation("space.json")
+        space_stars.speed = 0.3f
+        space_stars.playAnimation()
+        space_stars.loop(true)
+//        textView2.visibility = View.VISIBLE
+//        email.visibility = View.VISIBLE
+//        password.visibility = View.VISIBLE
         login_button.visibility = View.VISIBLE
         register_button.visibility = View.VISIBLE
 

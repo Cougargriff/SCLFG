@@ -19,8 +19,12 @@
                 android:id="@+id/cardView2"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                app:cardBackgroundColor="@color/rsiWall">
+                android:layout_marginEnd="16dp"
+                app:cardBackgroundColor="@color/iosBlue"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="8dp">
 
                 <TextView
                     android:id="@+id/textView4"
@@ -28,14 +32,19 @@
                     android:layout_height="match_parent"
                     android:text="@string/create_a_group"
                     android:textAlignment="center"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/white"
                     android:textSize="36sp" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="8dp">
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:elevation="8dp"
+                app:cardCornerRadius="12dp"
+                app:cardBackgroundColor="@color/iosBlue">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -47,7 +56,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="29dp"
                         android:text="@string/crew_name"
-                        android:textColor="@color/rsiWall"
+                        android:textColor="@color/white"
                         android:textSize="18sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.501"
@@ -60,7 +69,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:text="@string/ship"
-                        android:textColor="@color/rsiWall"
+                        android:textColor="@color/white"
                         android:textSize="18sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.501"
@@ -91,11 +100,11 @@
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
-                                app:np_dividerColor="@color/rsiWall"
+                                app:np_dividerColor="@color/iosBlue"
                                 app:np_min="2"
                                 app:np_orientation="horizontal"
-                                app:np_selectedTextColor="@color/rsiWall"
-                                app:np_textColor="@color/rsiWall" />
+                                app:np_selectedTextColor="@color/iosBlue"
+                                app:np_textColor="@color/iosBlue" />
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                     </androidx.cardview.widget.CardView>
@@ -112,8 +121,8 @@
                         android:nextFocusDown="@+id/playNumSelector"
                         android:nextFocusForward="@+id/playNumSelector"
                         android:textAlignment="center"
-                        android:textColor="@color/rsiWall"
-                        android:textColorHint="@color/rsiWall"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/white"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
@@ -125,7 +134,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:text="@string/how_many_players"
-                        android:textColor="@color/rsiWall"
+                        android:textColor="@color/white"
                         android:textSize="18sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
@@ -145,7 +154,7 @@
                         android:nextFocusDown="@+id/locSearchBox"
                         android:nextFocusForward="@+id/locSearchBox"
                         android:textAlignment="center"
-                        android:textColor="@color/rsiWall"
+                        android:textColor="@color/white"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
@@ -157,7 +166,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:text="@string/location"
-                        android:textColor="@color/rsiWall"
+                        android:textColor="@color/white"
                         android:textSize="18sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
@@ -175,7 +184,7 @@
                         android:nextFocusDown="@+id/descriptionBox"
                         android:nextFocusForward="@+id/descriptionBox"
                         android:textAlignment="center"
-                        android:textColor="@color/rsiWall"
+                        android:textColor="@color/white"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
@@ -187,7 +196,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:text="@string/description"
-                        android:textColor="@color/rsiWall"
+                        android:textColor="@color/white"
                         android:textSize="18sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
@@ -199,7 +208,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
                         android:layout_marginTop="8dp"
-                        app:cardBackgroundColor="@color/rsiWall"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        app:cardCornerRadius="12dp"
+                        android:elevation="8dp"
+                        app:cardBackgroundColor="@color/white"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
@@ -210,23 +223,23 @@
                             android:layout_height="match_parent">
 
                             <androidx.constraintlayout.widget.ConstraintLayout
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_marginTop="4dp"
                                 android:layout_marginBottom="4dp"
+                                android:background="#FFFFFF"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
-                                android:background="#FFFFFF"
                                 app:layout_constraintTop_toTopOf="parent">
 
                                 <EditText
                                     android:id="@+id/descriptionBox"
-                                    android:layout_width="320dp"
+                                    android:layout_width="0dp"
                                     android:layout_height="match_parent"
-                                    android:layout_marginStart="4dp"
+                                    android:layout_marginStart="2dp"
                                     android:layout_marginTop="8dp"
-                                    android:layout_marginEnd="4dp"
+                                    android:layout_marginEnd="2dp"
                                     android:layout_marginBottom="8dp"
                                     android:background="#FFFFFF"
                                     android:ems="10"
@@ -235,7 +248,7 @@
                                     android:inputType="textMultiLine"
                                     android:singleLine="false"
                                     android:textAlignment="textStart"
-                                    android:textColor="@color/rsiWall"
+                                    android:textColor="@color/iosBlue"
                                     android:textColorHighlight="#FFFFFF"
                                     android:textColorHint="#FFFFFF"
                                     android:textSize="18sp"
@@ -254,10 +267,14 @@
                         android:id="@+id/groupCreateButton"
                         style="@android:style/Widget.Material.Light.Button.Borderless"
                         android:layout_width="248dp"
-                        android:layout_height="72dp"
-                        android:layout_marginTop="8dp"
+                        android:layout_height="60dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/round_button"
+                        android:elevation="8dp"
                         android:text="@string/create_group"
-                        android:textColor="@color/rsiWall"
+                        android:textColor="@color/iosBlue"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"

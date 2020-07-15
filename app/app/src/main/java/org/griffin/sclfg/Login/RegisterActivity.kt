@@ -14,7 +14,7 @@ import org.griffin.sclfg.View.Home.MainActivity
 
 class RegisterActivity : AppCompatActivity() {
     private val BUTTON_ELEVATION by lazy {
-        applicationContext.resources.displayMetrics.density * 20
+        applicationContext.resources.displayMetrics.density * 8
     }
     private lateinit var localCache: LocalCache
     private lateinit var display_name: String

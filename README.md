@@ -13,14 +13,19 @@ You can set groups that you own to private to not appear in the public group lis
 
 ## Preview
 
-|                                       Login                                        |                                   Group Creation                                    |
-| :--------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------: |
-| ![](.images/lfgLogin.png) | ![](.images/lfgSearch.png) |
+|                                       Login                                        |                                       Register                                        |
+| :--------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------: |
+| <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgLogin.png" > | <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgRegister.png" > |
 
-|                                 Star Citizen autocomplete                                 |                                   Group Listing                                   |
-| :---------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------: |
-| ![](.images/lfgAutoComplete.png) | ![](.images/lfgList.png) |
+|                                   Group Creation                                    |                                   Group Listing                                   |
+| :---------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------: |
+| <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgSearch.png" > | <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgList.png" > |
 
-|                                  Group Messaging View                                  |                                       Profile                                        |
-| :------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------: |
-| ![](.images/lfgMessaging.png) | ![](.images/lfgProfile.png) |
+|                                     Messaging View                                     |                                    Group About                                     |
+| :------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------: |
+| <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgMessaging.png" > | <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgAbout.png" > |
+
+|                                       Profile                                        |                                       AutoComplete                                        |
+| :----------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: |
+| <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgProfile.png" > | <img src="https://github.com/Cougargriff/SCLFG/blob/master/.images/lfgAutoComplete.png" > |
+

@@ -3,16 +3,17 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/rsiWall</item>
-        <item name="colorPrimaryDark">@color/rsiWall</item>
-        <item name="colorAccent">@color/rsiWall</item>
-        <item name="android:textColorSecondary">@color/rsiWall</item>
+        <item name="colorPrimary">@color/iosBlue</item>
+        <item name="colorPrimaryDark">@color/iosBlue</item>
+        <item name="colorAccent">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+
     </style>
 
     <style name="ToolBarTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/rsiWall</item>
-        <item name="colorPrimaryDark">@color/rsiWall</item>
-        <item name="colorAccent">@color/rsiWall</item>
+        <item name="colorPrimary">@color/iosBlue</item>
+        <item name="colorPrimaryDark">@color/iosBlue</item>
+        <item name="colorAccent">@color/iosBlue</item>
         <item name="android:textColorSecondary">@android:color/white</item>
     </style>
 
