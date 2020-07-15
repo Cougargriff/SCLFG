@@ -80,7 +80,7 @@ abstract class SwipeToDeleteCallback(context: Context) :
             itemView.right + dX.toInt(),
             itemView.top,
             itemView.right,
-            itemView.bottom
+            itemView.bottom - 40
         )
         background.draw(c)
 
