@@ -8,7 +8,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import org.griffin.sclfg.Models.Message
 
-class MessageViewModel(var gid : String) : ViewModel() {
+class MessageViewModel() : ViewModel() {
         companion object {
                 fun messageToHash(msg: Message) : HashMap<String, Any> {
                         return hashMapOf(
@@ -29,7 +29,11 @@ class MessageViewModel(var gid : String) : ViewModel() {
         }
 
         private val db = Firebase.firestore
+        private lateinit var gid : String
 
+        fun setGid(id : String) {
+                gid = id
+        }
         private val msgs : MutableLiveData<List<Message>> by lazy {
                 MutableLiveData<List<Message>>().also {
                         initMsgs()

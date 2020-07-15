@@ -42,22 +42,20 @@ class MessageFragment(val gid : String) : Fragment() {
 
     }
 
-    private fun loadMsgVm() : MessageViewModel {
-        return ViewModelProvider(requireActivity())[MessageViewModel(gid)::class.java]
-    }
 
     private fun setupVM() {
         vm.getUser().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             user = it
         })
 
-//        msgVm.getMsgs().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-//            var temp = ArrayList<Message>()
-//            it.forEach{
-//                temp.add(it)
-//            }
-//            msgs = temp
-//        })
+
+        msgVm.getMsgs().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            var temp = ArrayList<Message>()
+            it.forEach{
+                temp.add(it)
+            }
+            msgs = temp
+        })
     }
 
 }

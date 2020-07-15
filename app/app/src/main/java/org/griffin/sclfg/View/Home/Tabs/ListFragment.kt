@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.app.ShareCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -67,7 +68,8 @@ class ListFragment : Fragment() {
 
     private val openModal = fun (gid : String) {
         var intent = Intent(requireActivity(), ModalGroupActivity::class.java)
-        requireActivity().startActivity(intent)
+        intent.putExtra("gid", gid)
+        ContextCompat.startActivity(requireContext(), intent, null)
     }
 
     private val leaveGroup = fun(gid: String, uid: String, cb: () -> Unit) {

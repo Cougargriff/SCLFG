@@ -18,7 +18,7 @@ import java.lang.Exception
 class ModalGroupActivity : AppCompatActivity() {
 
     private lateinit var pa : PageAdapter
-    private  var gid = ""
+    private var gid = ""
     private val msgVm : MessageViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +27,9 @@ class ModalGroupActivity : AppCompatActivity() {
 
 
         try {
-           // gid = savedInstanceState!!.getString("gid", "")
+            gid = intent.extras!!.getString("gid", "")
+            msgVm.setGid(gid)
+            System.out.println(gid)
         }
         catch(err : Exception) {
             /* If fail to get gid, return to main screen */
