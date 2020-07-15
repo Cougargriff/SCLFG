@@ -1,6 +1,8 @@
 package org.griffin.sclfg.View.GroupView.Messaging
 
+import android.animation.Animator
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,11 +12,13 @@ import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
+import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Timestamp
+import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.fragment_message.*
 import kotlinx.android.synthetic.main.fragment_message.view.*
 import kotlinx.android.synthetic.main.message_cell_lb.view.*
@@ -77,10 +81,27 @@ class MessageFragment(val gid : String) : Fragment() {
     private fun setupSendButton() {
         sendButton.setOnClickListener {
             if(message_box.text.isNotBlank()) {
+                sendButton.visibility = View.GONE
+                confirm_lottie.apply {
+                    imageAssetsFolder = "/assets/"
+                    setAnimation("confirm_lottie.json")
+                    visibility = View.VISIBLE
+                    addAnimatorListener(object : Animator.AnimatorListener {
+                        override fun onAnimationEnd(animation: Animator?) {
+                            confirm_lottie.visibility = View.GONE
+                            sendButton.visibility = View.VISIBLE
+                        }
+                        override fun onAnimationCancel(animation: Animator?) = Unit
+                        override fun onAnimationRepeat(animation: Animator?) = Unit
+                        override fun onAnimationStart(animation: Animator?) = Unit
+                    })
+                    playAnimation()
+                }
                 val txt = message_box.text.toString()
                 message_box.text.clear()
                 vm.groupExists(gid, {}, {
-                    msgVm.sendMessage( Message(user.uid, Timestamp.now().seconds, txt, ""))
+                    msgVm.sendMessage( Message(user.uid, Timestamp.now().seconds, txt, "")) {
+                    }
                 })
             }
 

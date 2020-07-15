@@ -21,3 +21,7 @@ j
 :app/src/main/java/org/griffin/sclfg/Login/LoginActivity.kt,2\6\26fe39be7de423d412b13972806a6151e2bd0b17
 
 Oapp/src/main/java/org/griffin/sclfg/View/GroupView/Messaging/MessageFragment.kt,c\3\c36a489e017ccf8de7e62a610ee8f89633c4f442
+s
+Capp/src/main/java/org/griffin/sclfg/View/GroupView/AboutFragment.kt,6\f\6ff6132c04882e71b6a6619cd5c73c38d5097cd6
+€
+Papp/src/main/java/org/griffin/sclfg/Utils/Gestures/SwipeToDeleteGroupCallback.kt,4\d\4d42cf8c4f023c21ea2237cd1fca8d5e603a80ac

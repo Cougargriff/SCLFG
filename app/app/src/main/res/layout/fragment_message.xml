@@ -52,6 +52,19 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <view
+                    android:id="@+id/confirm_lottie"
+                    class="com.airbnb.lottie.LottieAnimationView"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:lottie_enableMergePathsForKitKatAndAbove="true"
+                    app:lottie_fileName="confirm_lottie.json"
+                    tools:visibility="gone" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
