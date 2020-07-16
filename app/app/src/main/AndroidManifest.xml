@@ -16,7 +16,7 @@
         android:usesCleartextTraffic="true">
         <activity android:name=".View.GroupView.AboutFragment"></activity>
         <activity android:name=".View.GroupView.ModalGroupActivity"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".Login.LoginActivity"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>

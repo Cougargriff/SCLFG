@@ -1,24 +1,17 @@
 package org.griffin.sclfg.View.GroupView.Messaging
 
 import android.animation.Animator
-import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.view.animation.LayoutAnimationController
-import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
-import androidx.annotation.RequiresApi
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Timestamp
-import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.fragment_message.*
 import kotlinx.android.synthetic.main.fragment_message.view.*
 import kotlinx.android.synthetic.main.message_cell_lb.view.*

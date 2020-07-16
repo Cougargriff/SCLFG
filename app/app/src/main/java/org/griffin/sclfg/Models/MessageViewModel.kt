@@ -1,4 +1,4 @@
-package org.griffin.sclfg.View.GroupView.Messaging
+package org.griffin.sclfg.Models
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,7 +7,6 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import org.griffin.sclfg.Models.Message
 
 class MessageViewModel() : ViewModel() {
         companion object {
@@ -49,7 +48,11 @@ class MessageViewModel() : ViewModel() {
                db.collection("groups")
                        .document(gid)
                        .collection("messages")
-                       .add(messageToHash(msg))
+                       .add(
+                           messageToHash(
+                               msg
+                           )
+                       )
                        .addOnSuccessListener {
                                /* should update on its own */
                                cb()
@@ -59,7 +62,11 @@ class MessageViewModel() : ViewModel() {
         private fun msgListFromDocs(msgDocs : MutableList<DocumentSnapshot>) : ArrayList<Message> {
                 val msgList = ArrayList<Message>()
                 msgDocs.forEach {
-                        msgList.add(messageFromHash(it))
+                        msgList.add(
+                            messageFromHash(
+                                it
+                            )
+                        )
                 }
                 return msgList
         }

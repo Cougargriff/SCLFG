@@ -128,8 +128,16 @@ class UserListAdapter(
         val curr = userList[position]
         var item = holder.itemView
 
+        item.animate()
+            .alpha(0f)
+            .setDuration(0L)
+            .start()
         lookUp(curr) {
             item.userName.text = it
+            item.animate()
+                .alpha(1f)
+                .setDuration(400L)
+                .start()
         }
 
     }

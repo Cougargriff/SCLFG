@@ -2,6 +2,7 @@ package org.griffin.sclfg.Login
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -32,7 +33,22 @@ class RegisterActivity : AppCompatActivity() {
         signup_button.elevation = BUTTON_ELEVATION
     }
 
+    private fun hideUi() {
+        register_container.visibility = View.GONE
+    }
+
+    private fun startAnimation() {
+        reg_anim.visibility = View.VISIBLE
+        reg_anim.apply {
+            setAnimation("register_loading.json")
+            loop(true)
+            playAnimation()
+        }
+    }
+
     var cache_register_cb = fun(user: LoginHandler.User, uid: String) {
+        hideUi()
+        startAnimation()
         localCache.cacheCredentials(user)
         register_cb(uid)
     }

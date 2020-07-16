@@ -104,6 +104,8 @@ class ProfileFragment : Fragment() {
             adapter = rvAdapter
         }
 
+
+
         val swipeHandler = object : SwipeToDeleteCallback(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val adapter = rv.adapter as GListAdapter
@@ -128,8 +130,8 @@ class ProfileFragment : Fragment() {
         itemTouchHelper.attachToRecyclerView(rv)
 
         view.loading_profile_groups.apply {
-            setAnimation("circles.json")
-            speed = 0.7f
+            setAnimation("register_loading.json")
+            speed = 2f
             playAnimation()
             addAnimatorListener(object: Animator.AnimatorListener {
                 override fun onAnimationEnd(animation: Animator?) {
@@ -149,6 +151,7 @@ class ProfileFragment : Fragment() {
 
         profile_animate.apply {
             setAnimation("cell_animate.json")
+                speed = 1.5f
             loop(true)
             playAnimation()
         }
@@ -171,7 +174,7 @@ class ProfileFragment : Fragment() {
         profileImage.setOnClickListener {
 
             /* Confirm selection with alertDialog */
-            AlertDialog.Builder(this.requireContext()).apply {
+            var dialog = AlertDialog.Builder(this.requireContext()).apply {
                 setTitle("Choose a new profile image?")
                 setPositiveButton("Yes") { dialog, which ->
                     /* Continue to image picker on confirm */
@@ -180,7 +183,12 @@ class ProfileFragment : Fragment() {
                 setNegativeButton("Cancel") { dialog, which ->
                     /* Do nothing and return to profile fragment*/
                 }
-            }.show()
+            }
+
+                dialog.show().apply{
+                    this.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(resources.getColor(R.color.iosBlue))
+                    this.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(resources.getColor(R.color.iosBlue))
+                }
         }
     }
 
@@ -248,6 +256,11 @@ class ProfileFragment : Fragment() {
         startActivityForResult(imgPicker, PICK_PHOTO_TO_CROP)
     }
 
+    /* ****
+
+        FIREBASE OBSERVERS AND UPDATES FOR RV
+
+     * ****/
     private fun setupVM() {
         var a = rv.adapter as GListAdapter
         vm.getUser().observe(viewLifecycleOwner, Observer {

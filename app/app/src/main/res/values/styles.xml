@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/iosBlue</item>
         <item name="colorAccent">@color/white</item>
         <item name="android:textColorSecondary">@color/white</item>
+        <item name="android:actionMenuTextColor">@color/iosBlue</item>
 
     </style>
 
@@ -15,6 +16,7 @@
         <item name="colorPrimaryDark">@color/iosBlue</item>
         <item name="colorAccent">@color/iosBlue</item>
         <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="android:actionMenuTextColor">@color/iosBlue</item>
     </style>
 
 </resources>

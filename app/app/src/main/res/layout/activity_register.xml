@@ -7,7 +7,21 @@
     android:visibility="visible"
     tools:context=".Login.LoginActivity">
 
+    <view
+        android:id="@+id/reg_anim"
+        class="com.airbnb.lottie.LottieAnimationView"
+        android:layout_width="300dp"
+        android:layout_height="400dp"
+        app:lottie_enableMergePathsForKitKatAndAbove="true"
+        app:lottie_fileName="register_loading.json"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.cardview.widget.CardView
+        android:id="@+id/register_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -58,12 +72,13 @@
 
                     <EditText
                         android:id="@+id/emailR"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="16dp"
                         android:layout_marginBottom="8dp"
+                        android:backgroundTint="@color/iosBlue"
                         android:ems="10"
                         android:hint="@string/e_mail"
                         android:inputType="textEmailAddress"
@@ -97,12 +112,13 @@
 
                     <EditText
                         android:id="@+id/passwordR"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="16dp"
                         android:layout_marginBottom="8dp"
+                        android:backgroundTint="@color/iosBlue"
                         android:ems="10"
                         android:hint="@string/password"
                         android:inputType="textPassword"
@@ -136,12 +152,13 @@
 
                     <EditText
                         android:id="@+id/passwordR_confirm"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="16dp"
                         android:layout_marginBottom="8dp"
+                        android:backgroundTint="@color/iosBlue"
                         android:ems="10"
                         android:hint="@string/password_confirm"
                         android:inputType="textPassword"
@@ -175,12 +192,13 @@
 
                     <EditText
                         android:id="@+id/screen_name"
-                        android:layout_width="360dp"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="16dp"
                         android:layout_marginBottom="8dp"
+                        android:backgroundTint="@color/iosBlue"
                         android:ems="10"
                         android:hint="@string/display_name"
                         android:textAlignment="center"
