@@ -120,6 +120,7 @@ class ProfileFragment : Fragment() {
 
                 dialog.show().apply {
                     this.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(resources.getColor(R.color.iosBlue))
+                    this.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(resources.getColor(R.color.iosBlue))
                 }
             }
         }
