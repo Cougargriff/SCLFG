@@ -150,6 +150,7 @@ class ProfileFragment : Fragment() {
 
         profile_animate.apply {
             setAnimation("cell_animate.json")
+                speed = 1.5f
             loop(true)
             playAnimation()
         }

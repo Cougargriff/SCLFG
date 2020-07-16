@@ -2,6 +2,8 @@ package org.griffin.sclfg.View.Home
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.BlendMode
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -11,6 +13,7 @@ import android.widget.Toolbar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.marginStart
 import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import com.google.firebase.auth.FirebaseAuth
@@ -77,7 +80,7 @@ class MainActivity : AppCompatActivity() {
             (R.id.action_change_name) -> {
                 /* alert dialog to change screen name */
                 val nameEditBox = EditText(this).apply {
-                    highlightColor = ContextCompat.getColor(context, R.color.rsiWall)
+                    
                 }
                 var lp = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,

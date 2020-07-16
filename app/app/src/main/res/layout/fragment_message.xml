@@ -31,16 +31,21 @@
 
                 <EditText
                     android:id="@+id/message_box"
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:backgroundTint="@color/cardview_light_background"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:backgroundTint="@color/iosBlue"
                     android:ems="10"
                     android:hint="Message..."
                     android:inputType="textMultiLine"
                     android:singleLine="false"
+                    android:textColor="@color/iosBlue"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintEnd_toStartOf="@+id/sendButton"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageButton
                     android:id="@+id/sendButton"
