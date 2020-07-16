@@ -5,15 +5,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import kotlinx.android.synthetic.main.activity_modal_group.*
 import org.griffin.sclfg.Models.ViewModel
 import org.griffin.sclfg.R
 import org.griffin.sclfg.View.GroupView.Messaging.MessageFragment
-import org.griffin.sclfg.View.GroupView.Messaging.MessageViewModel
+import org.griffin.sclfg.Models.MessageViewModel
 import org.griffin.sclfg.View.Home.MainActivity
 import org.griffin.sclfg.View.Home.PageAdapter
 import java.lang.Exception

@@ -167,7 +167,6 @@ class ViewModel : ViewModel() {
             )
             .addOnCompleteListener {
                 loadUser()
-                //loadGroups()
             }
     }
 
@@ -200,7 +199,6 @@ class ViewModel : ViewModel() {
             )
             .addOnCompleteListener {
                 loadUser()
-                //loadGroups()
             }
     }
 
@@ -210,7 +208,6 @@ class ViewModel : ViewModel() {
             .set(hash, SetOptions.merge())
             .addOnSuccessListener {
                 addGroupToUser(gid)
-                //loadGroups()
             }
             .addOnCompleteListener {
                 cb()
@@ -222,7 +219,6 @@ class ViewModel : ViewModel() {
             .set(hash, SetOptions.merge())
             .addOnSuccessListener {
                 removeGroupFromUser(gid)
-                //loadGroups()
             }
             .addOnCompleteListener {
                 cb()
@@ -339,6 +335,7 @@ class ViewModel : ViewModel() {
 
     private fun loadUser() {
         userRef = db.collection("users")
+
         userRef.document(auth.uid!!).get()
             .addOnCompleteListener {
                 if (it.isSuccessful) {

@@ -224,8 +224,10 @@ class UserListAdapter(val userList: ArrayList<String>,
         val curr = userList[position]
         val item = holder.itemView
 
+
         lookUp(curr) {
             item.userName.text = it
+
         }
 
 

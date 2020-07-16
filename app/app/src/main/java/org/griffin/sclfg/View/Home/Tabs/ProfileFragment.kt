@@ -130,7 +130,8 @@ class ProfileFragment : Fragment() {
         itemTouchHelper.attachToRecyclerView(rv)
 
         view.loading_profile_groups.apply {
-            setAnimation("circles.json")
+            setAnimation("register_loading.json")
+            speed = 2f
             playAnimation()
             addAnimatorListener(object: Animator.AnimatorListener {
                 override fun onAnimationEnd(animation: Animator?) {
