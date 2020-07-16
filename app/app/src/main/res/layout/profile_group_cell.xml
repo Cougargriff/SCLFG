@@ -40,11 +40,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp" />
+
                 <TextView
                     android:id="@+id/groupName"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
                     android:ellipsize="end"
                     android:maxEms="2"
                     android:maxLines="2"
@@ -58,6 +64,8 @@
                     android:id="@+id/shiploc"
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
                     android:maxEms="12"
                     android:textAlignment="center"
                     android:textColor="@color/white"
@@ -177,7 +185,10 @@
                             android:layout_marginBottom="8dp"
                             android:text="Private"
                             android:textColor="@color/iosBlue"
+                            android:textColorLink="@color/iosBlue"
                             android:textSize="18sp"
+                            android:thumbTint="@color/iosBlue"
+                            android:trackTint="#939393"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"

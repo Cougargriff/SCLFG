@@ -105,8 +105,8 @@ class ListFragment : Fragment() {
 
         rvAdapter = GroupListAdapter(requireActivity(),
             ArrayList(),
-            ArrayList(),
             user,
+            lookUp,
             joinGroup,
             leaveGroup,
             openModal
@@ -166,12 +166,18 @@ class ListFragment : Fragment() {
                 userLists.add(userList)
             }
 
-            val newAdapter = GroupListAdapter(requireActivity(),
-                ArrayList(groupsList), userLists, user,
-                joinGroup, leaveGroup, openModal
-            )
-            rv.adapter = newAdapter
+            (rv.adapter as GroupListAdapter).apply {
+                authUser = user
+                update(groupsList as ArrayList<Group>)
+            }
         })
+
+    }
+
+    private val lookUp= fun (uid : String, cb : (name : String) -> Unit) {
+        vm.lookupUID(uid) {
+            cb(it)
+        }
     }
 
     private fun getUsersForGroup(group: Group): ArrayList<User> {
@@ -198,7 +204,8 @@ class ListFragment : Fragment() {
 */
 
 /* Adapter for user sub list view */
-class UserListAdapter(val userList: ArrayList<User>) :
+class UserListAdapter(val userList: ArrayList<String>,
+                      val lookUp : (uid: String, cb : (name : String) -> Unit) -> Unit ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     class ViewHolder(val cellView: LinearLayout) : RecyclerView.ViewHolder(cellView)
 
@@ -213,7 +220,11 @@ class UserListAdapter(val userList: ArrayList<User>) :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val curr = userList[position]
         val item = holder.itemView
-        item.userName.text = curr.screenName
+
+        lookUp(curr) {
+            item.userName.text = it
+        }
+
 
         /* other setup for user list cell components */
     }
@@ -229,9 +240,9 @@ class UserListAdapter(val userList: ArrayList<User>) :
  */
 class GroupListAdapter(
     val activity : FragmentActivity,
-    val groupList: ArrayList<Group>,
-    val userLists: ArrayList<ArrayList<User>>,
-    val authUser: User,
+    var groupList: ArrayList<Group>,
+    var authUser: User,
+    val lookUp : (uid: String, cb : (name : String) -> Unit) -> Unit,
     val joinGroup: (gid: String, uid: String, cb: () -> Unit) -> Unit,
     val leaveGroup: (gid: String, uid: String, cb: () -> Unit) -> Unit,
     val openModal: (gid: String) -> Unit
@@ -241,9 +252,13 @@ class GroupListAdapter(
     private lateinit var grvManager: RecyclerView.LayoutManager
     private lateinit var vParent: ViewGroup
 
+    fun update(groups : ArrayList<Group>) {
+        groupList = groups
+        notifyDataSetChanged()
+    }
+
     private fun hideGoneElements(itemView: View) {
         /* Toggle the views that should be GONE at start */
-        itemView.sub_item.visibility = View.GONE
         itemView.joinButton.visibility = View.GONE
         itemView.leaveButton.visibility = View.GONE
     }
@@ -260,6 +275,7 @@ class GroupListAdapter(
 
         return ViewHolder(cellView)
     }
+
 
     /* Set attributes to text in bind */
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -285,13 +301,14 @@ class GroupListAdapter(
         /* BIND USER LIST */
         grvManager = LinearLayoutManager(vParent.context)
         val gRV = item.userListView
-        val grvAdapter = UserListAdapter(userLists[position])
+        val grvAdapter = UserListAdapter(curr.playerList, lookUp)
 
         /* Bind everything together */
         gRV.apply {
             layoutManager = grvManager
             adapter = grvAdapter
         }
+
 
         hideGoneElements(item)
 

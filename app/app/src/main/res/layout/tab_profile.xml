@@ -116,12 +116,12 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        app:lottie_fileName="circles.json"
-        app:lottie_enableMergePathsForKitKatAndAbove="true"
         app:layout_constraintBottom_toBottomOf="@+id/my_groups"
         app:layout_constraintEnd_toEndOf="@+id/my_groups"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:lottie_enableMergePathsForKitKatAndAbove="true"
+        app:lottie_fileName="circles.json" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/my_groups"

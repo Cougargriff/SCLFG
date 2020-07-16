@@ -249,8 +249,10 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setupVM() {
+        var a = rv.adapter as GListAdapter
         vm.getUser().observe(viewLifecycleOwner, Observer {
             user = it!!
+            a.authUser = user
             nameChange.text = user.screenName
             val num_in = user.inGroups.size
             numIn.text = "In ${num_in} Groups"
@@ -268,20 +270,18 @@ class ProfileFragment : Fragment() {
                 if (it.playerList.contains(user.uid)) {
                     tempList.add(it)
                 }
-
             }
 
-            groupsList = tempList
+                groupsList = tempList
+            (rv.adapter as GListAdapter).update(groupsList as ArrayList<Group>)
 
-            var newAdapter = GListAdapter(ArrayList(groupsList), user, modifyGroup, openModal)
-            rv.adapter = newAdapter
         })
     }
 }
 
 
 class GListAdapter(
-    val groupList: ArrayList<Group>, val authUser: User,
+    var groupList: ArrayList<Group>, var authUser: User,
     val modifyGroup: (gid: String, action: GroupMod) -> Unit,
     val openModal : (gid : String) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -309,7 +309,7 @@ class GListAdapter(
         item.maxCount.text = "${curr.maxPlayers}  ...  Players Joined"
         item.shiploc.text = "${curr.ship} - ${curr.loc}"
 
-        item.setOnClickListener {
+        item.title_view.setOnClickListener {
             openModal(groupList[position].gid)
         }
 
@@ -331,6 +331,13 @@ class GListAdapter(
 
     fun removeItem(gid: String) {
         modifyGroup(gid, GroupMod.DELETE)
+    }
+
+    fun update(group_list : ArrayList<Group>) {
+            groupList = group_list
+
+
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {

@@ -89,11 +89,14 @@ class ViewModel : ViewModel() {
     private val auth = FirebaseAuth.getInstance()
 
     fun lookupUID(uid: String, cb: (name : String) -> Unit) {
-        db.collection("users").document(uid).get()
-            .addOnSuccessListener {
-                val result = userFromHash(it)
-                cb(result.screenName)
-            }
+        if(uid.isNotBlank()) {
+            db.collection("users").document(uid).get()
+                .addOnSuccessListener {
+                    val result = userFromHash(it)
+                    cb(result.screenName)
+                }
+        }
+
     }
 
 
@@ -129,12 +132,14 @@ class ViewModel : ViewModel() {
     }
 
     fun findUser(uid: String, cb: (User) -> Unit) {
-        userRef.document(uid).get()
-            .addOnCompleteListener {
-                if (it.isSuccessful && it.result!!.exists()) {
-                    cb(userFromHash(it.result!!))
+        if(uid.isNotBlank()) {
+            userRef.document(uid).get()
+                .addOnCompleteListener {
+                    if (it.isSuccessful && it.result!!.exists()) {
+                        cb(userFromHash(it.result!!))
+                    }
                 }
-            }
+        }
     }
 
     fun updateScreenName(name: String) {
