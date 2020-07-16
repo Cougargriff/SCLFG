@@ -43,7 +43,7 @@ class ModalGroupActivity : AppCompatActivity() {
         paSetup()
         vpSetup()
         initVMs()
-        modalViewPager.setCurrentItem(0, true)
+        modalViewPager.setCurrentItem(1, true)
     }
 
     private fun initVMs() {

@@ -30,10 +30,13 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         hideUI()
-        login_bar.imageAssetsFolder = "/assets/"
-        login_bar.setAnimation("spacecraft.json")
-        login_bar.playAnimation()
-        login_bar.loop(true)
+        login_bar.apply {
+            imageAssetsFolder = "/assets/"
+            setAnimation("spacecraft.json")
+            speed = 0.75f
+            loop(true)
+            playAnimation()
+        }
 
         /* if credentials exist in cache, login with cb method */
         localCache = getCache().apply {

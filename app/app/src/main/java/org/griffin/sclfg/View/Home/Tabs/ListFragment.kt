@@ -1,6 +1,7 @@
 package org.griffin.sclfg.View.Home.Tabs
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -271,9 +272,14 @@ class GroupListAdapter(
         item.descriptionBox.text = groupList[position].description
         item.space_animate.apply {
             setAnimation("stars_profile.json")
-            speed = Math.random().toFloat()
+            speed = Math.random().toFloat() * 0.85f
             loop(true)
             playAnimation()
+        }
+
+        item.openModalButton.setOnHoverListener { v, event ->
+            v.setBackgroundColor(Color.BLUE)
+            true
         }
 
         /* BIND USER LIST */
