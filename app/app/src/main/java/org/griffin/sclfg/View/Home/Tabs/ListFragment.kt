@@ -144,7 +144,10 @@ class ListFragment : Fragment() {
                 possible in the future to just make local
                 call to function for getGroups instead of vm call
              */
-            vm.update()
+            (rv.adapter as GroupListAdapter).apply {
+                authUser = user
+                notifyDataSetChanged()
+            }
         })
 
         vm.getGroups().observe(viewLifecycleOwner, Observer {
@@ -352,13 +355,42 @@ class GroupListAdapter(
         }
     }
 
+    private enum class Animate {
+        HIDE, SHOW
+    }
+    private fun animateChange(view : View, type : Animate) {
+        when(type) {
+            Animate.HIDE -> {
+                view.animate()
+                    .setDuration(150L)
+                    .alpha(0f)
+                    .withEndAction {
+                        view.visibility = View.GONE
+                    }
+                    .start()
+            }
+            Animate.SHOW -> {
+                view.animate()
+                    .alpha(0f)
+                    .setDuration(0L)
+                    .start()
+                view.visibility = View.VISIBLE
+                view.animate()
+                    .setDuration(500L)
+                    .alpha(1f)
+                    .start()
+
+            }
+        }
+    }
+
     private fun onExpand(item: View) {
         when (item.sub_item.visibility) {
             View.GONE -> /* Already gone. Need to switch to Visible */ {
-                item.sub_item.visibility = View.VISIBLE
+                animateChange(item.sub_item, Animate.SHOW)
             }
             View.VISIBLE -> /* Its visible. Need to toggle Gone */ {
-                item.sub_item.visibility = View.GONE
+                animateChange(item.sub_item, Animate.HIDE)
             }
         }
     }

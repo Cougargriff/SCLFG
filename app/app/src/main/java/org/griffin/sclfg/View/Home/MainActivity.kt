@@ -139,6 +139,10 @@ class MainActivity : AppCompatActivity() {
         /* View Model Setup */
         /* UI Updaters on Observation Changes from FireStore */
 
+        vm.getUser().observe(this, Observer {
+            user = it!!
+        })
+
         vm.getLocs().observe(this, Observer {
             locList = it!!
 
@@ -152,9 +156,6 @@ class MainActivity : AppCompatActivity() {
             })
         })
 
-        vm.getUser().observe(this, Observer {
-            user = it!!
-        })
 
 
     }

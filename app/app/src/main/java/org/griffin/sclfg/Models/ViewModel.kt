@@ -167,7 +167,7 @@ class ViewModel : ViewModel() {
             )
             .addOnCompleteListener {
                 loadUser()
-                loadGroups()
+                //loadGroups()
             }
     }
 
@@ -200,7 +200,7 @@ class ViewModel : ViewModel() {
             )
             .addOnCompleteListener {
                 loadUser()
-                loadGroups()
+                //loadGroups()
             }
     }
 
@@ -210,7 +210,7 @@ class ViewModel : ViewModel() {
             .set(hash, SetOptions.merge())
             .addOnSuccessListener {
                 addGroupToUser(gid)
-                loadGroups()
+                //loadGroups()
             }
             .addOnCompleteListener {
                 cb()
@@ -222,7 +222,7 @@ class ViewModel : ViewModel() {
             .set(hash, SetOptions.merge())
             .addOnSuccessListener {
                 removeGroupFromUser(gid)
-                loadGroups()
+                //loadGroups()
             }
             .addOnCompleteListener {
                 cb()
@@ -317,6 +317,26 @@ class ViewModel : ViewModel() {
         uiCb()
     }
 
+    fun syncInGroups(tUser : User) {
+        val grps = groups.value
+        var temp_user = tUser
+        var temp_gids = ArrayList<String>()
+        grps!!.forEach {
+            temp_gids.add(it.gid)
+        }
+
+        tUser.inGroups.forEachIndexed { index, gid ->
+            if(temp_gids.contains(gid)) {
+                temp_user!!.inGroups.removeAt(index)
+            }
+        }
+
+        user.value = temp_user
+        userRef.document(tUser.uid).set(hashMapOf(
+            "inGroups" to temp_gids
+        ), SetOptions.merge())
+    }
+
     private fun loadUser() {
         userRef = db.collection("users")
         userRef.document(auth.uid!!).get()
@@ -324,6 +344,7 @@ class ViewModel : ViewModel() {
                 if (it.isSuccessful) {
                     var result = it.result!!
                     if (result.exists()) {
+
                         user.value = userFromHash(result)
                     } else {
                         initUser()
