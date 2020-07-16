@@ -9,15 +9,15 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/messageTabs"
-        app:tabTextColor="@color/iosBlue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="#00FFFFFF"
         android:elevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tabIndicatorColor="@color/iosBlue">
+        app:tabIndicatorColor="@color/iosBlue"
+        app:tabTextColor="@color/iosBlue">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"

@@ -85,15 +85,18 @@ class MainActivity : AppCompatActivity() {
                 )
                 nameEditBox.layoutParams = lp
 
-                AlertDialog.Builder(this).apply {
+                var dialog = AlertDialog.Builder(this).apply {
                     setTitle(NAME_CHANGE_TITLE)
                     setCancelable(true)
                     setPositiveButton("Change") { dialog, which ->
                         vm.updateScreenName(nameEditBox.text.toString())
                     }
                     setView(nameEditBox)
-                }.show()
-
+                }
+                dialog.show().apply {
+                    this.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(resources.getColor(R.color.iosBlue))
+                    this.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(resources.getColor(R.color.iosBlue))
+                }
             }
         }
         return super.onOptionsItemSelected(item)
@@ -118,7 +121,7 @@ class MainActivity : AppCompatActivity() {
         vpSetup()
         firestoreSetup()
         vmSetup()
-        viewPager.setCurrentItem(0, true)
+        viewPager.setCurrentItem(2, true)
 
         /* if from register, update screen name */
         registerScreenName()

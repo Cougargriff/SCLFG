@@ -1,5 +1,7 @@
 package org.griffin.sclfg.View.Home.Tabs
 
+import android.animation.Animator
+import android.animation.ValueAnimator
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
@@ -12,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -29,8 +32,10 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import com.soundcloud.android.crop.Crop
+import kotlinx.android.synthetic.main.fragment_message.view.*
 import kotlinx.android.synthetic.main.profile_group_cell.view.*
 import kotlinx.android.synthetic.main.tab_profile.*
+import kotlinx.android.synthetic.main.tab_profile.numIn
 import kotlinx.android.synthetic.main.tab_profile.view.*
 import org.griffin.sclfg.Models.Group
 import org.griffin.sclfg.Models.GroupMod
@@ -38,6 +43,7 @@ import org.griffin.sclfg.Models.User
 import org.griffin.sclfg.Models.ViewModel
 import org.griffin.sclfg.R
 import org.griffin.sclfg.Utils.Gestures.SwipeToDeleteCallback
+import org.griffin.sclfg.View.GroupView.ModalGroupActivity
 import java.io.File
 import java.io.InputStream
 
@@ -91,7 +97,7 @@ class ProfileFragment : Fragment() {
         rv = view.my_groups
         rvManager = LinearLayoutManager(context)
 
-        rvAdapter = GListAdapter(ArrayList(), user, modifyGroup)
+        rvAdapter = GListAdapter(ArrayList(), user, modifyGroup, openModal)
 
         rv.apply {
             layoutManager = rvManager
@@ -102,26 +108,59 @@ class ProfileFragment : Fragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val adapter = rv.adapter as GListAdapter
                 val group = adapter.groupList[viewHolder.adapterPosition]
-                AlertDialog.Builder(requireContext()).apply {
+                var dialog = AlertDialog.Builder(requireContext()).apply {
                     setTitle("Delete " + group.name + "?")
                     setPositiveButton("Yes") { dialog, which ->
                         adapter.removeItem(group.gid)
                     }
                     setNegativeButton("Cancel") { dialog, which ->
-
                         vm.update()
                     }
-                }.show()
+                }.setCancelable(false)
+
+                dialog.show().apply {
+                    this.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(resources.getColor(R.color.iosBlue))
+                    this.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(resources.getColor(R.color.iosBlue))
+                }
             }
         }
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(rv)
+
+        view.loading_profile_groups.apply {
+            setAnimation("circles.json")
+            speed = 0.7f
+            playAnimation()
+            addAnimatorListener(object: Animator.AnimatorListener {
+                override fun onAnimationEnd(animation: Animator?) {
+                    loading_profile_groups.visibility = View.GONE
+                }
+                override fun onAnimationCancel(animation: Animator?) = Unit
+                override fun onAnimationRepeat(animation: Animator?) = Unit
+                override fun onAnimationStart(animation: Animator?) = Unit
+            })
+        }
 
         return view
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        profile_animate.apply {
+            setAnimation("cell_animate.json")
+            loop(true)
+            playAnimation()
+        }
+
+        little_ship.apply {
+            setAnimation("stars_profile.json")
+            speed = 0.4f
+            loop(true)
+            playAnimation()
+        }
+
+
 
         setupVM()
         try {
@@ -143,6 +182,12 @@ class ProfileFragment : Fragment() {
                 }
             }.show()
         }
+    }
+
+    private val openModal = fun (gid : String) {
+        var intent = Intent(requireActivity(), ModalGroupActivity::class.java)
+        intent.putExtra("gid", gid)
+        ContextCompat.startActivity(requireContext(), intent, null)
     }
 
     /* TODO fallback image now shows. Check to see if upload will refresh */
@@ -204,9 +249,13 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setupVM() {
+        var a = rv.adapter as GListAdapter
         vm.getUser().observe(viewLifecycleOwner, Observer {
             user = it!!
+            a.authUser = user
             nameChange.text = user.screenName
+            val num_in = user.inGroups.size
+            numIn.text = "In ${num_in} Groups"
         })
 
         vm.getGroups().observe(viewLifecycleOwner, Observer {
@@ -221,21 +270,20 @@ class ProfileFragment : Fragment() {
                 if (it.playerList.contains(user.uid)) {
                     tempList.add(it)
                 }
-
             }
 
-            groupsList = tempList
+                groupsList = tempList
+            (rv.adapter as GListAdapter).update(groupsList as ArrayList<Group>)
 
-            var newAdapter = GListAdapter(ArrayList(groupsList), user, modifyGroup)
-            rv.adapter = newAdapter
         })
     }
 }
 
 
 class GListAdapter(
-    val groupList: ArrayList<Group>, val authUser: User,
-    val modifyGroup: (gid: String, action: GroupMod) -> Unit
+    var groupList: ArrayList<Group>, var authUser: User,
+    val modifyGroup: (gid: String, action: GroupMod) -> Unit,
+    val openModal : (gid : String) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     class ViewHolder(val cellView: LinearLayout) : RecyclerView.ViewHolder(cellView)
 
@@ -261,6 +309,10 @@ class GListAdapter(
         item.maxCount.text = "${curr.maxPlayers}  ...  Players Joined"
         item.shiploc.text = "${curr.ship} - ${curr.loc}"
 
+        item.title_view.setOnClickListener {
+            openModal(groupList[position].gid)
+        }
+
         if (curr.createdBy == authUser.uid) {
             item.active_toggle.isChecked = !curr.active
             item.active_toggle.isActivated = !curr.active
@@ -279,6 +331,13 @@ class GListAdapter(
 
     fun removeItem(gid: String) {
         modifyGroup(gid, GroupMod.DELETE)
+    }
+
+    fun update(group_list : ArrayList<Group>) {
+            groupList = group_list
+
+
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {

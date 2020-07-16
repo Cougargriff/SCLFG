@@ -34,6 +34,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <view
+                android:id="@+id/space_animate"
+                class="com.airbnb.lottie.LottieAnimationView"
+                android:layout_width="200dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:lottie_enableMergePathsForKitKatAndAbove="true"
+                app:lottie_fileName="stars_profile.json" />
+
             <TextView
                 android:id="@+id/groupName"
                 android:layout_width="0dp"
@@ -110,7 +121,7 @@
                 android:layout_marginBottom="4dp"
                 android:backgroundTint="@color/iosBlue"
                 android:contentDescription="TODO"
-                android:foreground="@drawable/ic_group_add_black_24dp"
+                android:foreground="@drawable/ic_baseline_emoji_people_24"
                 android:scaleType="fitCenter"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/expander"
@@ -126,7 +137,7 @@
                 android:layout_marginBottom="4dp"
                 android:backgroundTint="@color/iosBlue"
                 android:contentDescription="TODO"
-                android:foreground="@drawable/ic_close_black_24dp"
+                android:foreground="@drawable/ic_baseline_clear_24"
                 android:scaleType="fitCenter"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/expander"
@@ -162,7 +173,7 @@
         android:background="#00FFFFFF"
         android:backgroundTint="#00FFFFFF"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

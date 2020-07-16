@@ -14,7 +14,7 @@
     <string name="sign_up">or Sign Up!</string>
     <string name="register">Register</string>
     <string name="create_a_group">Create A Group</string>
-    <string name="crew_name">Crew Name</string>
+    <string name="crew_name">Group Name</string>
     <string name="ship">Ship</string>
     <string name="how_many_players">How many players?</string>
     <string name="location">Location</string>

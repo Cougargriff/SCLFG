@@ -11,6 +11,7 @@ import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.io.Serializable
+import java.lang.Exception
 
 /* Need to pass Ship and Loc db ref to get lists */
 class ViewModel : ViewModel() {
@@ -88,12 +89,16 @@ class ViewModel : ViewModel() {
     private val auth = FirebaseAuth.getInstance()
 
     fun lookupUID(uid: String, cb: (name : String) -> Unit) {
-        db.collection("users").document(uid).get()
-            .addOnSuccessListener {
-                val result = userFromHash(it)
-                cb(result.screenName)
-            }
+        if(uid.isNotBlank()) {
+            db.collection("users").document(uid).get()
+                .addOnSuccessListener {
+                    val result = userFromHash(it)
+                    cb(result.screenName)
+                }
+        }
+
     }
+
 
     private val user: MutableLiveData<User> by lazy {
         MutableLiveData<User>().also {
@@ -127,12 +132,14 @@ class ViewModel : ViewModel() {
     }
 
     fun findUser(uid: String, cb: (User) -> Unit) {
-        userRef.document(uid).get()
-            .addOnCompleteListener {
-                if (it.isSuccessful && it.result!!.exists()) {
-                    cb(userFromHash(it.result!!))
+        if(uid.isNotBlank()) {
+            userRef.document(uid).get()
+                .addOnCompleteListener {
+                    if (it.isSuccessful && it.result!!.exists()) {
+                        cb(userFromHash(it.result!!))
+                    }
                 }
-            }
+        }
     }
 
     fun updateScreenName(name: String) {
@@ -162,6 +169,20 @@ class ViewModel : ViewModel() {
                 loadUser()
                 loadGroups()
             }
+    }
+
+
+    fun getGroup(gid : String, cb: (MutableLiveData<Group>) -> Unit) {
+        grpRef.document(gid).addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+            val result =  groupFromHash(documentSnapshot!!)
+            try {
+                cb(MutableLiveData(result))
+            }
+            catch (err : Exception) {
+
+            }
+        }
+
     }
 
     fun removeGroupFromUser(gid: String, uid: String = user.value!!.uid) {
