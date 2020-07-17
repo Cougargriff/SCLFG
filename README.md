@@ -20,6 +20,12 @@ Finally, in the Create screen, you can create new groups which you will be added
 
 From any of the main screens, you can access the Sign Out and Change screen name options by clicking the three dots menu in the upper right. 
 
+#### Known Issues
+
+- If while in a dedicated group screen and the group is delete by another user. The app will crash...
+
+- Tool bar items for sign out and change screen name should appear as icons. Not only in the overflow menu (three dots menu).
+
 
 ## Preview
 
