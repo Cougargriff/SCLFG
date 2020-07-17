@@ -31,8 +31,13 @@ class MessageViewModel() : ViewModel() {
         private val db = Firebase.firestore
         private lateinit var gid : String
 
-        fun setGid(id : String) {
-                gid = id
+        fun setGid(id : String, errCb : () -> Unit) {
+                try {
+                        gid = id
+                }
+                catch(err : Exception) {
+                        errCb()
+                }
         }
         private val msgs : MutableLiveData<List<Message>> by lazy {
                 MutableLiveData<List<Message>>().also {

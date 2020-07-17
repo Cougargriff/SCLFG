@@ -10,7 +10,7 @@
     android:icon="@drawable/ic_signout"
     android:title="@string/sign_out"
     android:visible="true"
-    app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_change_name"

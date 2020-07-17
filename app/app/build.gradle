@@ -47,6 +47,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.2.2'
     implementation 'com.google.firebase:firebase-auth:19.3.0'
     implementation 'com.google.firebase:firebase-firestore-ktx:21.4.1'
+    implementation 'com.google.android.gms:play-services-auth:18.0.0'
+
     implementation 'com.google.firebase:firebase-storage-ktx:19.1.1'
 
     // ViewModel
@@ -76,6 +78,9 @@ dependencies {
 
     /* Lottie View Animations */
     implementation 'com.airbnb.android:lottie:3.0.1'
+
+    /* Material Design */
+    implementation 'com.google.android.material:material:<version>'
 
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])

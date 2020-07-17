@@ -72,6 +72,7 @@
 
                     <EditText
                         android:id="@+id/emailR"
+                        style="@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
@@ -112,6 +113,7 @@
 
                     <EditText
                         android:id="@+id/passwordR"
+                        style="@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_marginStart="16dp"
@@ -152,6 +154,7 @@
 
                     <EditText
                         android:id="@+id/passwordR_confirm"
+                        style="@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_marginStart="16dp"
@@ -192,6 +195,7 @@
 
                     <EditText
                         android:id="@+id/screen_name"
+                        style="@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
@@ -229,7 +233,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="32dp"
         android:background="@drawable/round_button_blue"
-        android:elevation="20dp"
+        android:elevation="8dp"
         android:text="@string/register"
         android:textColor="#FFFFFF"
         android:visibility="visible"
@@ -237,6 +241,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.454"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <view
+        android:id="@+id/reg_anim_ship"
+        class="com.airbnb.lottie.LottieAnimationView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/register_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_enableMergePathsForKitKatAndAbove="true"
+        app:lottie_fileName="reg_ship.json" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

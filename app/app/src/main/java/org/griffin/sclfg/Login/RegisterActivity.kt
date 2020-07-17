@@ -1,5 +1,6 @@
 package org.griffin.sclfg.Login
 
+import android.animation.Animator
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.core.content.ContextCompat
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_register.*
+import kotlinx.android.synthetic.main.tab_profile.view.*
 import org.griffin.sclfg.Utils.Cache.LocalCache
 import org.griffin.sclfg.R
 import org.griffin.sclfg.View.Home.MainActivity
@@ -24,6 +26,13 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
+        reg_anim_ship.apply {
+            setAnimation("reg_ship.json")
+            speed = 0.25f
+            loop(true)
+            playAnimation()
+        }
+
         localCache = LocalCache(this)
         setupRegisterOnclick()
     }
@@ -37,20 +46,33 @@ class RegisterActivity : AppCompatActivity() {
         register_container.visibility = View.GONE
     }
 
-    private fun startAnimation() {
+    private fun startAnimation(cb_end : () -> Unit, cb_start : () -> Unit) {
         reg_anim.visibility = View.VISIBLE
         reg_anim.apply {
             setAnimation("register_loading.json")
-            loop(true)
             playAnimation()
+            addAnimatorListener(object: Animator.AnimatorListener {
+                override fun onAnimationEnd(animation: Animator?) {
+                    cb_end()
+                }
+                override fun onAnimationCancel(animation: Animator?) = Unit
+                override fun onAnimationRepeat(animation: Animator?) = Unit
+                override fun onAnimationStart(animation: Animator?) {
+                    cb_start()
+                }
+            })
         }
     }
 
     var cache_register_cb = fun(user: LoginHandler.User, uid: String) {
         hideUi()
-        startAnimation()
         localCache.cacheCredentials(user)
-        register_cb(uid)
+        startAnimation({
+            register_cb(uid)
+        }, {
+            reg_anim_ship.visibility = View.GONE
+            signup_button.visibility = View.GONE
+        })
     }
 
     var register_cb = fun(uid: String) {
@@ -60,7 +82,6 @@ class RegisterActivity : AppCompatActivity() {
             intent.putExtra("display_name", display_name)
             ContextCompat.startActivity(this@RegisterActivity, intent, null)
         }
-
     }
 
     private fun initUser(uid: String, cb: () -> Unit) {
@@ -95,6 +116,7 @@ class RegisterActivity : AppCompatActivity() {
              */
             if (emailR.text.isNotBlank() &&
                 (passwordR.text.isNotBlank() && passwordR_confirm.text.isNotBlank()) &&
+                passwordR.length() >= 6 && passwordR_confirm.length() >= 6 &&
                 (passwordR.text.toString().compareTo(passwordR_confirm.text.toString()) == 0) &&
                 screen_name.text.isNotBlank()
             ) {
