@@ -10,6 +10,16 @@ You can now click the bottom right of group listings to expand the player list v
 
 You can set groups that you own to private to not appear in the public group listings. Public Group Listings update on any change to the groups list in the database live. Click on the floating action button in the expanded group to access the group messaging view. :fire: :fire:
 
+#### Using the App!
+
+The app is broken into three main screens: Create, List, and Me. The Me screen contains all of the groups you are in as well as privacy toggles for any groups that you are the owner of. Clicking a group card under My Groups will take you to the Group Screen featuring group messaging and an About Group section. For any groups you own, you also have the option to swipe the cell to delete. 
+
+In the list screen you can see all public group listings. Click the person to join a group and the X to leave. The white button will expand the group cell to show existing users of the particular group. After joining a group a button will show in the sub list to view the dedicated group screen. 
+
+Finally, in the Create screen, you can create new groups which you will be added to automatically on creation.
+
+From any of the main screens, you can access the Sign Out and Change screen name options by clicking the three dots menu in the upper right. 
+
 
 ## Preview
 
