@@ -119,7 +119,6 @@ class MessageFragment(val gid : String) : Fragment() {
                 }
                 msgs = temp
 
-                /* TODO not scrolling to bottom of messages nicely... */
                rv.smoothScrollToPosition(0)
             })
     })
@@ -181,10 +180,7 @@ class MessageListAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val curr = messageList[position]
         var item = holder.itemView
-
         item.content_box.text = curr.content
-
-        /* TODO slow on updates */
         retrieveName(curr.author) {
             item.author_box.text = it
         }

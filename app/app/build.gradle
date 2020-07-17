@@ -77,6 +77,9 @@ dependencies {
     /* Lottie View Animations */
     implementation 'com.airbnb.android:lottie:3.0.1'
 
+    /* Material Design */
+    implementation 'com.google.android.material:material:<version>'
+
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

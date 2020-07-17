@@ -6,6 +6,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
@@ -326,14 +327,35 @@ class GListAdapter(
             openModal(groupList[position].gid)
         }
 
+
         if (curr.createdBy == authUser.uid) {
+
+            when (item.active_toggle.isChecked) {
+                true -> {
+                    item.active_toggle.thumbTintList = ColorStateList.valueOf(Color.parseColor("#2196F3"))
+                    item.active_toggle.trackTintList = ColorStateList.valueOf(Color.parseColor("#2196F3"))
+                }
+                false -> {
+                    item.active_toggle.thumbTintList = ColorStateList.valueOf(Color.parseColor("#CECFD1"))
+                    item.active_toggle.trackTintList = ColorStateList.valueOf(Color.parseColor("#CECFD1"))
+                }
+            }
+
             item.active_toggle.isChecked = !curr.active
             item.active_toggle.isActivated = !curr.active
             item.active_toggle.setOnClickListener {
                 /* isActivated is state !BEFORE! switched */
                 when (it.isActivated) {
-                    false -> modifyGroup(curr.gid, GroupMod.MAKE_PRIVATE)
-                    true -> modifyGroup(curr.gid, GroupMod.MAKE_PUBLIC)
+                    false -> {
+                        item.active_toggle.thumbTintList = ColorStateList.valueOf(Color.parseColor("#2196F3"))
+                        item.active_toggle.trackTintList = ColorStateList.valueOf(Color.parseColor("#2196F3"))
+                        modifyGroup(curr.gid, GroupMod.MAKE_PRIVATE)
+                    }
+                    true -> {
+                        item.active_toggle.thumbTintList = ColorStateList.valueOf(Color.parseColor("#CECFD1"))
+                        item.active_toggle.trackTintList = ColorStateList.valueOf(Color.parseColor("#CECFD1"))
+                        modifyGroup(curr.gid, GroupMod.MAKE_PUBLIC)
+                    }
                 }
             }
         } else {

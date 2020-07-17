@@ -58,6 +58,7 @@ class LoginActivity : AppCompatActivity() {
 //        email.visibility = View.GONE
 //        password.visibility = View.GONE
         login_button.visibility = View.GONE
+
         register_button.visibility = View.GONE
     }
 
@@ -66,7 +67,7 @@ class LoginActivity : AppCompatActivity() {
         login_container.visibility = View.VISIBLE
         space_stars.visibility = View.VISIBLE
         space_stars.setAnimation("space.json")
-        space_stars.speed = 0.3f
+        space_stars.speed = 0.2f
         space_stars.playAnimation()
         space_stars.loop(true)
 //        textView2.visibility = View.VISIBLE
@@ -74,7 +75,6 @@ class LoginActivity : AppCompatActivity() {
 //        password.visibility = View.VISIBLE
         login_button.visibility = View.VISIBLE
         register_button.visibility = View.VISIBLE
-
         login_bar.visibility = View.INVISIBLE
     }
 
@@ -122,6 +122,10 @@ class LoginActivity : AppCompatActivity() {
         login_button.elevation = BUTTON_ELEVATION
     }
 
+    override fun onBackPressed() {
+       /* dont go back on login screen */
+    }
+
     private fun setupLoginOnclick() {
         /* Setup Button OnClick Listeners */
 
@@ -130,7 +134,7 @@ class LoginActivity : AppCompatActivity() {
             var lpacket = LoginHandler.User(email = "", password = "")
             var err = false
 
-            if (email.text.isNotBlank() && password.text.isNotBlank()) {
+            if (email.text!!.isNotBlank() && password.text.isNotBlank()) {
                 lpacket.email = email.text.toString()
                 lpacket.password = password.text.toString()
             } else {

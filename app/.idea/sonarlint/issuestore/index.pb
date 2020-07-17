@@ -7,8 +7,6 @@ r
 Bapp/src/main/java/org/griffin/sclfg/View/Home/Tabs/ListFragment.kt,5\7\57831375590f6130b7b65e88e2edeb87e749b857
 m
 =app/src/main/java/org/griffin/sclfg/Login/RegisterActivity.kt,7\6\7686863ce84142a81cc9435957234eeac64711e1
-€
-Papp/src/main/java/org/griffin/sclfg/View/GroupView/Messaging/MessageViewModel.kt,6\d\6dc36b73c6c26641f3a598e0ad9cb363ba248944
 e
 5app/src/main/java/org/griffin/sclfg/Models/Message.kt,a\d\adc106e2e639d433bfbb8601f96ba5d652a35820
 g
