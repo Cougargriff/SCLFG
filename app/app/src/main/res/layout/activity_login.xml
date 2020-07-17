@@ -17,7 +17,7 @@
         app:cardBackgroundColor="@color/iosBlue"
         app:cardCornerRadius="12dp"
         app:cardElevation="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/login_button"
+        app:layout_constraintBottom_toTopOf="@+id/google_login_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -139,6 +139,23 @@
         app:layout_constraintBottom_toTopOf="@+id/register_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/google_login_button"
+        style="@android:style/Widget.Material.Light.Button.Borderless"
+        android:layout_width="360dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/round_button_blue"
+        android:backgroundTint="@color/iosBlue"
+        android:elevation="8dp"
+        android:text="Sign in with Google"
+        android:textColor="#FFFFFF"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/login_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button

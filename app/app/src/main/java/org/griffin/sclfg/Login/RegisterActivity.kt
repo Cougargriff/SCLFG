@@ -50,7 +50,6 @@ class RegisterActivity : AppCompatActivity() {
         reg_anim.visibility = View.VISIBLE
         reg_anim.apply {
             setAnimation("register_loading.json")
-            loop(true)
             playAnimation()
             addAnimatorListener(object: Animator.AnimatorListener {
                 override fun onAnimationEnd(animation: Animator?) {
@@ -71,7 +70,8 @@ class RegisterActivity : AppCompatActivity() {
         startAnimation({
             register_cb(uid)
         }, {
-
+            reg_anim_ship.visibility = View.GONE
+            signup_button.visibility = View.GONE
         })
     }
 

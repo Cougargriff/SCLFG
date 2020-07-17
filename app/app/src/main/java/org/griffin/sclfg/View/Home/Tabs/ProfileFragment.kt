@@ -15,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -103,39 +104,15 @@ class ProfileFragment : Fragment() {
             adapter = rvAdapter
         }
 
-
-
-        val swipeHandler = object : SwipeToDeleteCallback(requireContext()) {
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val adapter = rv.adapter as GListAdapter
-                val group = adapter.groupList[viewHolder.adapterPosition]
-                var dialog = AlertDialog.Builder(requireContext()).apply {
-                    setTitle("Delete " + group.name + "?")
-                    setPositiveButton("Yes") { dialog, which ->
-                        adapter.removeItem(group.gid)
-                    }
-                    setNegativeButton("Cancel") { dialog, which ->
-                        vm.update()
-                    }
-                }.setCancelable(false)
-
-                dialog.show().apply {
-                    this.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(resources.getColor(R.color.iosBlue))
-                    this.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(resources.getColor(R.color.iosBlue))
-                }
-            }
-        }
-        val itemTouchHelper = ItemTouchHelper(swipeHandler)
-        itemTouchHelper.attachToRecyclerView(rv)
-
         view.loading_profile_groups.apply {
             setAnimation("register_loading.json")
             speed = 2f
             playAnimation()
-            addAnimatorListener(object: Animator.AnimatorListener {
+            addAnimatorListener(object : Animator.AnimatorListener {
                 override fun onAnimationEnd(animation: Animator?) {
                     loading_profile_groups.visibility = View.GONE
                 }
+
                 override fun onAnimationCancel(animation: Animator?) = Unit
                 override fun onAnimationRepeat(animation: Animator?) = Unit
                 override fun onAnimationStart(animation: Animator?) = Unit
@@ -150,7 +127,7 @@ class ProfileFragment : Fragment() {
 
         profile_animate.apply {
             setAnimation("cell_animate.json")
-                speed = 1.5f
+            speed = 1.5f
             loop(true)
             playAnimation()
         }
@@ -184,14 +161,16 @@ class ProfileFragment : Fragment() {
                 }
             }
 
-                dialog.show().apply{
-                    this.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(resources.getColor(R.color.iosBlue))
-                    this.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(resources.getColor(R.color.iosBlue))
-                }
+            dialog.show().apply {
+                this.getButton(AlertDialog.BUTTON_POSITIVE)
+                    .setTextColor(resources.getColor(R.color.iosBlue))
+                this.getButton(AlertDialog.BUTTON_NEGATIVE)
+                    .setTextColor(resources.getColor(R.color.iosBlue))
+            }
         }
     }
 
-    private val openModal = fun (gid : String) {
+    private val openModal = fun(gid: String) {
         var intent = Intent(requireActivity(), ModalGroupActivity::class.java)
         intent.putExtra("gid", gid)
         ContextCompat.startActivity(requireContext(), intent, null)
@@ -284,7 +263,7 @@ class ProfileFragment : Fragment() {
                 }
             }
 
-                groupsList = tempList
+            groupsList = tempList
             (rv.adapter as GListAdapter).update(groupsList as ArrayList<Group>)
 
         })
@@ -295,7 +274,7 @@ class ProfileFragment : Fragment() {
 class GListAdapter(
     var groupList: ArrayList<Group>, var authUser: User,
     val modifyGroup: (gid: String, action: GroupMod) -> Unit,
-    val openModal : (gid : String) -> Unit
+    val openModal: (gid: String) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     class ViewHolder(val cellView: LinearLayout) : RecyclerView.ViewHolder(cellView)
 
@@ -310,6 +289,44 @@ class GListAdapter(
         vParent = parent
 
         return ViewHolder(cellView)
+    }
+
+    private val DURATION = 250L
+    private fun animateDown(views: List<View>) {
+        if (views.size > 0) {
+            views[0].animate()
+                .alpha(0f)
+                .setDuration(DURATION)
+                .withStartAction {
+                    if (views.size > 1)
+                        animateDown(views.subList(1, views.size))
+
+                }
+                .withEndAction {
+                    views[0].visibility = View.INVISIBLE
+                }
+                .start()
+        }
+
+    }
+
+    private fun animateUp(views: List<View>) {
+
+        if (views.size > 0) {
+            views[0].animate()
+                .alpha(1f)
+                .setDuration(DURATION)
+                .withStartAction {
+                    if (views.size > 1) {
+                        animateUp(views.subList(1, views.size))
+                    }
+
+                }
+                .withEndAction {
+                    views[0].visibility = View.VISIBLE
+                }
+                .start()
+        }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -328,15 +345,77 @@ class GListAdapter(
         if (curr.createdBy == authUser.uid) {
             item.active_toggle.isChecked = !curr.active
             item.active_toggle.isActivated = !curr.active
+            item.startDelete.visibility = View.VISIBLE
+
+            val swapViews = fun(showDelete: Boolean) {
+                when (showDelete) {
+                    true -> {
+                        animateUp(
+                            listOf(
+                                item.delete_button!!,
+                                item.cancel_button!!
+                            )
+                        )
+
+
+                        animateDown(
+                            listOf(
+
+                                item.startDelete!!,
+
+                                item.cell_container!!
+                            )
+                        )
+                    }
+                    false -> {
+                        animateDown(
+                            listOf(
+                                item.delete_button!!,
+                                item.cancel_button!!
+                            )
+                        )
+
+
+                        animateUp(
+                            listOf(
+                                item.startDelete!!,
+                                item.cell_container
+                            )
+                        )
+                    }
+                }
+            }
+
+
+            /* attach delete button */
+            item.startDelete.setOnClickListener {
+                swapViews(true)
+            }
+
+            item.cancel_button.setOnClickListener {
+                swapViews(false)
+            }
+
+            item.delete_button.setOnClickListener {
+                /* Delete the item */
+                swapViews(false)
+                removeItem(curr.gid, position)
+            }
+
+
 
             when (item.active_toggle.isChecked) {
-                 true -> {
-                    item.active_toggle.thumbTintList = ColorStateList.valueOf(Color.parseColor("#2196F3"))
-                    item.active_toggle.trackTintList = ColorStateList.valueOf(Color.parseColor("#2196F3"))
+                true -> {
+                    item.active_toggle.thumbTintList =
+                        ColorStateList.valueOf(Color.parseColor("#2196F3"))
+                    item.active_toggle.trackTintList =
+                        ColorStateList.valueOf(Color.parseColor("#2196F3"))
                 }
                 false -> {
-                    item.active_toggle.thumbTintList = ColorStateList.valueOf(Color.parseColor("#CECFD1"))
-                    item.active_toggle.trackTintList = ColorStateList.valueOf(Color.parseColor("#CECFD1"))
+                    item.active_toggle.thumbTintList =
+                        ColorStateList.valueOf(Color.parseColor("#CECFD1"))
+                    item.active_toggle.trackTintList =
+                        ColorStateList.valueOf(Color.parseColor("#CECFD1"))
                 }
             }
 
@@ -345,13 +424,17 @@ class GListAdapter(
                 /* isActivated is state !BEFORE! switched */
                 when (it.isActivated) {
                     false -> {
-                        item.active_toggle.thumbTintList = ColorStateList.valueOf(Color.parseColor("#2196F3"))
-                        item.active_toggle.trackTintList = ColorStateList.valueOf(Color.parseColor("#2196F3"))
+                        item.active_toggle.thumbTintList =
+                            ColorStateList.valueOf(Color.parseColor("#2196F3"))
+                        item.active_toggle.trackTintList =
+                            ColorStateList.valueOf(Color.parseColor("#2196F3"))
                         modifyGroup(curr.gid, GroupMod.MAKE_PRIVATE)
                     }
                     true -> {
-                        item.active_toggle.thumbTintList = ColorStateList.valueOf(Color.parseColor("#CECFD1"))
-                        item.active_toggle.trackTintList = ColorStateList.valueOf(Color.parseColor("#CECFD1"))
+                        item.active_toggle.thumbTintList =
+                            ColorStateList.valueOf(Color.parseColor("#CECFD1"))
+                        item.active_toggle.trackTintList =
+                            ColorStateList.valueOf(Color.parseColor("#CECFD1"))
                         modifyGroup(curr.gid, GroupMod.MAKE_PUBLIC)
                     }
                 }
@@ -362,14 +445,13 @@ class GListAdapter(
 
     }
 
-    fun removeItem(gid: String) {
+    fun removeItem(gid: String, position: Int) {
         modifyGroup(gid, GroupMod.DELETE)
+        notifyItemRemoved(position)
     }
 
-    fun update(group_list : ArrayList<Group>) {
-            groupList = group_list
-
-
+    fun update(group_list: ArrayList<Group>) {
+        groupList = group_list
         notifyDataSetChanged()
     }
 
