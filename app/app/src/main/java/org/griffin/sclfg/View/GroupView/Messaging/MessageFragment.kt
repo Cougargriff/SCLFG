@@ -12,8 +12,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Timestamp
-import kotlinx.android.synthetic.main.fragment_message.*
-import kotlinx.android.synthetic.main.fragment_message.view.*
+import kotlinx.android.synthetic.main.tab_message.*
+import kotlinx.android.synthetic.main.tab_message.view.*
 import kotlinx.android.synthetic.main.message_cell_lb.view.*
 import org.griffin.sclfg.Models.*
 import org.griffin.sclfg.R
@@ -35,7 +35,7 @@ class MessageFragment(val gid : String) : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        var view = inflater.inflate(R.layout.fragment_message, container, false)
+        var view = inflater.inflate(R.layout.tab_message, container, false)
 
         /* Setup Message View */
         rv = view.messageView
@@ -147,20 +147,20 @@ class MessageListAdapter(
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         var cellView = LayoutInflater.from(parent.context).inflate((
-                R.layout.message_cell_rg),
+                R.layout.message_cell_lb),
             parent, false
         ) as LinearLayout
 
         when(viewType) {
             TYPE_ME -> {
                 cellView = LayoutInflater.from(parent.context).inflate(
-                    R.layout.message_cell_lb,
+                    R.layout.message_cell_rg,
                     parent, false
                 ) as LinearLayout
             }
             TYPE_OTHER -> {
                 cellView = LayoutInflater.from(parent.context).inflate((
-                        R.layout.message_cell_rg),
+                        R.layout.message_cell_lb),
                     parent, false
                         ) as LinearLayout
             }

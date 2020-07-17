@@ -28,15 +28,13 @@ class ModalGroupActivity : AppCompatActivity() {
         setContentView(R.layout.activity_modal_group)
 
 
-        try {
+
             gid = intent.extras!!.getString("gid", "")
-            msgVm.setGid(gid)
-        }
-        catch(err : Exception) {
-            /* If fail to get gid, return to main screen */
-            val intent = Intent(this@ModalGroupActivity, MainActivity::class.java)
-            ContextCompat.startActivity(this@ModalGroupActivity, intent, null)
-        }
+            msgVm.setGid(gid) {
+                /* If fail to get gid, return to main screen */
+                val intent = Intent(this@ModalGroupActivity, MainActivity::class.java)
+                ContextCompat.startActivity(this@ModalGroupActivity, intent, null)
+            }
 
         paSetup()
         vpSetup()

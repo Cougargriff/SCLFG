@@ -33,7 +33,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import com.soundcloud.android.crop.Crop
-import kotlinx.android.synthetic.main.fragment_message.view.*
+import kotlinx.android.synthetic.main.tab_message.view.*
 import kotlinx.android.synthetic.main.profile_group_cell.view.*
 import kotlinx.android.synthetic.main.tab_profile.*
 import kotlinx.android.synthetic.main.tab_profile.numIn
@@ -58,8 +58,6 @@ class MyAppGlideModule : AppGlideModule() {
         )
     }
 }
-
-
 
 class ProfileFragment : Fragment() {
     private val PICK_PHOTO_TO_CROP = 0
@@ -327,11 +325,12 @@ class GListAdapter(
             openModal(groupList[position].gid)
         }
 
-
         if (curr.createdBy == authUser.uid) {
+            item.active_toggle.isChecked = !curr.active
+            item.active_toggle.isActivated = !curr.active
 
             when (item.active_toggle.isChecked) {
-                true -> {
+                 true -> {
                     item.active_toggle.thumbTintList = ColorStateList.valueOf(Color.parseColor("#2196F3"))
                     item.active_toggle.trackTintList = ColorStateList.valueOf(Color.parseColor("#2196F3"))
                 }
@@ -341,8 +340,7 @@ class GListAdapter(
                 }
             }
 
-            item.active_toggle.isChecked = !curr.active
-            item.active_toggle.isActivated = !curr.active
+
             item.active_toggle.setOnClickListener {
                 /* isActivated is state !BEFORE! switched */
                 when (it.isActivated) {
