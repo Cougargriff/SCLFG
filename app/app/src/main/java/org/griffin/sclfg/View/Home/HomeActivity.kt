@@ -18,10 +18,11 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activty_main.*
-import org.griffin.sclfg.Utils.Cache.LocalCache
 import org.griffin.sclfg.Login.LoginActivity
 import org.griffin.sclfg.Models.*
 import org.griffin.sclfg.R
+import org.griffin.sclfg.Utils.Adapters.PageAdapter
+import org.griffin.sclfg.Utils.Cache.LocalCache
 import org.griffin.sclfg.View.Home.Tabs.CreateFragment
 import org.griffin.sclfg.View.Home.Tabs.ListFragment
 import org.griffin.sclfg.View.Home.Tabs.ProfileFragment
@@ -77,7 +78,7 @@ class HomeActivity : AppCompatActivity() {
             (R.id.action_change_name) -> {
                 /* alert dialog to change screen name */
                 val nameEditBox = EditText(this).apply {
-                    
+
                 }
                 var lp = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -94,8 +95,10 @@ class HomeActivity : AppCompatActivity() {
                     setView(nameEditBox)
                 }
                 dialog.show().apply {
-                    this.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(resources.getColor(R.color.iosBlue))
-                    this.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(resources.getColor(R.color.iosBlue))
+                    this.getButton(AlertDialog.BUTTON_POSITIVE)
+                        .setTextColor(resources.getColor(R.color.iosBlue))
+                    this.getButton(AlertDialog.BUTTON_NEGATIVE)
+                        .setTextColor(resources.getColor(R.color.iosBlue))
                 }
             }
         }
@@ -155,7 +158,6 @@ class HomeActivity : AppCompatActivity() {
                 })
             })
         })
-
 
 
     }

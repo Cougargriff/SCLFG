@@ -10,14 +10,14 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_login.*
 import org.griffin.sclfg.Models.GroupViewModel
-import org.griffin.sclfg.Utils.Cache.LocalCache
 import org.griffin.sclfg.R
+import org.griffin.sclfg.Utils.Cache.LocalCache
 import org.griffin.sclfg.View.Home.HomeActivity
 
 
 class LoginActivity : AppCompatActivity() {
 
-    private val vm : GroupViewModel  by viewModels()
+    private val vm: GroupViewModel by viewModels()
 
     private val BUTTON_ELEVATION by lazy {
         applicationContext.resources.displayMetrics.density * 8
@@ -82,7 +82,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     var cachedLogin = fun(user: String, psw: String) {
-        LoginHandler(LoginHandler.User(user, psw), err_cb).apply {
+        EmailPasswordLoginHandler(EmailPasswordLoginHandler.User(user, psw), err_cb).apply {
             login(already_cached_cb)
         }
     }
@@ -101,12 +101,12 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    var cache_login_cb = fun(user: LoginHandler.User) {
+    var cache_login_cb = fun(user: EmailPasswordLoginHandler.User) {
         localCache.cacheCredentials(user)
         login_cb()
     }
 
-    var already_cached_cb = fun(user: LoginHandler.User) {
+    var already_cached_cb = fun(user: EmailPasswordLoginHandler.User) {
         login_cb()
     }
 
@@ -122,7 +122,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-       /* dont go back on login screen */
+        /* dont go back on login screen */
     }
 
     private fun setupLoginOnclick() {
@@ -130,7 +130,7 @@ class LoginActivity : AppCompatActivity() {
 
         login_button.setOnClickListener {
             login_button.elevation = 0f
-            var lpacket = LoginHandler.User(email = "", password = "")
+            var lpacket = EmailPasswordLoginHandler.User(email = "", password = "")
             var err = false
 
             if (email.text!!.isNotBlank() && password.text.isNotBlank()) {
@@ -149,7 +149,7 @@ class LoginActivity : AppCompatActivity() {
             } else /* Handle Login Request */ {
                 Toast.makeText(this, "Logging in...", Toast.LENGTH_SHORT).show()
 
-                LoginHandler(lpacket, err_cb).apply {
+                EmailPasswordLoginHandler(lpacket, err_cb).apply {
                     login(cache_login_cb)
                 }
             }

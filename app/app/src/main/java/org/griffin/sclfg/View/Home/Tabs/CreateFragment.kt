@@ -12,9 +12,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.tab_create.*
 import org.griffin.sclfg.Models.Group
+import org.griffin.sclfg.Models.GroupViewModel
 import org.griffin.sclfg.Models.Location
 import org.griffin.sclfg.Models.Ship
-import org.griffin.sclfg.Models.GroupViewModel
 import org.griffin.sclfg.R
 
 class CreateFragment : Fragment() {

@@ -9,5 +9,5 @@
     android:titleTextColor="@color/white"
     tools:actionBarNavMode="list"
     tools:menu="@menu/action_menu">
-    
+
 </Toolbar>

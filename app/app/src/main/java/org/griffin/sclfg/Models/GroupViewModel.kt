@@ -11,7 +11,6 @@ import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.io.Serializable
-import java.lang.Exception
 
 /* Need to pass Ship and Loc db ref to get lists */
 class GroupViewModel : ViewModel() {
@@ -36,7 +35,6 @@ class GroupViewModel : ViewModel() {
         }
 
 
-
         fun userFromHash(result: DocumentSnapshot): User {
             var time = result["timeCreated"].toString()
             var name = result["screenName"].toString()
@@ -44,7 +42,7 @@ class GroupViewModel : ViewModel() {
             return User(name, result.id, inGroups, time.toLong())
         }
 
-        fun groupToHash(grp : Group, uid : String) : HashMap<String, Any> {
+        fun groupToHash(grp: Group, uid: String): HashMap<String, Any> {
             return hashMapOf(
                 "name" to grp.name,
                 "timeCreated" to grp.timeCreated,
@@ -83,13 +81,13 @@ class GroupViewModel : ViewModel() {
     private lateinit var shipRef: CollectionReference
     private lateinit var locRef: CollectionReference
     private lateinit var userRef: CollectionReference
-    private lateinit var grpRef : CollectionReference
+    private lateinit var grpRef: CollectionReference
 
     private val db = Firebase.firestore
     private val auth = FirebaseAuth.getInstance()
 
-    fun lookupUID(uid: String, cb: (name : String) -> Unit) {
-        if(uid.isNotBlank()) {
+    fun lookupUID(uid: String, cb: (name: String) -> Unit) {
+        if (uid.isNotBlank()) {
             db.collection("users").document(uid).get()
                 .addOnSuccessListener {
                     val result = userFromHash(it)
@@ -132,7 +130,7 @@ class GroupViewModel : ViewModel() {
     }
 
     fun findUser(uid: String, cb: (User) -> Unit) {
-        if(uid.isNotBlank()) {
+        if (uid.isNotBlank()) {
             userRef.document(uid).get()
                 .addOnCompleteListener {
                     if (it.isSuccessful && it.result!!.exists()) {
@@ -155,7 +153,6 @@ class GroupViewModel : ViewModel() {
     }
 
 
-
     fun addGroupToUser(gid: String) {
         var currIngroups = user.value!!.inGroups
         currIngroups.add(gid)
@@ -171,13 +168,12 @@ class GroupViewModel : ViewModel() {
     }
 
 
-    fun getGroup(gid : String, cb: (MutableLiveData<Group>) -> Unit) {
+    fun getGroup(gid: String, cb: (MutableLiveData<Group>) -> Unit) {
         grpRef.document(gid).addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-            val result =  groupFromHash(documentSnapshot!!)
+            val result = groupFromHash(documentSnapshot!!)
             try {
                 cb(MutableLiveData(result))
-            }
-            catch (err : Exception) {
+            } catch (err: Exception) {
 
             }
         }
@@ -301,7 +297,7 @@ class GroupViewModel : ViewModel() {
 
     fun pushGroup(grp: Group, uiCb: () -> Unit, cb: (gid: String) -> Unit) {
 
-       val grpHash = groupToHash(grp, auth.uid!!)
+        val grpHash = groupToHash(grp, auth.uid!!)
 
         grpRef.add(grpHash).addOnCompleteListener {
             if (it.isSuccessful) {
@@ -313,7 +309,7 @@ class GroupViewModel : ViewModel() {
         uiCb()
     }
 
-    fun syncInGroups(tUser : User) {
+    fun syncInGroups(tUser: User) {
         val grps = groups.value
         var temp_user = tUser
         var temp_gids = ArrayList<String>()
@@ -322,15 +318,17 @@ class GroupViewModel : ViewModel() {
         }
 
         tUser.inGroups.forEachIndexed { index, gid ->
-            if(temp_gids.contains(gid)) {
-                temp_user!!.inGroups.removeAt(index)
+            if (temp_gids.contains(gid)) {
+                temp_user.inGroups.removeAt(index)
             }
         }
 
         user.value = temp_user
-        userRef.document(tUser.uid).set(hashMapOf(
-            "inGroups" to temp_gids
-        ), SetOptions.merge())
+        userRef.document(tUser.uid).set(
+            hashMapOf(
+                "inGroups" to temp_gids
+            ), SetOptions.merge()
+        )
     }
 
     private fun loadUser() {
