@@ -12,13 +12,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.tab_create.*
 import org.griffin.sclfg.Models.Group
+import org.griffin.sclfg.Models.GroupViewModel
 import org.griffin.sclfg.Models.Location
 import org.griffin.sclfg.Models.Ship
-import org.griffin.sclfg.Models.ViewModel
 import org.griffin.sclfg.R
 
 class CreateFragment : Fragment() {
-    private val vm: ViewModel by activityViewModels()
+    private val vm: GroupViewModel by activityViewModels()
     private lateinit var shipList: List<Ship>
     private lateinit var locList: List<Location>
     private var SHIPS = listOf("")

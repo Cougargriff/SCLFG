@@ -2,7 +2,7 @@ package org.griffin.sclfg.Utils.Cache
 
 import android.content.Context
 import android.content.SharedPreferences
-import org.griffin.sclfg.Login.LoginHandler
+import org.griffin.sclfg.Login.EmailPasswordLoginHandler
 
 private val USER_PROP = "USER_FIELD"
 private val PSW_PROP = "PSW_FIELD"
@@ -12,7 +12,7 @@ class LocalCache(context: Context) {
         context.getSharedPreferences("SCLFG", Context.MODE_PRIVATE)
     }
 
-    fun cacheCredentials(lpacket: LoginHandler.User) {
+    fun cacheCredentials(lpacket: EmailPasswordLoginHandler.User) {
         sharedPref.edit().apply {
             putString(USER_PROP, lpacket.email)
             putString(PSW_PROP, lpacket.password)

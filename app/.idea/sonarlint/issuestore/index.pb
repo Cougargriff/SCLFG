@@ -29,3 +29,7 @@ Papp/src/main/java/org/griffin/sclfg/Utils/Gestures/SwipeToDeleteGroupCallback.k
 app/build.gradle,f\4\f4a01d6a4fcb971362ec00a83903fd3902f52164
 t
 Dapp/src/main/java/org/griffin/sclfg/View/Home/Tabs/CreateFragment.kt,f\0\f01610e52af45cb0a11cb89e4f62f3ebfb9655ab
+n
+>app/src/main/java/org/griffin/sclfg/Models/MessageViewModel.kt,a\e\ae996d8789ca67493944ea73d78c427465eb72cf
+i
+9app/src/main/java/org/griffin/sclfg/Login/LoginHandler.kt,e\9\e9389652f0c5f73aaa762d13d11e462414b0a4f2

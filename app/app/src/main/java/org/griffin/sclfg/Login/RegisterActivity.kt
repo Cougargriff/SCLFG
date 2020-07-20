@@ -5,15 +5,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_register.*
-import kotlinx.android.synthetic.main.tab_profile.view.*
-import org.griffin.sclfg.Utils.Cache.LocalCache
+import org.griffin.sclfg.Models.GroupViewModel
 import org.griffin.sclfg.R
-import org.griffin.sclfg.View.Home.MainActivity
+import org.griffin.sclfg.Utils.Cache.LocalCache
+import org.griffin.sclfg.View.Home.HomeActivity
 
 class RegisterActivity : AppCompatActivity() {
     private val BUTTON_ELEVATION by lazy {
@@ -21,6 +20,8 @@ class RegisterActivity : AppCompatActivity() {
     }
     private lateinit var localCache: LocalCache
     private lateinit var display_name: String
+    private val gvm : GroupViewModel by viewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,12 +47,12 @@ class RegisterActivity : AppCompatActivity() {
         register_container.visibility = View.GONE
     }
 
-    private fun startAnimation(cb_end : () -> Unit, cb_start : () -> Unit) {
+    private fun startAnimation(cb_end: () -> Unit, cb_start: () -> Unit) {
         reg_anim.visibility = View.VISIBLE
         reg_anim.apply {
             setAnimation("register_loading.json")
             playAnimation()
-            addAnimatorListener(object: Animator.AnimatorListener {
+            addAnimatorListener(object : Animator.AnimatorListener {
                 override fun onAnimationEnd(animation: Animator?) {
                     cb_end()
                 }
@@ -64,7 +65,7 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    var cache_register_cb = fun(user: LoginHandler.User, uid: String) {
+    var cache_register_cb = fun(user: EmailPasswordLoginHandler.User, uid: String) {
         hideUi()
         localCache.cacheCredentials(user)
         startAnimation({
@@ -78,65 +79,56 @@ class RegisterActivity : AppCompatActivity() {
     var register_cb = fun(uid: String) {
         /* INIT USER w/ display name */
         initUser(uid) {
-            var intent = Intent(this@RegisterActivity, MainActivity::class.java)
+            var intent = Intent(this@RegisterActivity, HomeActivity::class.java)
             intent.putExtra("display_name", display_name)
             ContextCompat.startActivity(this@RegisterActivity, intent, null)
         }
     }
 
-    private fun initUser(uid: String, cb: () -> Unit) {
-        val userRef = Firebase.firestore.collection("users")
-        userRef.document(uid).get()
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
-                    var result = it.result!!
-                    /* create the user if they don't exist already */
-                    if (!result.exists()) {
-                        var initUser = hashMapOf(
-                            "timeCreated" to System.currentTimeMillis().toString(),
-                            "inGroups" to emptyList<String>(),
-                            "screenName" to display_name
-                        )
-                        userRef.document(uid).set(initUser).also {
-                            cb()
-                        }
-                    }
-                }
-            }
+    private fun initUser(uid: String, gotoMain: () -> Unit) {
+        gvm.initUser(display_name) {
+            gotoMain()
+        }
+    }
+
+    private fun validateFields(rpacket : EmailPasswordLoginHandler.User) : Boolean {
+        var err = false
+        /*
+            Check all fields for non empty.
+            Check passwords match
+         */
+        if (emailR.text.isNotBlank() &&
+            (passwordR.text.isNotBlank() && passwordR_confirm.text.isNotBlank()) &&
+            passwordR.length() >= 6 && passwordR_confirm.length() >= 6 &&
+            (passwordR.text.toString().compareTo(passwordR_confirm.text.toString()) == 0) &&
+            screen_name.text.isNotBlank() && screen_name.text.length <= 20
+        ) {
+            rpacket.email = emailR.text.toString()
+            rpacket.password = passwordR.text.toString()
+            display_name = screen_name.text.toString()
+        } else {
+            err = true
+        }
+        if (err) {
+            return false
+        }
+            return true
     }
 
     private fun setupRegisterOnclick() {
         signup_button.setOnClickListener {
             signup_button.elevation = 0f
-            var rpacket = LoginHandler.User(email = "", password = "")
-            var err = false
-            /*
-                Check all fields for non empty.
-                Check passwords match
-             */
-            if (emailR.text.isNotBlank() &&
-                (passwordR.text.isNotBlank() && passwordR_confirm.text.isNotBlank()) &&
-                passwordR.length() >= 6 && passwordR_confirm.length() >= 6 &&
-                (passwordR.text.toString().compareTo(passwordR_confirm.text.toString()) == 0) &&
-                screen_name.text.isNotBlank()
-            ) {
-                rpacket.email = emailR.text.toString()
-                rpacket.password = passwordR.text.toString()
-                display_name = screen_name.text.toString()
-            } else {
-                err = true
-            }
-
-            if (err) {
-                Toast.makeText(
-                    this,
-                    "Either email or password was incorrect!", Toast.LENGTH_SHORT
-                ).show()
-            } else {
+            var rpacket = EmailPasswordLoginHandler.User(email = "", password = "")
+            if(validateFields(rpacket)) {
                 Toast.makeText(this, "Registering...", Toast.LENGTH_SHORT).show()
-                LoginHandler(rpacket, err_cb).apply {
+                EmailPasswordLoginHandler(rpacket, err_cb).apply {
                     register(cache_register_cb)
                 }
+            } else {
+                Toast.makeText(
+                    this,
+                    "Valid Email?\nPassword Length >= 6\nDisplay Name Length <= 20", Toast.LENGTH_LONG
+                ).show()
             }
         }
     }

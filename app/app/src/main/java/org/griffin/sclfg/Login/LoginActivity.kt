@@ -8,17 +8,16 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import com.airbnb.lottie.LottieComposition
 import kotlinx.android.synthetic.main.activity_login.*
-import org.griffin.sclfg.Models.ViewModel
-import org.griffin.sclfg.Utils.Cache.LocalCache
+import org.griffin.sclfg.Models.GroupViewModel
 import org.griffin.sclfg.R
-import org.griffin.sclfg.View.Home.MainActivity
+import org.griffin.sclfg.Utils.Cache.LocalCache
+import org.griffin.sclfg.View.Home.HomeActivity
 
 
 class LoginActivity : AppCompatActivity() {
 
-    private val vm : ViewModel  by viewModels()
+    private val vm: GroupViewModel by viewModels()
 
     private val BUTTON_ELEVATION by lazy {
         applicationContext.resources.displayMetrics.density * 8
@@ -45,20 +44,13 @@ class LoginActivity : AppCompatActivity() {
                 unhideUI()
             })
         }
-
-
-
         setupLoginOnclick()
     }
 
     private fun hideUI() {
         login_container.visibility = View.GONE
         space_stars.visibility = View.GONE
-//        textView2.visibility = View.INVISIBLE
-//        email.visibility = View.GONE
-//        password.visibility = View.GONE
         login_button.visibility = View.GONE
-
         register_button.visibility = View.GONE
     }
 
@@ -66,13 +58,12 @@ class LoginActivity : AppCompatActivity() {
         /* un-hide sign in tools */
         login_container.visibility = View.VISIBLE
         space_stars.visibility = View.VISIBLE
-        space_stars.setAnimation("space.json")
-        space_stars.speed = 0.2f
-        space_stars.playAnimation()
-        space_stars.loop(true)
-//        textView2.visibility = View.VISIBLE
-//        email.visibility = View.VISIBLE
-//        password.visibility = View.VISIBLE
+        if (!space_stars.isAnimating) {
+            space_stars.setAnimation("space.json")
+            space_stars.speed = 0.2f
+            space_stars.playAnimation()
+            space_stars.loop(true)
+        }
         login_button.visibility = View.VISIBLE
         register_button.visibility = View.VISIBLE
         login_bar.visibility = View.INVISIBLE
@@ -83,7 +74,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     var cachedLogin = fun(user: String, psw: String) {
-        LoginHandler(LoginHandler.User(user, psw), err_cb).apply {
+        EmailPasswordLoginHandler(EmailPasswordLoginHandler.User(user, psw), err_cb).apply {
             login(already_cached_cb)
         }
     }
@@ -94,20 +85,20 @@ class LoginActivity : AppCompatActivity() {
      */
     var login_cb = fun() {
 
-        vm.getUser().observe(this, Observer {
-            var intent = Intent(this@LoginActivity, MainActivity::class.java)
+        vm.getUser().observe(this, Observer{
+            var intent = Intent(this@LoginActivity, HomeActivity::class.java)
             ContextCompat.startActivity(this@LoginActivity, intent, null)
         })
 
 
     }
 
-    var cache_login_cb = fun(user: LoginHandler.User) {
+    var cache_login_cb = fun(user: EmailPasswordLoginHandler.User) {
         localCache.cacheCredentials(user)
         login_cb()
     }
 
-    var already_cached_cb = fun(user: LoginHandler.User) {
+    var already_cached_cb = fun(user: EmailPasswordLoginHandler.User) {
         login_cb()
     }
 
@@ -123,7 +114,24 @@ class LoginActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-       /* dont go back on login screen */
+        /* dont go back on login screen */
+    }
+
+    private fun validateFields(lpacket : EmailPasswordLoginHandler.User) : Boolean {
+        var err = false
+
+        if (email.text!!.isNotBlank() && password.text.isNotBlank()) {
+            lpacket.email = email.text.toString()
+            lpacket.password = password.text.toString()
+        } else {
+            err = true
+        }
+
+        if (err) {
+            return false
+        }
+        /* Handle Login Request */
+        return true
     }
 
     private fun setupLoginOnclick() {
@@ -131,28 +139,19 @@ class LoginActivity : AppCompatActivity() {
 
         login_button.setOnClickListener {
             login_button.elevation = 0f
-            var lpacket = LoginHandler.User(email = "", password = "")
-            var err = false
+            var lpacket = EmailPasswordLoginHandler.User(email = "", password = "")
+            if(validateFields(lpacket)) {
+                Toast.makeText(this, "Logging in...", Toast.LENGTH_SHORT).show()
 
-            if (email.text!!.isNotBlank() && password.text.isNotBlank()) {
-                lpacket.email = email.text.toString()
-                lpacket.password = password.text.toString()
+                EmailPasswordLoginHandler(lpacket, err_cb).apply {
+                    login(cache_login_cb)
+                }
             } else {
-                err = true
-            }
-
-            if (err) {
                 Toast.makeText(
                     this,
                     "Either email or password was incorrect!", Toast.LENGTH_SHORT
                 ).show()
                 err_cb()
-            } else /* Handle Login Request */ {
-                Toast.makeText(this, "Logging in...", Toast.LENGTH_SHORT).show()
-
-                LoginHandler(lpacket, err_cb).apply {
-                    login(cache_login_cb)
-                }
             }
         }
 

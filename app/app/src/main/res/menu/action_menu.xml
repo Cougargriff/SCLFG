@@ -5,11 +5,11 @@
     android:layout_height="match_parent">
 
     <item
-    android:id="@+id/action_sign_out"
-    android:enabled="true"
-    android:icon="@drawable/ic_signout"
-    android:title="@string/sign_out"
-    android:visible="true"
+        android:id="@+id/action_sign_out"
+        android:enabled="true"
+        android:icon="@drawable/ic_signout"
+        android:title="@string/sign_out"
+        android:visible="true"
         app:showAsAction="always" />
 
     <item
