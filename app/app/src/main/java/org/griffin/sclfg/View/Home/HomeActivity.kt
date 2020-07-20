@@ -2,8 +2,6 @@ package org.griffin.sclfg.View.Home
 
 import android.app.AlertDialog
 import android.content.Intent
-import android.graphics.BlendMode
-import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -13,7 +11,6 @@ import android.widget.Toolbar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.marginStart
 import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import com.google.firebase.auth.FirebaseAuth
@@ -29,7 +26,7 @@ import org.griffin.sclfg.View.Home.Tabs.CreateFragment
 import org.griffin.sclfg.View.Home.Tabs.ListFragment
 import org.griffin.sclfg.View.Home.Tabs.ProfileFragment
 
-class MainActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity() {
     /*
         Firebase / FireStore Setup
      */
@@ -43,7 +40,7 @@ class MainActivity : AppCompatActivity() {
 
     /* Fragment Frameworks */
     private lateinit var pa: PageAdapter
-    private val vm: ViewModel by viewModels()
+    private val vm: GroupViewModel by viewModels()
 
     private lateinit var shipList: List<Ship>
     private lateinit var locList: List<Location>
@@ -71,8 +68,8 @@ class MainActivity : AppCompatActivity() {
                     /* clear cache and sign out */
                     clearCache {
                         /* callback after cache clear */
-                        val intent = Intent(this@MainActivity, LoginActivity::class.java)
-                        ContextCompat.startActivity(this@MainActivity, intent, null)
+                        val intent = Intent(this@HomeActivity, LoginActivity::class.java)
+                        ContextCompat.startActivity(this@HomeActivity, intent, null)
                     }
                 }
             }

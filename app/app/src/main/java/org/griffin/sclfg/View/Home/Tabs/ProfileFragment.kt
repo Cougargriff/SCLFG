@@ -1,7 +1,6 @@
 package org.griffin.sclfg.View.Home.Tabs
 
 import android.animation.Animator
-import android.animation.ValueAnimator
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
@@ -15,12 +14,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
@@ -34,7 +31,6 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import com.soundcloud.android.crop.Crop
-import kotlinx.android.synthetic.main.tab_message.view.*
 import kotlinx.android.synthetic.main.profile_group_cell.view.*
 import kotlinx.android.synthetic.main.tab_profile.*
 import kotlinx.android.synthetic.main.tab_profile.numIn
@@ -42,10 +38,9 @@ import kotlinx.android.synthetic.main.tab_profile.view.*
 import org.griffin.sclfg.Models.Group
 import org.griffin.sclfg.Models.GroupMod
 import org.griffin.sclfg.Models.User
-import org.griffin.sclfg.Models.ViewModel
+import org.griffin.sclfg.Models.GroupViewModel
 import org.griffin.sclfg.R
-import org.griffin.sclfg.Utils.Gestures.SwipeToDeleteCallback
-import org.griffin.sclfg.View.GroupView.ModalGroupActivity
+import org.griffin.sclfg.View.Group.GroupActivity
 import java.io.File
 import java.io.InputStream
 
@@ -62,7 +57,7 @@ class MyAppGlideModule : AppGlideModule() {
 
 class ProfileFragment : Fragment() {
     private val PICK_PHOTO_TO_CROP = 0
-    private val vm: ViewModel by activityViewModels()
+    private val vm: GroupViewModel by activityViewModels()
     private var user = User("", "", ArrayList(), 0)
 
     /* Recycler View Setup */
@@ -171,7 +166,7 @@ class ProfileFragment : Fragment() {
     }
 
     private val openModal = fun(gid: String) {
-        var intent = Intent(requireActivity(), ModalGroupActivity::class.java)
+        var intent = Intent(requireActivity(), GroupActivity::class.java)
         intent.putExtra("gid", gid)
         ContextCompat.startActivity(requireContext(), intent, null)
     }

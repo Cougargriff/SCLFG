@@ -8,9 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
@@ -23,12 +21,12 @@ import kotlinx.android.synthetic.main.tab_list.view.*
 import kotlinx.android.synthetic.main.user_cell.view.*
 import org.griffin.sclfg.Models.Group
 import org.griffin.sclfg.Models.User
-import org.griffin.sclfg.Models.ViewModel
+import org.griffin.sclfg.Models.GroupViewModel
 import org.griffin.sclfg.R
-import org.griffin.sclfg.View.GroupView.ModalGroupActivity
+import org.griffin.sclfg.View.Group.GroupActivity
 
 class ListFragment : Fragment() {
-    private val vm: ViewModel by activityViewModels()
+    private val vm: GroupViewModel by activityViewModels()
     private lateinit var groupsList: List<Group>
     private var user = User("", "", ArrayList(), 0)
     private var userLists: ArrayList<ArrayList<User>> = ArrayList()
@@ -47,7 +45,7 @@ class ListFragment : Fragment() {
     private val joinGroup = fun(gid: String, uid: String, cb: () -> Unit) {
         vm.groupExists(gid, err_cb) {
             /* callback invoked after checking if group still exists on db */
-            var g = ViewModel.groupFromHash(it)
+            var g = GroupViewModel.groupFromHash(it)
             if (g.currCount + 1 <= g.maxPlayers) {
                 g.playerList.add(uid)
                 /* only pass updated data due to nature of merging docs */
@@ -68,7 +66,7 @@ class ListFragment : Fragment() {
     }
 
     private val openModal = fun (gid : String) {
-        var intent = Intent(requireActivity(), ModalGroupActivity::class.java)
+        var intent = Intent(requireActivity(), GroupActivity::class.java)
         intent.putExtra("gid", gid)
         ContextCompat.startActivity(requireContext(), intent, null)
     }
@@ -76,7 +74,7 @@ class ListFragment : Fragment() {
     private val leaveGroup = fun(gid: String, uid: String, cb: () -> Unit) {
         vm.groupExists(gid, err_cb) {
             /* callback invoked after checking if group still exists on db */
-            var g = ViewModel.groupFromHash(it)
+            var g = GroupViewModel.groupFromHash(it)
             if (g.currCount - 1 >= 0) {
                 g.playerList.remove(uid)
                 /* only pass updated data due to nature of merging docs */

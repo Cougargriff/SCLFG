@@ -1,4 +1,4 @@
-package org.griffin.sclfg.View.GroupView.Messaging
+package org.griffin.sclfg.View.Group.Messaging
 
 import android.animation.Animator
 import android.os.Bundle
@@ -20,7 +20,7 @@ import org.griffin.sclfg.R
 
 class MessageFragment(val gid : String) : Fragment() {
 
-    private val vm : ViewModel by activityViewModels()
+    private val vm : GroupViewModel by activityViewModels()
     private val msgVm : MessageViewModel by activityViewModels()
 
     private var msgs = ArrayList<Message>()

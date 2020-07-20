@@ -10,10 +10,9 @@ import androidx.core.content.ContextCompat
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_register.*
-import kotlinx.android.synthetic.main.tab_profile.view.*
 import org.griffin.sclfg.Utils.Cache.LocalCache
 import org.griffin.sclfg.R
-import org.griffin.sclfg.View.Home.MainActivity
+import org.griffin.sclfg.View.Home.HomeActivity
 
 class RegisterActivity : AppCompatActivity() {
     private val BUTTON_ELEVATION by lazy {
@@ -78,7 +77,7 @@ class RegisterActivity : AppCompatActivity() {
     var register_cb = fun(uid: String) {
         /* INIT USER w/ display name */
         initUser(uid) {
-            var intent = Intent(this@RegisterActivity, MainActivity::class.java)
+            var intent = Intent(this@RegisterActivity, HomeActivity::class.java)
             intent.putExtra("display_name", display_name)
             ContextCompat.startActivity(this@RegisterActivity, intent, null)
         }

@@ -14,7 +14,7 @@ import java.io.Serializable
 import java.lang.Exception
 
 /* Need to pass Ship and Loc db ref to get lists */
-class ViewModel : ViewModel() {
+class GroupViewModel : ViewModel() {
     companion object {
 
         fun findShip(searchName: String, shipList: List<Ship>): Ship? {
