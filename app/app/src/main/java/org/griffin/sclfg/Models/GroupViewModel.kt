@@ -4,16 +4,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import java.io.Serializable
+import kotlin.coroutines.CoroutineContext
 
 /* Need to pass Ship and Loc db ref to get lists */
-class GroupViewModel : ViewModel() {
+class GroupViewModel : ViewModel(), CoroutineScope {
     companion object {
 
         fun findShip(searchName: String, shipList: List<Ship>): Ship? {
@@ -86,6 +90,8 @@ class GroupViewModel : ViewModel() {
     private val grpRef = db.collection("groups")
 
 
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main
 
     fun lookupUID(uid: String, cb: (name: String) -> Unit) {
         if (uid.isNotBlank()) {
@@ -97,6 +103,15 @@ class GroupViewModel : ViewModel() {
         }
     }
 
+    val modifyGroup = fun(gid: String, action: GroupMod, err_cb: () -> Unit) {
+        groupExists(gid, err_cb) {
+            when (action) {
+                GroupMod.MAKE_PRIVATE -> makePrivate(gid)
+                GroupMod.MAKE_PUBLIC -> makePublic(gid)
+                GroupMod.DELETE -> delete(gid)
+            }
+        }
+    }
 
     private val user: MutableLiveData<User> by lazy {
         MutableLiveData<User>().also {
@@ -105,13 +120,13 @@ class GroupViewModel : ViewModel() {
     }
     private val groups: MutableLiveData<List<Group>> by lazy {
         MutableLiveData<List<Group>>().also {
-            loadGroups()
+            launchLoadGroups()
         }
     }
 
     private val ships: MutableLiveData<List<Ship>> by lazy {
         MutableLiveData<List<Ship>>().also {
-            loadShips()
+           launchLoadShips()
         }
     }
 
@@ -125,8 +140,20 @@ class GroupViewModel : ViewModel() {
         return user
     }
 
-    fun update() {
-        loadGroups()
+    private fun launchLoadShips() {
+        launch {
+            loadShips {
+                ships.value = it
+            }
+        }
+    }
+
+    fun launchLoadGroups() {
+        launch {
+            loadGroups {
+                groups.value = it
+            }
+        }
     }
 
     fun findUser(uid: String, cb: (User) -> Unit) {
@@ -147,7 +174,7 @@ class GroupViewModel : ViewModel() {
             ), SetOptions.merge()
         ).addOnCompleteListener {
             loadUser().also {
-                loadGroups()
+               launchLoadGroups()
             }
         }
     }
@@ -170,12 +197,10 @@ class GroupViewModel : ViewModel() {
 
     fun getGroup(gid: String, cb: (MutableLiveData<Group>) -> Unit) {
         grpRef.document(gid).addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-            val result = groupFromHash(documentSnapshot!!)
             try {
+                val result = groupFromHash(documentSnapshot!!)
                 cb(MutableLiveData(result))
-            } catch (err: Exception) {
-
-            }
+            } catch (err: Exception) {}
         }
 
     }
@@ -250,7 +275,7 @@ class GroupViewModel : ViewModel() {
                     cb(grpDoc)
                 } else {
                     /* load updated groups to flush out non-existent group entries locally */
-                    loadGroups()
+                   launchLoadGroups()
                     /* Error callback to alert user that group doesn't exist anymore */
                     err()
                 }
@@ -258,8 +283,7 @@ class GroupViewModel : ViewModel() {
         }
     }
 
-    fun delete(gid: String) {
-
+    private fun delete(gid: String) {
         grpRef.document(gid).get().addOnSuccessListener {
             var grp = groupFromHash(it)
             grpRef.document(gid).delete()
@@ -268,30 +292,29 @@ class GroupViewModel : ViewModel() {
                     grp.playerList.forEach {
                         removeGroupFromUser(gid, it)
                     }
-                    loadGroups()
+                   launchLoadGroups()
                 }
         }
     }
 
-    fun makePublic(gid: String) {
+    private fun makePublic(gid: String) {
         val hash = hashMapOf(
             "active" to true
         )
         grpRef.document(gid)
             .set(hash, SetOptions.merge())
             .addOnSuccessListener {
-                loadGroups()
+                launchLoadGroups()
             }
     }
 
-    fun makePrivate(gid: String) {
-        val hash = hashMapOf(
-            "active" to false
-        )
+    private fun makePrivate(gid: String) {
         grpRef.document(gid)
-            .set(hash, SetOptions.merge())
+            .set(hashMapOf(
+                "active" to false
+            ), SetOptions.merge())
             .addOnSuccessListener {
-                loadGroups()
+                launchLoadGroups()
             }
     }
 
@@ -305,8 +328,7 @@ class GroupViewModel : ViewModel() {
                 cb(resultId)
             }
         }
-        loadGroups()
-        uiCb()
+       launchLoadGroups()
     }
 
     fun syncInGroups(tUser: User) {
@@ -341,7 +363,7 @@ class GroupViewModel : ViewModel() {
                     } else {
                         initUser("")
                     }
-                    update()
+                    launchLoadGroups()
                 }
             }
     }
@@ -376,7 +398,7 @@ class GroupViewModel : ViewModel() {
     }
 
     /* loads oldest first */
-    private fun loadGroups() {
+    private suspend fun loadGroups(cb: (ArrayList<Group>) -> Unit) {
         /* Listens to db changes and reloads groups */
         grpRef.orderBy("timeCreated", Query.Direction.ASCENDING)
             .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
@@ -386,18 +408,14 @@ class GroupViewModel : ViewModel() {
                 groups.value = grpList
             }
 
-        grpRef.orderBy("timeCreated", Query.Direction.ASCENDING)
-            .get()
-            .addOnCompleteListener {
-                /* Sanity Check */
-                if (it.isSuccessful) {
-                    var result = it.result!! /* QuerySnapshot */
-                    var grpDocs = result.documents
-                    var grpList = groupListFromDocs(grpDocs)
-                    /* Update our groups list */
-                    groups.value = grpList
-                }
-            }
+        try {
+            val grps = grpRef.orderBy("timeCreated", Query.Direction.ASCENDING)
+                .get()
+                .await()
+            cb(groupListFromDocs(grps.documents))
+        } catch (e : Exception) {
+
+        }
     }
 
     private fun loadLocs() {
@@ -420,29 +438,26 @@ class GroupViewModel : ViewModel() {
             }
     }
 
-    private fun loadShips() {
-        // Do an asynchronous operation to fetch users.
-        shipRef.get()
-            .addOnCompleteListener {
-                /* Sanity Check */
-                if (it.isSuccessful && !it.result!!.isEmpty) {
-                    var result = it.result!! /* QuerySnapshot */
-                    var shipDocs = result.documents /* Ships in collection */
-                    var shipList = ArrayList<Ship>()
-                    for (ship in shipDocs) {
-                        var name = ship["name"] as String
-                        var mass = ship["mass"] as String
-                        var manu = ship["manufacturer"] as String
-                        var price = ship["price"] as String
-                        var prod = ship["prod_state"] as String
-                        var role = ship["role"] as String
-                        var size = ship["size"] as String
-                        /* Save the current ship to the list */
-                        shipList.add(Ship(name, manu, mass, price, prod, role, size))
-                    }
-                    /* Update our new ship list */
-                    ships.value = shipList
-                }
-            }
+    private suspend fun loadShips(cb: (ship : ArrayList<Ship>) -> Unit) {
+
+        try {
+            val ships = shipRef.get().await()
+            cb(ArrayList(ships.documents.toList().map {
+                val ship = it
+                val name = ship["name"] as String
+                val mass = ship["mass"] as String
+                val manu = ship["manufacturer"] as String
+                val price = ship["price"] as String
+                val prod = ship["prod_state"] as String
+                val role = ship["role"] as String
+                val size = ship["size"] as String
+                Ship(name, manu, mass, price, prod, role, size)
+            }))
+        } catch (e : Exception) {
+
+        }
     }
+
+
+
 }

@@ -48,6 +48,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:19.3.0'
     implementation 'com.google.firebase:firebase-firestore-ktx:21.4.1'
     implementation 'com.google.android.gms:play-services-auth:18.0.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1'
 
     implementation 'com.google.firebase:firebase-storage-ktx:19.1.1'
 

@@ -62,17 +62,9 @@ class ProfileFragment : Fragment() {
     private lateinit var rvManager: RecyclerView.LayoutManager
     private lateinit var rvAdapter: RecyclerView.Adapter<*>
 
-    private var groupsList = emptyList<Group>()
+    private var groupsList = ArrayList<Group>()
 
-    private val modifyGroup = fun(gid: String, action: GroupMod) {
-        vm.groupExists(gid, err_cb) {
-            when (action) {
-                GroupMod.MAKE_PRIVATE -> vm.makePrivate(gid)
-                GroupMod.MAKE_PUBLIC -> vm.makePublic(gid)
-                GroupMod.DELETE -> vm.delete(gid)
-            }
-        }
-    }
+
 
     private val err_cb = fun() {
         Toast.makeText(requireContext(), "Group No Longer Exists", Toast.LENGTH_LONG)
@@ -89,7 +81,7 @@ class ProfileFragment : Fragment() {
         rv = view.my_groups
         rvManager = LinearLayoutManager(context)
 
-        rvAdapter = ProfileAdapter(ArrayList(), user, modifyGroup, openModal)
+        rvAdapter = ProfileAdapter(ArrayList(), user, vm.modifyGroup, err_cb, openModal)
 
         rv.apply {
             layoutManager = rvManager

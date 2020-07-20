@@ -126,7 +126,7 @@ class ListFragment : Fragment() {
                 Updates group list in view model.
                 Observer in fragment will update local list.
              */
-            vm.update()
+            vm.launchLoadGroups()
             swipe_layout.isRefreshing = false
         }
     }
