@@ -10,8 +10,8 @@ import androidx.core.content.ContextCompat
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_register.*
-import org.griffin.sclfg.Utils.Cache.LocalCache
 import org.griffin.sclfg.R
+import org.griffin.sclfg.Utils.Cache.LocalCache
 import org.griffin.sclfg.View.Home.HomeActivity
 
 class RegisterActivity : AppCompatActivity() {
@@ -45,15 +45,16 @@ class RegisterActivity : AppCompatActivity() {
         register_container.visibility = View.GONE
     }
 
-    private fun startAnimation(cb_end : () -> Unit, cb_start : () -> Unit) {
+    private fun startAnimation(cb_end: () -> Unit, cb_start: () -> Unit) {
         reg_anim.visibility = View.VISIBLE
         reg_anim.apply {
             setAnimation("register_loading.json")
             playAnimation()
-            addAnimatorListener(object: Animator.AnimatorListener {
+            addAnimatorListener(object : Animator.AnimatorListener {
                 override fun onAnimationEnd(animation: Animator?) {
                     cb_end()
                 }
+
                 override fun onAnimationCancel(animation: Animator?) = Unit
                 override fun onAnimationRepeat(animation: Animator?) = Unit
                 override fun onAnimationStart(animation: Animator?) {
@@ -63,7 +64,7 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    var cache_register_cb = fun(user: LoginHandler.User, uid: String) {
+    var cache_register_cb = fun(user: EmailPasswordLoginHandler.User, uid: String) {
         hideUi()
         localCache.cacheCredentials(user)
         startAnimation({
@@ -107,7 +108,7 @@ class RegisterActivity : AppCompatActivity() {
     private fun setupRegisterOnclick() {
         signup_button.setOnClickListener {
             signup_button.elevation = 0f
-            var rpacket = LoginHandler.User(email = "", password = "")
+            var rpacket = EmailPasswordLoginHandler.User(email = "", password = "")
             var err = false
             /*
                 Check all fields for non empty.
@@ -133,7 +134,7 @@ class RegisterActivity : AppCompatActivity() {
                 ).show()
             } else {
                 Toast.makeText(this, "Registering...", Toast.LENGTH_SHORT).show()
-                LoginHandler(rpacket, err_cb).apply {
+                EmailPasswordLoginHandler(rpacket, err_cb).apply {
                     register(cache_register_cb)
                 }
             }

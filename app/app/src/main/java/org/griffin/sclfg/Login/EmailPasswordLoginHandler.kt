@@ -4,7 +4,7 @@ import com.google.firebase.auth.FirebaseAuth
 
 
 /* added success and fail anon callback functions to do ui stuff after async call */
-class LoginHandler(var lPacket: User, val failCb: () -> Unit) {
+class EmailPasswordLoginHandler(var lPacket: User, val failCb: () -> Unit) {
     data class User(var email: String, var password: String)
 
     private var mAuth = FirebaseAuth.getInstance()

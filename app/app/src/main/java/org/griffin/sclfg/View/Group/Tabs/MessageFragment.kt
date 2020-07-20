@@ -1,35 +1,34 @@
-package org.griffin.sclfg.View.Group.Messaging
+package org.griffin.sclfg.View.Group.Tabs
 
 import android.animation.Animator
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.LinearLayout
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Timestamp
 import kotlinx.android.synthetic.main.tab_message.*
 import kotlinx.android.synthetic.main.tab_message.view.*
-import kotlinx.android.synthetic.main.message_cell_lb.view.*
 import org.griffin.sclfg.Models.*
 import org.griffin.sclfg.R
+import org.griffin.sclfg.Utils.Adapters.MessagesAdapter
 
-class MessageFragment(val gid : String) : Fragment() {
+class MessageFragment(val gid: String) : Fragment() {
 
-    private val vm : GroupViewModel by activityViewModels()
-    private val msgVm : MessageViewModel by activityViewModels()
+    private val vm: GroupViewModel by activityViewModels()
+    private val msgVm: MessageViewModel by activityViewModels()
 
     private var msgs = ArrayList<Message>()
     private var user = User("Loading...", "loading", ArrayList(), -1)
-    private lateinit var group : Group
+    private lateinit var group: Group
 
-    private lateinit var rv : RecyclerView
+    private lateinit var rv: RecyclerView
     private lateinit var rvManager: RecyclerView.LayoutManager
-    private lateinit var rvAdapter : RecyclerView.Adapter<*>
+    private lateinit var rvAdapter: RecyclerView.Adapter<*>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,7 +41,7 @@ class MessageFragment(val gid : String) : Fragment() {
         rvManager = LinearLayoutManager(context).apply {
             reverseLayout = true
         }
-        rvAdapter = MessageListAdapter(ArrayList(), user, retrieveName)
+        rvAdapter = MessagesAdapter(ArrayList(), user, retrieveName)
         rv.apply {
             layoutManager = rvManager
             adapter = rvAdapter
@@ -65,15 +64,15 @@ class MessageFragment(val gid : String) : Fragment() {
     }
 
     private val retrieveName =
-        fun (uid : String, cb: (name : String) -> Unit) {
+        fun(uid: String, cb: (name: String) -> Unit) {
             vm.lookupUID(uid) {
                 cb(it)
             }
-    }
+        }
 
     private fun setupSendButton() {
         sendButton.setOnClickListener {
-            if(message_box.text.isNotBlank()) {
+            if (message_box.text.isNotBlank()) {
                 sendButton.visibility = View.INVISIBLE
                 confirm_lottie.apply {
                     imageAssetsFolder = "/assets/"
@@ -84,6 +83,7 @@ class MessageFragment(val gid : String) : Fragment() {
                             confirm_lottie.visibility = View.GONE
                             it.visibility = View.VISIBLE
                         }
+
                         override fun onAnimationCancel(animation: Animator?) = Unit
                         override fun onAnimationRepeat(animation: Animator?) = Unit
                         override fun onAnimationStart(animation: Animator?) = Unit
@@ -93,7 +93,7 @@ class MessageFragment(val gid : String) : Fragment() {
                 val txt = message_box.text.toString()
                 message_box.text.clear()
                 vm.groupExists(gid, {}, {
-                    msgVm.sendMessage( Message(user.uid, Timestamp.now().seconds, txt, "")) {
+                    msgVm.sendMessage(Message(user.uid, Timestamp.now().seconds, txt, "")) {
                     }
                 })
             }
@@ -104,92 +104,24 @@ class MessageFragment(val gid : String) : Fragment() {
     private fun setupVM() {
         vm.getUser().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             user = it
-            (rv.adapter as MessageListAdapter).authUser = user
+            (rv.adapter as MessagesAdapter).authUser = user
 
             msgVm.getMsgs().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
                 var temp = ArrayList<Message>()
-                it.forEach{
+                it.forEach {
                     temp.add(it)
                 }
 
-                var diff  = temp.minus(msgs)
+                var diff = temp.minus(msgs)
 
                 diff.reversed().forEach {
-                    (rv.adapter as MessageListAdapter).addItem(it)
+                    (rv.adapter as MessagesAdapter).addItem(it)
                 }
                 msgs = temp
 
-               rv.smoothScrollToPosition(0)
+                rv.smoothScrollToPosition(0)
             })
-    })
+        })
     }
 }
 
-class MessageListAdapter(
-    val messageList: ArrayList<Message>, var authUser:  User,
-    val retrieveName : (uid : String, cb : (name : String) -> Unit) -> Unit
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    class ViewHolder(val cellView: LinearLayout) : RecyclerView.ViewHolder(cellView)
-
-    private val TYPE_ME = 1
-    private val TYPE_OTHER = 2
-
-    private lateinit var vParent: ViewGroup
-
-    override fun getItemViewType(position: Int): Int {
-        if(messageList.get(position).author.compareTo(authUser.uid) == 0){
-            return TYPE_ME
-        }
-        else
-        {
-            return TYPE_OTHER
-        }
-    }
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        var cellView = LayoutInflater.from(parent.context).inflate((
-                R.layout.message_cell_lb),
-            parent, false
-        ) as LinearLayout
-
-        when(viewType) {
-            TYPE_ME -> {
-                cellView = LayoutInflater.from(parent.context).inflate(
-                    R.layout.message_cell_rg,
-                    parent, false
-                ) as LinearLayout
-            }
-            TYPE_OTHER -> {
-                cellView = LayoutInflater.from(parent.context).inflate((
-                        R.layout.message_cell_lb),
-                    parent, false
-                        ) as LinearLayout
-            }
-        }
-
-        vParent = parent
-
-        return ViewHolder(cellView)
-    }
-
-    fun addItem(msg: Message)
-    {
-        messageList.add(0, msg)
-        notifyDataSetChanged()
-    }
-
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val curr = messageList[position]
-        var item = holder.itemView
-        item.content_box.text = curr.content
-        retrieveName(curr.author) {
-            item.author_box.text = it
-        }
-    }
-
-
-
-    override fun getItemCount(): Int {
-        return messageList.size
-    }
-
-}
