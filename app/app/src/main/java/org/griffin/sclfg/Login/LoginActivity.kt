@@ -58,10 +58,12 @@ class LoginActivity : AppCompatActivity() {
         /* un-hide sign in tools */
         login_container.visibility = View.VISIBLE
         space_stars.visibility = View.VISIBLE
-        space_stars.setAnimation("space.json")
-        space_stars.speed = 0.2f
-        space_stars.playAnimation()
-        space_stars.loop(true)
+        if (!space_stars.isAnimating) {
+            space_stars.setAnimation("space.json")
+            space_stars.speed = 0.2f
+            space_stars.playAnimation()
+            space_stars.loop(true)
+        }
         login_button.visibility = View.VISIBLE
         register_button.visibility = View.VISIBLE
         login_bar.visibility = View.INVISIBLE
@@ -115,33 +117,41 @@ class LoginActivity : AppCompatActivity() {
         /* dont go back on login screen */
     }
 
+    private fun validateFields(lpacket : EmailPasswordLoginHandler.User) : Boolean {
+        var err = false
+
+        if (email.text!!.isNotBlank() && password.text.isNotBlank()) {
+            lpacket.email = email.text.toString()
+            lpacket.password = password.text.toString()
+        } else {
+            err = true
+        }
+
+        if (err) {
+            return false
+        }
+        /* Handle Login Request */
+        return true
+    }
+
     private fun setupLoginOnclick() {
         /* Setup Button OnClick Listeners */
 
         login_button.setOnClickListener {
             login_button.elevation = 0f
             var lpacket = EmailPasswordLoginHandler.User(email = "", password = "")
-            var err = false
-
-            if (email.text!!.isNotBlank() && password.text.isNotBlank()) {
-                lpacket.email = email.text.toString()
-                lpacket.password = password.text.toString()
-            } else {
-                err = true
-            }
-
-            if (err) {
-                Toast.makeText(
-                    this,
-                    "Either email or password was incorrect!", Toast.LENGTH_SHORT
-                ).show()
-                err_cb()
-            } else /* Handle Login Request */ {
+            if(validateFields(lpacket)) {
                 Toast.makeText(this, "Logging in...", Toast.LENGTH_SHORT).show()
 
                 EmailPasswordLoginHandler(lpacket, err_cb).apply {
                     login(cache_login_cb)
                 }
+            } else {
+                Toast.makeText(
+                    this,
+                    "Either email or password was incorrect!", Toast.LENGTH_SHORT
+                ).show()
+                err_cb()
             }
         }
 
