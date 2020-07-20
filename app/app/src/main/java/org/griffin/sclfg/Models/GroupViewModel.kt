@@ -77,14 +77,15 @@ class GroupViewModel : ViewModel() {
         }
 
     }
-
-    private lateinit var shipRef: CollectionReference
-    private lateinit var locRef: CollectionReference
-    private lateinit var userRef: CollectionReference
-    private lateinit var grpRef: CollectionReference
-
     private val db = Firebase.firestore
     private val auth = FirebaseAuth.getInstance()
+
+    private val shipRef = db.collection("ships")
+    private val locRef = db.collection("locations")
+    private val userRef = db.collection("users")
+    private val grpRef = db.collection("groups")
+
+
 
     fun lookupUID(uid: String, cb: (name: String) -> Unit) {
         if (uid.isNotBlank()) {
@@ -332,8 +333,6 @@ class GroupViewModel : ViewModel() {
     }
 
     private fun loadUser() {
-        userRef = db.collection("users")
-
         userRef.document(auth.uid!!).get()
             .addOnCompleteListener {
                 if (it.isSuccessful) {
@@ -341,13 +340,13 @@ class GroupViewModel : ViewModel() {
                     if (result.exists()) {
                         user.value = userFromHash(result)
                     } else {
-                        initUser()
+                        initUser("")
                     }
                 }
             }
     }
 
-    private fun initUser() {
+    fun initUser(displayName : String, cb: () -> Unit = {}) {
         userRef.document(auth.uid!!).get()
             .addOnCompleteListener {
                 if (it.isSuccessful) {
@@ -357,9 +356,11 @@ class GroupViewModel : ViewModel() {
                         var initUser = hashMapOf(
                             "timeCreated" to System.currentTimeMillis().toString(),
                             "inGroups" to emptyList<String>(),
-                            "screenName" to "ANONYMOUS"
+                            "screenName" to displayName
                         )
-                        userRef.document(auth.uid!!).set(initUser)
+                        userRef.document(auth.uid!!).set(initUser).also {
+                            cb()
+                        }
                     }
                 }
             }
@@ -376,8 +377,6 @@ class GroupViewModel : ViewModel() {
 
     /* loads oldest first */
     private fun loadGroups() {
-        grpRef = db.collection("groups")
-
         /* Listens to db changes and reloads groups */
         grpRef.orderBy("timeCreated", Query.Direction.ASCENDING)
             .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
@@ -402,7 +401,6 @@ class GroupViewModel : ViewModel() {
     }
 
     private fun loadLocs() {
-        locRef = db.collection("locations")
 
         locRef.get()
             .addOnCompleteListener {
@@ -423,7 +421,6 @@ class GroupViewModel : ViewModel() {
     }
 
     private fun loadShips() {
-        shipRef = db.collection("ships")
         // Do an asynchronous operation to fetch users.
         shipRef.get()
             .addOnCompleteListener {

@@ -129,19 +129,15 @@ class HomeActivity : AppCompatActivity() {
     private fun vmSetup() {
         /* View Model Setup */
         /* UI Updaters on Observation Changes from FireStore */
-
-        vm.getUser().observe(this, Observer {
-        })
-
-        vm.getLocs().observe(this, Observer {
-
-            vm.getShips().observe(this, Observer {
-
-                /* depends on ships and locations */
-                vm.getGroups().observe(this, Observer {
-                })
-            })
-        })
+//        vm.getLocs().observe(this, Observer {
+//
+//            vm.getShips().observe(this, Observer {
+//
+//                /* depends on ships and locations */
+//                vm.getGroups().observe(this, Observer {
+//                })
+//            })
+//        })
 
 
     }
