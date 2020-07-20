@@ -339,7 +339,6 @@ class GroupViewModel : ViewModel() {
                 if (it.isSuccessful) {
                     var result = it.result!!
                     if (result.exists()) {
-
                         user.value = userFromHash(result)
                     } else {
                         initUser()

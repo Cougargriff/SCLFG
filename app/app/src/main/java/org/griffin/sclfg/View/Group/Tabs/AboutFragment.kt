@@ -48,9 +48,6 @@ class AboutFragment(val gid: String) : Fragment() {
             layoutManager = rvManager
             adapter = rvAdapter
         }
-
-
-
         return view
     }
 
@@ -63,17 +60,6 @@ class AboutFragment(val gid: String) : Fragment() {
             playAnimation()
         }
         setupVM()
-
-    }
-
-
-    private fun getPlayerNames(groupUids: ArrayList<String>) {
-        var new_list = ArrayList<String>()
-        (0..(groupUids.size - 1)).withIndex().forEach {
-            vm.lookupUID(groupUids[it.index]) {
-                userList.add(it)
-            }
-        }
     }
 
     private val lookUp = fun(uid: String, cb: (name: String) -> Unit) {

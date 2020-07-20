@@ -25,7 +25,6 @@ class ListFragment : Fragment() {
     private val vm: GroupViewModel by activityViewModels()
     private lateinit var groupsList: List<Group>
     private var user = User("", "", ArrayList(), 0)
-    private var userLists: ArrayList<ArrayList<User>> = ArrayList()
 
     /* Recycler View Setup */
     private lateinit var rv: RecyclerView
@@ -147,7 +146,6 @@ class ListFragment : Fragment() {
 
         vm.getGroups().observe(viewLifecycleOwner, Observer {
             val tempList = ArrayList<Group>()
-
             /* Spot to check for conditions on whether to show a specific group */
             /* TODO possible to add filter checks for user inputted tags in the future */
             it!!.forEach {
@@ -155,38 +153,18 @@ class ListFragment : Fragment() {
                     tempList.add(it)
                 }
             }
-            userLists.clear()
             groupsList = tempList
-
-            /* retrieve user lists for each group */
-            groupsList.forEachIndexed { i, group ->
-                val userList = getUsersForGroup(group)
-                userLists.add(userList)
-            }
-
             (rv.adapter as GroupListAdapter).apply {
                 authUser = user
                 update(groupsList as ArrayList<Group>)
             }
         })
-
     }
 
     private val lookUp = fun(uid: String, cb: (name: String) -> Unit) {
         vm.lookupUID(uid) {
             cb(it)
         }
-    }
-
-    private fun getUsersForGroup(group: Group): ArrayList<User> {
-        val userList = ArrayList<User>()
-        for (uid in group.playerList) {
-            val addUserToList = fun(user: User) {
-                userList.add(user)
-            }
-            vm.findUser(uid, addUserToList)
-        }
-        return userList
     }
 }
 

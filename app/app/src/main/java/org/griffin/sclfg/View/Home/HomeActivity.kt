@@ -31,23 +31,12 @@ class HomeActivity : AppCompatActivity() {
     /*
         Firebase / FireStore Setup
      */
-    private lateinit var userRef: CollectionReference
-    private lateinit var shipRef: CollectionReference
-    private lateinit var locRef: CollectionReference
-    private var auth = FirebaseAuth.getInstance()
-    private var db = Firebase.firestore
     private val FTAG = "FIRESTORE -> "
     private val NAME_CHANGE_TITLE = "Change Your Screen Name"
 
     /* Fragment Frameworks */
     private lateinit var pa: PageAdapter
     private val vm: GroupViewModel by viewModels()
-
-    private lateinit var shipList: List<Ship>
-    private lateinit var locList: List<Location>
-    private lateinit var grpList: List<Group>
-    private lateinit var user: User
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -122,7 +111,6 @@ class HomeActivity : AppCompatActivity() {
     private fun lateSetup() {
         paSetup()
         vpSetup()
-        firestoreSetup()
         vmSetup()
         viewPager.setCurrentItem(2, true)
 
@@ -143,29 +131,19 @@ class HomeActivity : AppCompatActivity() {
         /* UI Updaters on Observation Changes from FireStore */
 
         vm.getUser().observe(this, Observer {
-            user = it!!
         })
 
         vm.getLocs().observe(this, Observer {
-            locList = it!!
 
             vm.getShips().observe(this, Observer {
-                shipList = it!!
 
                 /* depends on ships and locations */
                 vm.getGroups().observe(this, Observer {
-                    grpList = it!!
                 })
             })
         })
 
 
-    }
-
-    private fun firestoreSetup() {
-        userRef = db.collection("users")
-        shipRef = db.collection("ships")
-        locRef = db.collection("locations")
     }
 
     private fun paSetup() {

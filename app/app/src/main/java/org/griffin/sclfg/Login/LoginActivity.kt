@@ -44,20 +44,13 @@ class LoginActivity : AppCompatActivity() {
                 unhideUI()
             })
         }
-
-
-
         setupLoginOnclick()
     }
 
     private fun hideUI() {
         login_container.visibility = View.GONE
         space_stars.visibility = View.GONE
-//        textView2.visibility = View.INVISIBLE
-//        email.visibility = View.GONE
-//        password.visibility = View.GONE
         login_button.visibility = View.GONE
-
         register_button.visibility = View.GONE
     }
 
@@ -69,9 +62,6 @@ class LoginActivity : AppCompatActivity() {
         space_stars.speed = 0.2f
         space_stars.playAnimation()
         space_stars.loop(true)
-//        textView2.visibility = View.VISIBLE
-//        email.visibility = View.VISIBLE
-//        password.visibility = View.VISIBLE
         login_button.visibility = View.VISIBLE
         register_button.visibility = View.VISIBLE
         login_bar.visibility = View.INVISIBLE
@@ -93,7 +83,7 @@ class LoginActivity : AppCompatActivity() {
      */
     var login_cb = fun() {
 
-        vm.getUser().observe(this, Observer {
+        vm.getUser().observe(this, Observer{
             var intent = Intent(this@LoginActivity, HomeActivity::class.java)
             ContextCompat.startActivity(this@LoginActivity, intent, null)
         })
