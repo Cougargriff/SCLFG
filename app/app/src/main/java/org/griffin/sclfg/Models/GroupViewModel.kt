@@ -95,7 +95,6 @@ class GroupViewModel : ViewModel() {
                     cb(result.screenName)
                 }
         }
-
     }
 
 
@@ -342,6 +341,7 @@ class GroupViewModel : ViewModel() {
                     } else {
                         initUser("")
                     }
+                    update()
                 }
             }
     }
