@@ -7,7 +7,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import org.griffin.sclfg.R
-import org.griffin.sclfg.View.Home.Tabs.GListAdapter
+import org.griffin.sclfg.Utils.Adapters.ProfileAdapter
+
 
 /*
     The SwipeToDelete implementation was snagged from this tutorial.
@@ -34,7 +35,7 @@ abstract class SwipeToDeleteCallback(context: Context) :
          * if (viewHolder?.itemViewType == YourAdapter.SOME_TYPE) return 0
          * if (viewHolder?.adapterPosition == 0) return 0
          */
-        var adapter = recyclerView.adapter as GListAdapter
+        var adapter = recyclerView.adapter as ProfileAdapter
         var item = adapter.groupList[viewHolder.adapterPosition]
         if (item.createdBy.compareTo(adapter.authUser.uid) != 0) return 0
         return super.getMovementFlags(recyclerView, viewHolder)
