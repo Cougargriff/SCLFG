@@ -9,12 +9,16 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_register.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.griffin.sclfg.Models.GroupViewModel
 import org.griffin.sclfg.R
 import org.griffin.sclfg.Utils.Cache.LocalCache
 import org.griffin.sclfg.View.Home.HomeActivity
+import kotlin.coroutines.CoroutineContext
 
-class RegisterActivity : AppCompatActivity() {
+class RegisterActivity : AppCompatActivity(), CoroutineScope {
     private val BUTTON_ELEVATION by lazy {
         applicationContext.resources.displayMetrics.density * 8
     }
@@ -22,6 +26,8 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var display_name: String
     private val gvm : GroupViewModel by viewModels()
 
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,14 +84,16 @@ class RegisterActivity : AppCompatActivity() {
 
     var register_cb = fun(uid: String) {
         /* INIT USER w/ display name */
-        initUser(uid) {
-            var intent = Intent(this@RegisterActivity, HomeActivity::class.java)
-            intent.putExtra("display_name", display_name)
-            ContextCompat.startActivity(this@RegisterActivity, intent, null)
+        launch {
+            initUser(uid) {
+                var intent = Intent(this@RegisterActivity, HomeActivity::class.java)
+                intent.putExtra("display_name", display_name)
+                ContextCompat.startActivity(this@RegisterActivity, intent, null)
+            }
         }
     }
 
-    private fun initUser(uid: String, gotoMain: () -> Unit) {
+    private suspend fun initUser(uid: String, gotoMain: () -> Unit) {
         gvm.initUser(display_name) {
             gotoMain()
         }

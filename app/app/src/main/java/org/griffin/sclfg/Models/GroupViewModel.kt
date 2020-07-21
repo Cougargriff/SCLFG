@@ -4,16 +4,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import java.io.Serializable
+import kotlin.coroutines.CoroutineContext
 
 /* Need to pass Ship and Loc db ref to get lists */
-class GroupViewModel : ViewModel() {
+class GroupViewModel : ViewModel(), CoroutineScope {
     companion object {
 
         fun findShip(searchName: String, shipList: List<Ship>): Ship? {
@@ -86,6 +90,8 @@ class GroupViewModel : ViewModel() {
     private val grpRef = db.collection("groups")
 
 
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main
 
     fun lookupUID(uid: String, cb: (name: String) -> Unit) {
         if (uid.isNotBlank()) {
@@ -97,27 +103,36 @@ class GroupViewModel : ViewModel() {
         }
     }
 
+    val modifyGroup = fun(gid: String, action: GroupMod, err_cb: () -> Unit) {
+        groupExists(gid, err_cb) {
+            when (action) {
+                GroupMod.MAKE_PRIVATE -> makePrivate(gid)
+                GroupMod.MAKE_PUBLIC -> makePublic(gid)
+                GroupMod.DELETE -> delete(gid)
+            }
+        }
+    }
 
     private val user: MutableLiveData<User> by lazy {
         MutableLiveData<User>().also {
-            loadUser()
+            launchLoadUser()
         }
     }
     private val groups: MutableLiveData<List<Group>> by lazy {
         MutableLiveData<List<Group>>().also {
-            loadGroups()
+            launchLoadGroups()
         }
     }
 
     private val ships: MutableLiveData<List<Ship>> by lazy {
         MutableLiveData<List<Ship>>().also {
-            loadShips()
+           launchLoadShips()
         }
     }
 
     private val locations: MutableLiveData<List<Location>> by lazy {
         MutableLiveData<List<Location>>().also {
-            loadLocs()
+            launchLoadLocs()
         }
     }
 
@@ -125,9 +140,7 @@ class GroupViewModel : ViewModel() {
         return user
     }
 
-    fun update() {
-        loadGroups()
-    }
+
 
     fun findUser(uid: String, cb: (User) -> Unit) {
         if (uid.isNotBlank()) {
@@ -146,8 +159,8 @@ class GroupViewModel : ViewModel() {
                 "screenName" to name
             ), SetOptions.merge()
         ).addOnCompleteListener {
-            loadUser().also {
-                loadGroups()
+            launchLoadUser().also {
+               launchLoadGroups()
             }
         }
     }
@@ -163,19 +176,17 @@ class GroupViewModel : ViewModel() {
                 ), SetOptions.merge()
             )
             .addOnCompleteListener {
-                loadUser()
+               launchLoadUser()
             }
     }
 
 
     fun getGroup(gid: String, cb: (MutableLiveData<Group>) -> Unit) {
         grpRef.document(gid).addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-            val result = groupFromHash(documentSnapshot!!)
             try {
+                val result = groupFromHash(documentSnapshot!!)
                 cb(MutableLiveData(result))
-            } catch (err: Exception) {
-
-            }
+            } catch (err: Exception) {}
         }
 
     }
@@ -194,7 +205,7 @@ class GroupViewModel : ViewModel() {
                 ), SetOptions.merge()
             )
             .addOnCompleteListener {
-                loadUser()
+               launchLoadUser()
             }
     }
 
@@ -233,13 +244,6 @@ class GroupViewModel : ViewModel() {
         return locations
     }
 
-    /**
-    Checks to see if passed group with id (gid)  still exists in remote db.
-
-    @param gid the id of the group to check
-    @param err the callback function invoked when group doesn't exist
-    @param cb callback invoked when group does exist
-     */
     fun groupExists(gid: String, err: () -> Unit, cb: (DocumentSnapshot) -> Unit) {
         grpRef.document(gid).get().addOnCompleteListener {
             if (it.isSuccessful) {
@@ -250,7 +254,7 @@ class GroupViewModel : ViewModel() {
                     cb(grpDoc)
                 } else {
                     /* load updated groups to flush out non-existent group entries locally */
-                    loadGroups()
+                   launchLoadGroups()
                     /* Error callback to alert user that group doesn't exist anymore */
                     err()
                 }
@@ -258,8 +262,7 @@ class GroupViewModel : ViewModel() {
         }
     }
 
-    fun delete(gid: String) {
-
+    private fun delete(gid: String) {
         grpRef.document(gid).get().addOnSuccessListener {
             var grp = groupFromHash(it)
             grpRef.document(gid).delete()
@@ -268,30 +271,29 @@ class GroupViewModel : ViewModel() {
                     grp.playerList.forEach {
                         removeGroupFromUser(gid, it)
                     }
-                    loadGroups()
+                   launchLoadGroups()
                 }
         }
     }
 
-    fun makePublic(gid: String) {
+    private fun makePublic(gid: String) {
         val hash = hashMapOf(
             "active" to true
         )
         grpRef.document(gid)
             .set(hash, SetOptions.merge())
             .addOnSuccessListener {
-                loadGroups()
+                launchLoadGroups()
             }
     }
 
-    fun makePrivate(gid: String) {
-        val hash = hashMapOf(
-            "active" to false
-        )
+    private fun makePrivate(gid: String) {
         grpRef.document(gid)
-            .set(hash, SetOptions.merge())
+            .set(hashMapOf(
+                "active" to false
+            ), SetOptions.merge())
             .addOnSuccessListener {
-                loadGroups()
+                launchLoadGroups()
             }
     }
 
@@ -305,66 +307,7 @@ class GroupViewModel : ViewModel() {
                 cb(resultId)
             }
         }
-        loadGroups()
-        uiCb()
-    }
-
-    fun syncInGroups(tUser: User) {
-        val grps = groups.value
-        var temp_user = tUser
-        var temp_gids = ArrayList<String>()
-        grps!!.forEach {
-            temp_gids.add(it.gid)
-        }
-
-        tUser.inGroups.forEachIndexed { index, gid ->
-            if (temp_gids.contains(gid)) {
-                temp_user.inGroups.removeAt(index)
-            }
-        }
-
-        user.value = temp_user
-        userRef.document(tUser.uid).set(
-            hashMapOf(
-                "inGroups" to temp_gids
-            ), SetOptions.merge()
-        )
-    }
-
-    private fun loadUser() {
-        userRef.document(auth.uid!!).get()
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
-                    var result = it.result!!
-                    if (result.exists()) {
-                        user.value = userFromHash(result)
-                    } else {
-                        initUser("")
-                    }
-                    update()
-                }
-            }
-    }
-
-    fun initUser(displayName : String, cb: () -> Unit = {}) {
-        userRef.document(auth.uid!!).get()
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
-                    var result = it.result!!
-                    /* create the user if they don't exist already */
-                    if (!result.exists()) {
-                        var initUser = hashMapOf(
-                            "timeCreated" to System.currentTimeMillis().toString(),
-                            "inGroups" to emptyList<String>(),
-                            "screenName" to displayName
-                        )
-                        userRef.document(auth.uid!!).set(initUser).also {
-                            cb()
-                        }
-                    }
-                }
-            }
-        getUser()
+       launchLoadGroups()
     }
 
     private fun groupListFromDocs(grpDocs: MutableList<DocumentSnapshot>): ArrayList<Group> {
@@ -375,8 +318,75 @@ class GroupViewModel : ViewModel() {
         return grpList
     }
 
+    private suspend fun loadUser(cb: (user : User) -> Unit) {
+        try {
+            val user = userRef.document(auth.uid!!).get().await()
+            if(user.exists()) {
+                cb(userFromHash(user))
+            } else {
+                initUser("")
+            }
+            launchLoadGroups()
+        } catch (e : Exception) {}
+    }
+
+    suspend fun initUser(displayName : String, cb: () -> Unit = {}) {
+        try {
+            val user = userRef.document(auth.uid!!).get().await()
+            if(!user.exists()) {
+                val initUser = hashMapOf(
+                    "timeCreated" to System.currentTimeMillis().toString(),
+                    "inGroups" to emptyList<String>(),
+                    "screenName" to displayName
+                )
+                userRef.document(auth.uid!!).set(initUser).also {
+                    launchLoadUser()
+                    cb()
+                }
+            }
+        } catch (e : Exception) {}
+    }
+
+
+
+    private fun launchLoadUser() {
+        launch {
+            loadUser {
+                user.value = it
+            }
+        }
+    }
+
+    private fun launchLoadShips() {
+        launch {
+            loadShips {
+                ships.value = it
+            }
+        }
+    }
+
+    private fun launchLoadLocs() {
+        launch {
+            loadLocs {
+                locations.value = it
+            }
+        }
+    }
+
+    fun launchLoadGroups() {
+        launch {
+            loadGroups {
+                groups.value = it
+            }
+        }
+    }
+
+
+
+
+
     /* loads oldest first */
-    private fun loadGroups() {
+    private suspend fun loadGroups(cb: (ArrayList<Group>) -> Unit) {
         /* Listens to db changes and reloads groups */
         grpRef.orderBy("timeCreated", Query.Direction.ASCENDING)
             .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
@@ -386,63 +396,44 @@ class GroupViewModel : ViewModel() {
                 groups.value = grpList
             }
 
-        grpRef.orderBy("timeCreated", Query.Direction.ASCENDING)
-            .get()
-            .addOnCompleteListener {
-                /* Sanity Check */
-                if (it.isSuccessful) {
-                    var result = it.result!! /* QuerySnapshot */
-                    var grpDocs = result.documents
-                    var grpList = groupListFromDocs(grpDocs)
-                    /* Update our groups list */
-                    groups.value = grpList
-                }
-            }
+        try {
+            val grps = grpRef.orderBy("timeCreated", Query.Direction.ASCENDING)
+                .get()
+                .await()
+            cb(groupListFromDocs(grps.documents))
+        } catch (e : Exception) {}
     }
 
-    private fun loadLocs() {
-
-        locRef.get()
-            .addOnCompleteListener {
-                /* Sanity Check */
-                if (it.isSuccessful && !it.result!!.isEmpty) {
-                    var result = it.result!! /* QuerySnapshot */
-                    var locDocs = result.documents /* Ships in collection */
-                    var locList = ArrayList<Location>()
-                    for (loc in locDocs) {
-                        var name = loc["name"] as String
-                        /* Save the current ship to the list */
-                        locList.add(Location(name))
-                    }
-                    /* Update our new ship list */
-                    locations.value = locList
-                }
-            }
+    private suspend fun loadLocs(cb : (locs : ArrayList<Location>) -> Unit) {
+        try {
+            val locs = locRef.get().await()
+            cb(
+                ArrayList(locs.documents.toList().map {
+                    Location(it["name"] as String)
+                })
+            )
+        } catch (e : Exception) {}
     }
 
-    private fun loadShips() {
-        // Do an asynchronous operation to fetch users.
-        shipRef.get()
-            .addOnCompleteListener {
-                /* Sanity Check */
-                if (it.isSuccessful && !it.result!!.isEmpty) {
-                    var result = it.result!! /* QuerySnapshot */
-                    var shipDocs = result.documents /* Ships in collection */
-                    var shipList = ArrayList<Ship>()
-                    for (ship in shipDocs) {
-                        var name = ship["name"] as String
-                        var mass = ship["mass"] as String
-                        var manu = ship["manufacturer"] as String
-                        var price = ship["price"] as String
-                        var prod = ship["prod_state"] as String
-                        var role = ship["role"] as String
-                        var size = ship["size"] as String
-                        /* Save the current ship to the list */
-                        shipList.add(Ship(name, manu, mass, price, prod, role, size))
-                    }
-                    /* Update our new ship list */
-                    ships.value = shipList
-                }
-            }
+    private suspend fun loadShips(cb: (ships : ArrayList<Ship>) -> Unit) {
+        try {
+            val ships = shipRef.get().await()
+            cb(ArrayList(ships.documents.toList().map {
+                val ship = it
+                val name = ship["name"] as String
+                val mass = ship["mass"] as String
+                val manu = ship["manufacturer"] as String
+                val price = ship["price"] as String
+                val prod = ship["prod_state"] as String
+                val role = ship["role"] as String
+                val size = ship["size"] as String
+                Ship(name, manu, mass, price, prod, role, size)
+            }))
+        } catch (e : Exception) {
+
+        }
     }
+
+
+
 }

@@ -11,15 +11,10 @@ import android.widget.Toolbar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activty_main.*
 import org.griffin.sclfg.Login.LoginActivity
-import org.griffin.sclfg.Models.*
+import org.griffin.sclfg.Models.GroupViewModel
 import org.griffin.sclfg.R
 import org.griffin.sclfg.Utils.Adapters.PageAdapter
 import org.griffin.sclfg.Utils.Cache.LocalCache

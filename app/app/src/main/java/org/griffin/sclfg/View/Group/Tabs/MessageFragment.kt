@@ -94,10 +94,10 @@ class MessageFragment(val gid: String) : Fragment() {
                 message_box.text.clear()
                 vm.groupExists(gid, {}, {
                     msgVm.sendMessage(Message(user.uid, Timestamp.now().seconds, txt, "")) {
+                        msgVm.getMsgs()
                     }
                 })
             }
-
         }
     }
 

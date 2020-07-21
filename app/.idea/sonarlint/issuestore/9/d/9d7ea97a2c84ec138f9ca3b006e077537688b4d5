@@ -1,6 +1,3 @@
 
-mkotlin:S1192 "HDefine a constant instead of duplicating this literal "#CECFD1" 4 times.(Ðû¨çýÿÿÿÿ8ƒ©éñµ.
-hkotlin:S1192š"HDefine a constant instead of duplicating this literal "#2196F3" 4 times.(ïœÈ“8ƒ©éñµ.
-vkotlin:S117ø"RRename this local variable to match the regular expression "^[_a-z][a-zA-Z0-9]*$".(ç¸ÿ×ûÿÿÿÿ8óšÍ¥µ.
-Kkotlin:S1135³"2Complete the task associated to this TODO comment.(”ŒÆª
-qkotlin:S117Å"MRename this parameter to match the regular expression "^[_a-z][a-zA-Z0-9]*$".(äø¹¬üÿÿÿÿ8¿ô”­µ.
+vkotlin:S117ñ"RRename this local variable to match the regular expression "^[_a-z][a-zA-Z0-9]*$".(ç¸ÿ×ûÿÿÿÿ8óšÍ¥µ.
+Kkotlin:S1135«"2Complete the task associated to this TODO comment.(”ŒÆª
