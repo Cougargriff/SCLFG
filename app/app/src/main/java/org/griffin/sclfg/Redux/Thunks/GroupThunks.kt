@@ -25,12 +25,12 @@ val userRef = db.collection("users")
  */
 
 fun createGroup(group : Group, cb : () -> Unit) : Thunk<AppState> = { dispatch, getState, extraArg ->
+    dispatch(Action.PUSH_NEW_GROUP_REQUEST)
     try {
         GlobalScope.launch {
-            val id = grpRef.add(GroupViewModel.groupToHash(group, auth.uid!!)).addOnSuccessListener {
-            }.await().id
+            val id = grpRef.add(GroupViewModel.groupToHash(group, auth.uid!!)).await().id
             addGroupToUser(id, auth.uid!!)
-            dispatch(Action.PUSH_NEW_GROUP)
+            dispatch(Action.PUSH_NEW_GROUP_SUCCESS)
         }
 
     } catch (e : Exception) {}

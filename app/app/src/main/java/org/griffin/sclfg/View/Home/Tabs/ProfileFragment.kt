@@ -181,7 +181,6 @@ class ProfileFragment : Fragment() {
 
         }
        store.dispatch(getUser())
-       store.dispatch(getGroups())
     }
 
     private fun render(newUser : User) {

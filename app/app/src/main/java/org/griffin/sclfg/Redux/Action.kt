@@ -8,7 +8,8 @@ class Action {
     data class LOAD_USER_SUCCESS(val user: User)
     data class UPDATE_GROUPS_FROM_SNAP (val groups : ArrayList<Group>)
     data class UPDATE_USER_FROM_SNAP(val user : User)
-    object PUSH_NEW_GROUP
+    object PUSH_NEW_GROUP_SUCCESS
+    object PUSH_NEW_GROUP_REQUEST
     object MAKE_GROUP_PUBLIC_SUCCESS
     object MAKE_GROUP_PRIVATE_SUCCESS
     object MAKE_GROUP_PRIVATE_REQUEST
