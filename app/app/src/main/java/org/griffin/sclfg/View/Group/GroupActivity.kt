@@ -2,17 +2,11 @@ package org.griffin.sclfg.View.Group
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import kotlinx.android.synthetic.main.activity_modal_group.*
-import org.griffin.sclfg.Models.GroupViewModel
-import org.griffin.sclfg.Models.MessageViewModel
 import org.griffin.sclfg.R
-import org.griffin.sclfg.Redux.Thunks.setMessageListener
-import org.griffin.sclfg.Redux.store
 import org.griffin.sclfg.Utils.Adapters.PageAdapter
 import org.griffin.sclfg.View.Group.Tabs.AboutFragment
 import org.griffin.sclfg.View.Group.Tabs.MessageFragment
@@ -22,16 +16,15 @@ class GroupActivity : AppCompatActivity() {
 
     private lateinit var pa: PageAdapter
     private var gid = ""
-    private val msgVm: MessageViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_modal_group)
 
 
-        gid = intent.extras!!.getString("gid", "")
-        msgVm.setGid(gid) {
-            /* If fail to get gid, return to main screen */
+        try {
+            gid = intent.extras!!.getString("gid", "")
+        } catch (e : Exception) {
             val intent = Intent(this@GroupActivity, HomeActivity::class.java)
             ContextCompat.startActivity(this@GroupActivity, intent, null)
         }

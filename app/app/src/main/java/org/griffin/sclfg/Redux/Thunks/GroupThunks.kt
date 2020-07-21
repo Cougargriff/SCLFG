@@ -13,7 +13,6 @@ import org.griffin.sclfg.Models.*
 import org.griffin.sclfg.Redux.Action
 import org.griffin.sclfg.Redux.AppState
 import org.reduxkotlin.Thunk
-import java.lang.Error
 
 val db = Firebase.firestore
 val auth = FirebaseAuth.getInstance()
@@ -26,7 +25,7 @@ val userRef = db.collection("users")
 
 private fun msgListFromDocs(msgDocs : MutableList<DocumentSnapshot>) : ArrayList<Message> {
         return ArrayList(msgDocs.map {
-            MessageViewModel.messageFromHash(it)
+            Messages.messageFromHash(it)
         })
 }
 
@@ -36,7 +35,7 @@ fun sendMessage(gid : String, msg : Message) : Thunk<AppState> = {dispatch, getS
         GlobalScope.launch {
             /* todo send and get messagse */
             grpRef.document(gid).collection("messages").add(
-                MessageViewModel.messageToHash(msg)
+                Messages.messageToHash(msg)
             ).await()
             dispatch(Action.SEND_MESSAGE_SUCCESS)
         }

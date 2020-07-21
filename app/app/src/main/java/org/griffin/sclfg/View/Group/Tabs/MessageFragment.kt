@@ -28,8 +28,6 @@ class MessageFragment(val gid: String) : Fragment() {
     private val vm: GroupViewModel by activityViewModels()
     private var msgs = ArrayList<Message>()
     private var user = User("Loading...", "loading", ArrayList(), -1)
-    private lateinit var group: Group
-
     private lateinit var unsub : StoreSubscription
 
     private lateinit var rv: RecyclerView
@@ -63,7 +61,6 @@ class MessageFragment(val gid: String) : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         setupSendButton()
     }
 
@@ -94,7 +91,6 @@ class MessageFragment(val gid: String) : Fragment() {
                     (rv.adapter as MessagesAdapter).addItem(it)
                 }
                 msgs = newMsgs
-
             requireActivity().runOnUiThread {
                 rv.smoothScrollToPosition(0)
             }
@@ -133,7 +129,6 @@ class MessageFragment(val gid: String) : Fragment() {
                             confirm_lottie.visibility = View.GONE
                             it.visibility = View.VISIBLE
                         }
-
                         override fun onAnimationCancel(animation: Animator?) = Unit
                         override fun onAnimationRepeat(animation: Animator?) = Unit
                         override fun onAnimationStart(animation: Animator?) = Unit
