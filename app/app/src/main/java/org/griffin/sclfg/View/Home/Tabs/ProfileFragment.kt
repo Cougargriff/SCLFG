@@ -32,7 +32,6 @@ import com.soundcloud.android.crop.Crop
 import kotlinx.android.synthetic.main.tab_profile.*
 import kotlinx.android.synthetic.main.tab_profile.view.*
 import org.griffin.sclfg.Models.Group
-import org.griffin.sclfg.Models.GroupMod
 import org.griffin.sclfg.Models.GroupViewModel
 import org.griffin.sclfg.Models.User
 import org.griffin.sclfg.R

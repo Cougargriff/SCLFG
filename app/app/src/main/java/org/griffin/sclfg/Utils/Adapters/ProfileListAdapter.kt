@@ -50,7 +50,6 @@ class ProfileAdapter(
                 }
                 .start()
         }
-
     }
 
     private fun animateUp(views: List<View>) {
@@ -63,7 +62,6 @@ class ProfileAdapter(
                     if (views.size > 1) {
                         animateUp(views.subList(1, views.size))
                     }
-
                 }
                 .withEndAction {
                     views[0].visibility = View.VISIBLE
@@ -99,13 +97,9 @@ class ProfileAdapter(
                                 item.cancel_button!!
                             )
                         )
-
-
                         animateDown(
                             listOf(
-
                                 item.startDelete!!,
-
                                 item.cell_container!!
                             )
                         )
@@ -117,8 +111,6 @@ class ProfileAdapter(
                                 item.cancel_button!!
                             )
                         )
-
-
                         animateUp(
                             listOf(
                                 item.startDelete!!,
@@ -128,7 +120,6 @@ class ProfileAdapter(
                     }
                 }
             }
-
 
             /* attach delete button */
             item.startDelete.setOnClickListener {
@@ -162,7 +153,6 @@ class ProfileAdapter(
                 }
             }
 
-
             item.active_toggle.setOnClickListener {
                 /* isActivated is state !BEFORE! switched */
                 when (it.isActivated) {
@@ -185,7 +175,6 @@ class ProfileAdapter(
         } else {
             item.active_toggle.visibility = View.GONE
         }
-
     }
 
     fun removeItem(gid: String, position: Int) {

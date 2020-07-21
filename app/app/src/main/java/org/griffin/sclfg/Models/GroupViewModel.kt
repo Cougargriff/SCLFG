@@ -115,7 +115,7 @@ class GroupViewModel : ViewModel(), CoroutineScope {
 
     private val user: MutableLiveData<User> by lazy {
         MutableLiveData<User>().also {
-            loadUser()
+            launchLoadUser()
         }
     }
     private val groups: MutableLiveData<List<Group>> by lazy {
@@ -132,7 +132,7 @@ class GroupViewModel : ViewModel(), CoroutineScope {
 
     private val locations: MutableLiveData<List<Location>> by lazy {
         MutableLiveData<List<Location>>().also {
-            loadLocs()
+            launchLoadLocs()
         }
     }
 
@@ -140,21 +140,7 @@ class GroupViewModel : ViewModel(), CoroutineScope {
         return user
     }
 
-    private fun launchLoadShips() {
-        launch {
-            loadShips {
-                ships.value = it
-            }
-        }
-    }
 
-    fun launchLoadGroups() {
-        launch {
-            loadGroups {
-                groups.value = it
-            }
-        }
-    }
 
     fun findUser(uid: String, cb: (User) -> Unit) {
         if (uid.isNotBlank()) {
@@ -173,7 +159,7 @@ class GroupViewModel : ViewModel(), CoroutineScope {
                 "screenName" to name
             ), SetOptions.merge()
         ).addOnCompleteListener {
-            loadUser().also {
+            launchLoadUser().also {
                launchLoadGroups()
             }
         }
@@ -190,7 +176,7 @@ class GroupViewModel : ViewModel(), CoroutineScope {
                 ), SetOptions.merge()
             )
             .addOnCompleteListener {
-                loadUser()
+               launchLoadUser()
             }
     }
 
@@ -219,7 +205,7 @@ class GroupViewModel : ViewModel(), CoroutineScope {
                 ), SetOptions.merge()
             )
             .addOnCompleteListener {
-                loadUser()
+               launchLoadUser()
             }
     }
 
@@ -258,13 +244,6 @@ class GroupViewModel : ViewModel(), CoroutineScope {
         return locations
     }
 
-    /**
-    Checks to see if passed group with id (gid)  still exists in remote db.
-
-    @param gid the id of the group to check
-    @param err the callback function invoked when group doesn't exist
-    @param cb callback invoked when group does exist
-     */
     fun groupExists(gid: String, err: () -> Unit, cb: (DocumentSnapshot) -> Unit) {
         grpRef.document(gid).get().addOnCompleteListener {
             if (it.isSuccessful) {
@@ -331,64 +310,6 @@ class GroupViewModel : ViewModel(), CoroutineScope {
        launchLoadGroups()
     }
 
-    fun syncInGroups(tUser: User) {
-        val grps = groups.value
-        var temp_user = tUser
-        var temp_gids = ArrayList<String>()
-        grps!!.forEach {
-            temp_gids.add(it.gid)
-        }
-
-        tUser.inGroups.forEachIndexed { index, gid ->
-            if (temp_gids.contains(gid)) {
-                temp_user.inGroups.removeAt(index)
-            }
-        }
-
-        user.value = temp_user
-        userRef.document(tUser.uid).set(
-            hashMapOf(
-                "inGroups" to temp_gids
-            ), SetOptions.merge()
-        )
-    }
-
-    private fun loadUser() {
-        userRef.document(auth.uid!!).get()
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
-                    var result = it.result!!
-                    if (result.exists()) {
-                        user.value = userFromHash(result)
-                    } else {
-                        initUser("")
-                    }
-                    launchLoadGroups()
-                }
-            }
-    }
-
-    fun initUser(displayName : String, cb: () -> Unit = {}) {
-        userRef.document(auth.uid!!).get()
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
-                    var result = it.result!!
-                    /* create the user if they don't exist already */
-                    if (!result.exists()) {
-                        var initUser = hashMapOf(
-                            "timeCreated" to System.currentTimeMillis().toString(),
-                            "inGroups" to emptyList<String>(),
-                            "screenName" to displayName
-                        )
-                        userRef.document(auth.uid!!).set(initUser).also {
-                            cb()
-                        }
-                    }
-                }
-            }
-        getUser()
-    }
-
     private fun groupListFromDocs(grpDocs: MutableList<DocumentSnapshot>): ArrayList<Group> {
         var grpList = ArrayList<Group>()
         for (grp in grpDocs) {
@@ -396,6 +317,73 @@ class GroupViewModel : ViewModel(), CoroutineScope {
         }
         return grpList
     }
+
+    private suspend fun loadUser(cb: (user : User) -> Unit) {
+        try {
+            val user = userRef.document(auth.uid!!).get().await()
+            if(user.exists()) {
+                cb(userFromHash(user))
+            } else {
+                initUser("")
+            }
+            launchLoadGroups()
+        } catch (e : Exception) {}
+    }
+
+    suspend fun initUser(displayName : String, cb: () -> Unit = {}) {
+        try {
+            val user = userRef.document(auth.uid!!).get().await()
+            if(!user.exists()) {
+                val initUser = hashMapOf(
+                    "timeCreated" to System.currentTimeMillis().toString(),
+                    "inGroups" to emptyList<String>(),
+                    "screenName" to displayName
+                )
+                userRef.document(auth.uid!!).set(initUser).also {
+                    launchLoadUser()
+                    cb()
+                }
+            }
+        } catch (e : Exception) {}
+    }
+
+
+
+    private fun launchLoadUser() {
+        launch {
+            loadUser {
+                user.value = it
+            }
+        }
+    }
+
+    private fun launchLoadShips() {
+        launch {
+            loadShips {
+                ships.value = it
+            }
+        }
+    }
+
+    private fun launchLoadLocs() {
+        launch {
+            loadLocs {
+                locations.value = it
+            }
+        }
+    }
+
+    fun launchLoadGroups() {
+        launch {
+            loadGroups {
+                groups.value = it
+            }
+        }
+    }
+
+
+
+
 
     /* loads oldest first */
     private suspend fun loadGroups(cb: (ArrayList<Group>) -> Unit) {
@@ -413,33 +401,21 @@ class GroupViewModel : ViewModel(), CoroutineScope {
                 .get()
                 .await()
             cb(groupListFromDocs(grps.documents))
-        } catch (e : Exception) {
-
-        }
+        } catch (e : Exception) {}
     }
 
-    private fun loadLocs() {
-
-        locRef.get()
-            .addOnCompleteListener {
-                /* Sanity Check */
-                if (it.isSuccessful && !it.result!!.isEmpty) {
-                    var result = it.result!! /* QuerySnapshot */
-                    var locDocs = result.documents /* Ships in collection */
-                    var locList = ArrayList<Location>()
-                    for (loc in locDocs) {
-                        var name = loc["name"] as String
-                        /* Save the current ship to the list */
-                        locList.add(Location(name))
-                    }
-                    /* Update our new ship list */
-                    locations.value = locList
-                }
-            }
+    private suspend fun loadLocs(cb : (locs : ArrayList<Location>) -> Unit) {
+        try {
+            val locs = locRef.get().await()
+            cb(
+                ArrayList(locs.documents.toList().map {
+                    Location(it["name"] as String)
+                })
+            )
+        } catch (e : Exception) {}
     }
 
-    private suspend fun loadShips(cb: (ship : ArrayList<Ship>) -> Unit) {
-
+    private suspend fun loadShips(cb: (ships : ArrayList<Ship>) -> Unit) {
         try {
             val ships = shipRef.get().await()
             cb(ArrayList(ships.documents.toList().map {
