@@ -38,6 +38,7 @@ import org.griffin.sclfg.Models.User
 import org.griffin.sclfg.R
 import org.griffin.sclfg.Redux.Thunks.*
 import org.griffin.sclfg.Redux.configureStore
+import org.griffin.sclfg.Redux.store
 import org.griffin.sclfg.Utils.Adapters.GroupListAdapter
 import org.griffin.sclfg.Utils.Adapters.ProfileAdapter
 import org.griffin.sclfg.View.Group.GroupActivity
@@ -65,8 +66,6 @@ class ProfileFragment : Fragment() {
     private lateinit var rvAdapter: RecyclerView.Adapter<*>
 
     private var groupsList = ArrayList<Group>()
-
-    private val store = configureStore()
 
     private val err_cb = fun() {
         Toast.makeText(requireContext(), "Group No Longer Exists", Toast.LENGTH_LONG)
@@ -135,30 +134,31 @@ class ProfileFragment : Fragment() {
 
         try {
             asyncLoadProfileImg()
+            profileImage.setOnClickListener {
+
+                /* Confirm selection with alertDialog */
+                var dialog = AlertDialog.Builder(this.requireContext()).apply {
+                    setTitle("Choose a new profile image?")
+                    setPositiveButton("Yes") { dialog, which ->
+                        /* Continue to image picker on confirm */
+                        doImagePicker()
+                    }
+                    setNegativeButton("Cancel") { dialog, which ->
+                        /* Do nothing and return to profile fragment*/
+                    }
+                }
+
+                dialog.show().apply {
+                    this.getButton(AlertDialog.BUTTON_POSITIVE)
+                        .setTextColor(resources.getColor(R.color.iosBlue))
+                    this.getButton(AlertDialog.BUTTON_NEGATIVE)
+                        .setTextColor(resources.getColor(R.color.iosBlue))
+                }
+            }
         } catch (err: Exception) {
             profileImage.setImageResource(R.drawable.astro_prof)
         }
-        profileImage.setOnClickListener {
 
-            /* Confirm selection with alertDialog */
-            var dialog = AlertDialog.Builder(this.requireContext()).apply {
-                setTitle("Choose a new profile image?")
-                setPositiveButton("Yes") { dialog, which ->
-                    /* Continue to image picker on confirm */
-                    doImagePicker()
-                }
-                setNegativeButton("Cancel") { dialog, which ->
-                    /* Do nothing and return to profile fragment*/
-                }
-            }
-
-            dialog.show().apply {
-                this.getButton(AlertDialog.BUTTON_POSITIVE)
-                    .setTextColor(resources.getColor(R.color.iosBlue))
-                this.getButton(AlertDialog.BUTTON_NEGATIVE)
-                    .setTextColor(resources.getColor(R.color.iosBlue))
-            }
-        }
     }
 
     private fun SetupRedux() {
@@ -181,8 +181,7 @@ class ProfileFragment : Fragment() {
          */
         (rv.adapter as ProfileAdapter).update(groupsList as ArrayList<Group>)
         nameChange.text = user.screenName
-        val num_in = user.inGroups.size
-        numIn.text = "In ${num_in} Groups"
+        numIn.text = "In ${user.inGroups.size} Groups"
         (rv.adapter as ProfileAdapter).apply {
             authUser = user
             notifyDataSetChanged()

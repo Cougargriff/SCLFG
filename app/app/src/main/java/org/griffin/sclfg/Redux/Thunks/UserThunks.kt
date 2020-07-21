@@ -39,6 +39,7 @@ fun changeName(name : String) : Thunk<AppState> = { dispatch, getState, extraArg
                     "screenName" to name
                 ), SetOptions.merge()
             ).addOnSuccessListener {
+                dispatch(getGroups())
                 dispatch(Action.CHANGE_NAME_SUCCESS)
             }
 

@@ -1,13 +1,10 @@
 package org.griffin.sclfg.Redux
 
-import android.util.Log
 import org.griffin.sclfg.Models.Group
 import org.griffin.sclfg.Models.User
 import org.griffin.sclfg.Redux.Middleware.loggingMiddleware
 import org.griffin.sclfg.Redux.Reducers.groupsReducer
 import org.griffin.sclfg.Redux.Reducers.userReducer
-import org.griffin.sclfg.Redux.Thunks.getGroups
-import org.griffin.sclfg.Redux.Thunks.getUser
 import org.griffin.sclfg.Redux.Thunks.listenToGroups
 import org.griffin.sclfg.Redux.Thunks.listenToUser
 import org.reduxkotlin.*
@@ -35,3 +32,5 @@ fun configureStore() : Store<AppState> {
 
     return store
 }
+
+val store = configureStore()

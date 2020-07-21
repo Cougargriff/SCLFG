@@ -18,6 +18,7 @@ import org.griffin.sclfg.Models.Ship
 import org.griffin.sclfg.R
 import org.griffin.sclfg.Redux.Thunks.createGroup
 import org.griffin.sclfg.Redux.configureStore
+import org.griffin.sclfg.Redux.store
 
 class CreateFragment : Fragment() {
     private val vm: GroupViewModel by activityViewModels()
@@ -30,7 +31,6 @@ class CreateFragment : Fragment() {
     private lateinit var acView: AutoCompleteTextView
     private val EMPTY = ""
 
-    private val store = configureStore()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -18,6 +18,7 @@ import org.griffin.sclfg.Models.GroupViewModel
 import org.griffin.sclfg.R
 import org.griffin.sclfg.Redux.Thunks.changeName
 import org.griffin.sclfg.Redux.configureStore
+import org.griffin.sclfg.Redux.store
 import org.griffin.sclfg.Utils.Adapters.PageAdapter
 import org.griffin.sclfg.Utils.Cache.LocalCache
 import org.griffin.sclfg.View.Home.Tabs.CreateFragment
@@ -33,7 +34,6 @@ class HomeActivity : AppCompatActivity() {
 
     /* Fragment Frameworks */
     private lateinit var pa: PageAdapter
-    private val store = configureStore()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

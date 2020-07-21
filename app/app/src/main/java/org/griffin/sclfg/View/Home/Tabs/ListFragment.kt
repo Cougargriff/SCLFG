@@ -19,6 +19,7 @@ import org.griffin.sclfg.Models.User
 import org.griffin.sclfg.R
 import org.griffin.sclfg.Redux.Thunks.*
 import org.griffin.sclfg.Redux.configureStore
+import org.griffin.sclfg.Redux.store
 import org.griffin.sclfg.Utils.Adapters.GroupListAdapter
 import org.griffin.sclfg.View.Group.GroupActivity
 
@@ -31,8 +32,6 @@ class ListFragment : Fragment() {
     private lateinit var rv: RecyclerView
     private lateinit var rvManager: RecyclerView.LayoutManager
     private lateinit var rvAdapter: RecyclerView.Adapter<*>
-
-    val store = configureStore()
 
     private val err_cb = fun() {
         Toast.makeText(requireContext(), "Group No Longer Exists", Toast.LENGTH_LONG)
