@@ -42,24 +42,26 @@ import org.griffin.sclfg.Redux.store
 import org.griffin.sclfg.Utils.Adapters.GroupListAdapter
 import org.griffin.sclfg.Utils.Adapters.ProfileAdapter
 import org.griffin.sclfg.View.Group.GroupActivity
+import org.reduxkotlin.StoreSubscription
 import java.io.File
 import java.io.InputStream
+import kotlin.Exception
 
-@GlideModule
-class MyAppGlideModule : AppGlideModule() {
-    override fun registerComponents(context: Context, glide: Glide, registry: Registry) {
-        // Register FirebaseImageLoader to handle StorageReference
-        registry.append(
-            StorageReference::class.java, InputStream::class.java,
-            FirebaseImageLoader.Factory()
-        )
-    }
-}
+//@GlideModule
+//class MyAppGlideModule : AppGlideModule() {
+//    override fun registerComponents(context: Context, glide: Glide, registry: Registry) {
+//        // Register FirebaseImageLoader to handle StorageReference
+//        registry.append(
+//            StorageReference::class.java, InputStream::class.java,
+//            FirebaseImageLoader.Factory()
+//        )
+//    }
+//}
 
 class ProfileFragment : Fragment() {
     private val PICK_PHOTO_TO_CROP = 0
     private var user = User("", "", ArrayList(), 0)
-
+    private lateinit var unsub : StoreSubscription
     /* Recycler View Setup */
     private lateinit var rv: RecyclerView
     private lateinit var rvManager: RecyclerView.LayoutManager
@@ -116,7 +118,6 @@ class ProfileFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        SetupRedux()
 
         profile_animate.apply {
             setAnimation("cell_animate.json")
@@ -132,68 +133,83 @@ class ProfileFragment : Fragment() {
             playAnimation()
         }
 
-        try {
-            asyncLoadProfileImg()
-            profileImage.setOnClickListener {
-
-                /* Confirm selection with alertDialog */
-                var dialog = AlertDialog.Builder(this.requireContext()).apply {
-                    setTitle("Choose a new profile image?")
-                    setPositiveButton("Yes") { dialog, which ->
-                        /* Continue to image picker on confirm */
-                        doImagePicker()
-                    }
-                    setNegativeButton("Cancel") { dialog, which ->
-                        /* Do nothing and return to profile fragment*/
-                    }
-                }
-
-                dialog.show().apply {
-                    this.getButton(AlertDialog.BUTTON_POSITIVE)
-                        .setTextColor(resources.getColor(R.color.iosBlue))
-                    this.getButton(AlertDialog.BUTTON_NEGATIVE)
-                        .setTextColor(resources.getColor(R.color.iosBlue))
-                }
-            }
-        } catch (err: Exception) {
+//        try {
+//            asyncLoadProfileImg()
+//            profileImage.setOnClickListener {
+//
+//                /* Confirm selection with alertDialog */
+//                var dialog = AlertDialog.Builder(this.requireContext()).apply {
+//                    setTitle("Choose a new profile image?")
+//                    setPositiveButton("Yes") { dialog, which ->
+//                        /* Continue to image picker on confirm */
+//                        doImagePicker()
+//                    }
+//                    setNegativeButton("Cancel") { dialog, which ->
+//                        /* Do nothing and return to profile fragment*/
+//                    }
+//                }
+//
+//                dialog.show().apply {
+//                    this.getButton(AlertDialog.BUTTON_POSITIVE)
+//                        .setTextColor(resources.getColor(R.color.iosBlue))
+//                    this.getButton(AlertDialog.BUTTON_NEGATIVE)
+//                        .setTextColor(resources.getColor(R.color.iosBlue))
+//                }
+//            }
+        //} catch (err: Exception) {
             profileImage.setImageResource(R.drawable.astro_prof)
-        }
+        //}
 
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        SetupRedux()
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        unsub()
+    }
+
     private fun SetupRedux() {
-        store.subscribe {
+        unsub = store.subscribe {
             requireActivity().runOnUiThread {
                 render(store.getState().groups)
                 render(store.getState().user)
             }
 
         }
-       //store.dispatch(getUser())
-       //store.dispatch(getGroups())
+       store.dispatch(getUser())
+       store.dispatch(getGroups())
     }
 
     private fun render(newUser : User) {
-        user = newUser
-        /*
+        try {
+            user = newUser
+            /*
             possible in the future to just make local
             call to function for getGroups instead of vm call
          */
-        (rv.adapter as ProfileAdapter).update(groupsList as ArrayList<Group>)
-        nameChange.text = user.screenName
-        numIn.text = "In ${user.inGroups.size} Groups"
-        (rv.adapter as ProfileAdapter).apply {
-            authUser = user
-            notifyDataSetChanged()
-        }
+            (rv.adapter as ProfileAdapter).update(groupsList as ArrayList<Group>)
+            nameChange.text = user.screenName
+            numIn.text = "In ${user.inGroups.size} Groups"
+            (rv.adapter as ProfileAdapter).apply {
+                authUser = user
+                notifyDataSetChanged()
+            }
+        } catch (e : Exception) {}
     }
 
     private fun render(newGroups : ArrayList<Group>) {
-        groupsList = ArrayList(newGroups.filter {  store.getState().user.inGroups.contains(it.gid)})
+        try {
+            groupsList = ArrayList(newGroups.filter {  store.getState().user.inGroups.contains(it.gid)})
 
-        (rv.adapter as ProfileAdapter).apply {
-            update(groupsList as ArrayList<Group>)
-        }
+            (rv.adapter as ProfileAdapter).apply {
+                update(groupsList as ArrayList<Group>)
+            }
+        } catch (e : Exception) {}
+
     }
 
     private val openModal = fun(gid: String) {
@@ -224,24 +240,24 @@ class ProfileFragment : Fragment() {
 
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == Activity.RESULT_OK && data != null) {
-            when (requestCode) {
-                PICK_PHOTO_TO_CROP -> {
-                    startImgCrop(data.data!!)
-                }
-
-                Crop.REQUEST_CROP -> {
-                    /* handle cropped photo push to storage */
-                    /* important to use Crop.getOutput(...) NOT data.data.... */
-                    profileImage.setImageURI(Crop.getOutput(data))
-                    pushImageToStorage(Crop.getOutput(data))
-                }
-            }
-        }
-    }
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//
+//        if (resultCode == Activity.RESULT_OK && data != null) {
+//            when (requestCode) {
+//                PICK_PHOTO_TO_CROP -> {
+//                    startImgCrop(data.data!!)
+//                }
+//
+//                Crop.REQUEST_CROP -> {
+//                    /* handle cropped photo push to storage */
+//                    /* important to use Crop.getOutput(...) NOT data.data.... */
+//                    profileImage.setImageURI(Crop.getOutput(data))
+//                    pushImageToStorage(Crop.getOutput(data))
+//                }
+//            }
+//        }
+//    }
 
     private fun pushImageToStorage(uri: Uri) {
         val imgInputStream = requireContext().contentResolver.openInputStream(uri)

@@ -1,5 +1,6 @@
 package org.griffin.sclfg.View.Home.Tabs
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -22,12 +23,13 @@ import org.griffin.sclfg.Redux.configureStore
 import org.griffin.sclfg.Redux.store
 import org.griffin.sclfg.Utils.Adapters.GroupListAdapter
 import org.griffin.sclfg.View.Group.GroupActivity
+import org.reduxkotlin.StoreSubscription
 
 class ListFragment : Fragment() {
     private val vm: GroupViewModel by activityViewModels()
     private var groupsList = ArrayList<Group>()
     private var user = User("", "", ArrayList(), 0)
-
+    private lateinit var unsub : StoreSubscription
     /* Recycler View Setup */
     private lateinit var rv: RecyclerView
     private lateinit var rvManager: RecyclerView.LayoutManager
@@ -93,12 +95,11 @@ class ListFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setupSwipeRefresh()
-        SetupRedux()
     }
 
     private fun SetupRedux() {
         /* Redux Store Setup */
-        store.subscribe {
+        unsub = store.subscribe {
             requireActivity().runOnUiThread {
             //    if(groupsList != store.state.groups)
                     render(store.getState().groups)
@@ -109,6 +110,16 @@ class ListFragment : Fragment() {
         }
        // store.dispatch(getUser())
         //store.dispatch(getGroups())
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        SetupRedux()
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        unsub()
     }
 
     private fun setupSwipeRefresh() {
@@ -123,23 +134,28 @@ class ListFragment : Fragment() {
     }
 
     private fun render(newUser : User) {
-        user = newUser
-        /*
+        try {
+            user = newUser
+            /*
             possible in the future to just make local
             call to function for getGroups instead of vm call
          */
-        (rv.adapter as GroupListAdapter).apply {
-            authUser = user
-            notifyDataSetChanged()
-        }
+            (rv.adapter as GroupListAdapter).apply {
+                authUser = user
+                notifyDataSetChanged()
+            }
+        } catch (e : Exception) {}
     }
 
     private fun render(newGroups : ArrayList<Group>) {
-        groupsList = ArrayList(newGroups.filter {  it.active })
+        try {
+            groupsList = ArrayList(newGroups.filter {  it.active })
 
-        (rv.adapter as GroupListAdapter).apply {
-            update(groupsList as ArrayList<Group>)
-        }
+            (rv.adapter as GroupListAdapter).apply {
+                update(groupsList as ArrayList<Group>)
+            }
+        } catch(e : Exception) {}
+
     }
 }
 
