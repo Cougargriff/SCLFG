@@ -24,7 +24,7 @@ import org.griffin.sclfg.View.Group.GroupActivity
 
 class ListFragment : Fragment() {
     private val vm: GroupViewModel by activityViewModels()
-    private lateinit var groupsList: List<Group>
+    private var groupsList = ArrayList<Group>()
     private var user = User("", "", ArrayList(), 0)
 
     /* Recycler View Setup */
@@ -88,23 +88,24 @@ class ListFragment : Fragment() {
             layoutManager = rvManager
             adapter = rvAdapter
         }
-
-       SetupRedux()
-
         return view
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setupSwipeRefresh()
+        SetupRedux()
     }
 
     private fun SetupRedux() {
         /* Redux Store Setup */
         store.subscribe {
             requireActivity().runOnUiThread {
-                render(store.state.groups)
-                render(store.state.user)
+            //    if(groupsList != store.state.groups)
+                    render(store.state.groups)
+
+               // if(user != store.state.user)
+                    render(store.state.user)
             }
         }
         store.dispatch(getUser())
@@ -135,17 +136,9 @@ class ListFragment : Fragment() {
     }
 
     private fun render(newGroups : ArrayList<Group>) {
-        val tempList = ArrayList<Group>()
-        /* Spot to check for conditions on whether to show a specific group */
-        /* TODO possible to add filter checks for user inputted tags in the future */
-        newGroups.forEach {
-            if (it.active) {
-                tempList.add(it)
-            }
-        }
-        groupsList = tempList
+        groupsList = ArrayList(newGroups.filter {  it.active })
+
         (rv.adapter as GroupListAdapter).apply {
-            authUser = user
             update(groupsList as ArrayList<Group>)
         }
     }

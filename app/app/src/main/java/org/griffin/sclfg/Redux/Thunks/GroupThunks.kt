@@ -12,7 +12,7 @@ import kotlinx.coroutines.tasks.await
 import org.griffin.sclfg.Models.Group
 import org.griffin.sclfg.Models.GroupViewModel
 import org.griffin.sclfg.Redux.Actions
-import org.griffin.sclfg.Redux.GroupsState
+import org.griffin.sclfg.Redux.AppState
 import org.reduxkotlin.Thunk
 
 
@@ -21,7 +21,19 @@ val auth = FirebaseAuth.getInstance()
 val grpRef = db.collection("groups")
 val userRef = db.collection("users")
 
-fun joinGroup(gid : String, cb: () -> Unit) : Thunk<GroupsState> = {dispatch, getState, extraArg ->
+
+fun createGroup(group : Group, cb : () -> Unit) {
+    try {
+        GlobalScope.launch {
+            val id = grpRef.add(GroupViewModel.groupToHash(group, auth.uid!!)).addOnSuccessListener {
+            }.await().id
+            addGroupToUser(id, auth.uid!!)
+        }
+
+    } catch (e : Exception) {}
+}
+
+fun joinGroup(gid : String, cb: () -> Unit) : Thunk<AppState> = { dispatch, getState, extraArg ->
     try {
         GlobalScope.launch {
             var group = findGroup(gid)!!
@@ -40,7 +52,8 @@ fun joinGroup(gid : String, cb: () -> Unit) : Thunk<GroupsState> = {dispatch, ge
     } catch(e : Exception) {}
 }
 
-fun leaveGroup(gid: String, cb: () -> Unit) : Thunk<GroupsState> = {dispatch, getState, extraArg ->
+
+fun leaveGroup(gid: String, cb: () -> Unit) : Thunk<AppState> = { dispatch, getState, extraArg ->
     try {
        GlobalScope.launch {
            var group = findGroup(gid)!!
@@ -61,37 +74,22 @@ fun leaveGroup(gid: String, cb: () -> Unit) : Thunk<GroupsState> = {dispatch, ge
     }
 }
 
-fun setPublic(gid : String) : Thunk<GroupsState> = {dispatch, getState, extraArg ->
+fun setPublic(gid : String) : Thunk<AppState> = { dispatch, getState, extraArg ->
     makePublic(gid) {
        dispatch(Actions.MAKE_GROUP_PUBLIC)
     }
 }
 
 
-fun setPrivate(gid : String) : Thunk<GroupsState> = {dispatch, getState, extraArg ->
+fun setPrivate(gid : String) : Thunk<AppState> = { dispatch, getState, extraArg ->
     makePrivate(gid) {
         dispatch(Actions.MAKE_GROUP_PRIVATE)
     }
 }
 
-fun getUser() : Thunk<GroupsState> = {dispatch, getState, extraArg ->
-    dispatch(Actions.LOAD_USER_REQUEST)
 
-    userRef.document(auth.uid!!)
-        .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-            val user = GroupViewModel.userFromHash(documentSnapshot!!)
-            dispatch(Actions.UPDATE_USER_FROM_SNAP(user))
-    }
 
-    try {
-        GlobalScope.launch {
-            val user = userRef.document(auth.uid!!).get().await()
-            dispatch(Actions.LOAD_USER_SUCCESS(GroupViewModel.userFromHash(user)))
-        }
-    } catch (e : Exception) {}
-}
-
-fun getGroups() : Thunk<GroupsState> = { dispatch, getState, extraArg ->
+fun getGroups() : Thunk<AppState> = { dispatch, getState, extraArg ->
     dispatch(Actions.LOAD_GROUPS_REQUEST)
 
     /* Listens to db changes and reloads groups */

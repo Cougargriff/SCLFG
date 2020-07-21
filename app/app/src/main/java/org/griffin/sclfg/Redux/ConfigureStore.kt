@@ -1,32 +1,25 @@
 package org.griffin.sclfg.Redux
 
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.tasks.await
 import org.griffin.sclfg.Models.Group
 import org.griffin.sclfg.Models.User
-import kotlinx.coroutines.launch
-import org.griffin.sclfg.Models.GroupViewModel
 import org.griffin.sclfg.Redux.Reducers.groupsReducer
+import org.griffin.sclfg.Redux.Reducers.userReducer
 import org.reduxkotlin.*
 
 
 
-data class GroupsState(val user : User,
-                       val groups : ArrayList<Group>,
-                       val isLoadingGroups : Boolean)
+data class AppState(val user : User,
+                    val groups : ArrayList<Group>,
+                    val isLoadingGroups : Boolean)
 
-val rootReducer = combineReducers(groupsReducer)
+val rootReducer = combineReducers(groupsReducer, userReducer)
 
 
 
-fun configureStore() : Store<GroupsState> {
+fun configureStore() : Store<AppState> {
     return createThreadSafeStore(
         rootReducer,
-        GroupsState(User("",
+        AppState(User("",
             "",
             ArrayList(),
             0),

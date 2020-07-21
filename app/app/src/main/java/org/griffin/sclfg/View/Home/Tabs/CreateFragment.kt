@@ -16,6 +16,8 @@ import org.griffin.sclfg.Models.GroupViewModel
 import org.griffin.sclfg.Models.Location
 import org.griffin.sclfg.Models.Ship
 import org.griffin.sclfg.R
+import org.griffin.sclfg.Redux.Thunks.createGroup
+import org.griffin.sclfg.Redux.configureStore
 
 class CreateFragment : Fragment() {
     private val vm: GroupViewModel by activityViewModels()
@@ -27,6 +29,8 @@ class CreateFragment : Fragment() {
     private lateinit var locAdapter: ArrayAdapter<String>
     private lateinit var acView: AutoCompleteTextView
     private val EMPTY = ""
+
+    private val store = configureStore()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,6 +49,7 @@ class CreateFragment : Fragment() {
         setupAutoComplete()
     }
 
+
     private fun handleCreate() {
         groupCreateButton.setOnClickListener {
             /* Check for empty box field */
@@ -60,23 +65,23 @@ class CreateFragment : Fragment() {
                     descriptionBox.text.toString()
                 )
 
+                store.dispatch(createGroup(newGroup, resetTextBoxes))
                 /* resetTextBoxes -> UI update on success callback */
-                vm.pushGroup(newGroup, resetTextBoxes) {
-                    /* after pushing group, callback with new gid param */
-                    /* add group to inGroups under user */
-                    vm.addGroupToUser(it)
-                }
                 Toast.makeText(requireContext(), newGroup.name + " Created!", Toast.LENGTH_SHORT)
                     .show()
             }
         }
     }
 
+
     private var resetTextBoxes = fun() {
-        groupBox.text.clear()
-        shipSearchBox.text.clear()
-        locSearchBox.text.clear()
-        descriptionBox.text.clear()
+        requireActivity().runOnUiThread {
+            groupBox.text.clear()
+            shipSearchBox.text.clear()
+            locSearchBox.text.clear()
+            descriptionBox.text.clear()
+        }
+
     }
 
 
