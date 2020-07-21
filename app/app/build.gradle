@@ -54,6 +54,9 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-storage-ktx:19.1.1'
 
+    implementation "org.reduxkotlin:redux-kotlin-threadsafe-jvm:0.5.3"
+    implementation "org.reduxkotlin:redux-kotlin-thunk:0.5.3"
+
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     // LiveData

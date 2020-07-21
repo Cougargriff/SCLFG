@@ -21,7 +21,6 @@ class GroupListAdapter(
     val activity: FragmentActivity,
     var groupList: ArrayList<Group>,
     var authUser: User,
-    val lookUp: (uid: String, cb: (name: String) -> Unit) -> Unit,
     val joinGroup: (gid: String, uid: String, cb: () -> Unit) -> Unit,
     val leaveGroup: (gid: String, uid: String, cb: () -> Unit) -> Unit,
     val openModal: (gid: String) -> Unit
@@ -80,7 +79,7 @@ class GroupListAdapter(
         /* BIND USER LIST */
         grvManager = LinearLayoutManager(vParent.context)
         val gRV = item.userListView
-        val grvAdapter = UserListAdapter(curr.playerList, lookUp)
+        val grvAdapter = UserListAdapter(curr.playerList)
 
         /* Bind everything together */
         gRV.apply {
@@ -91,7 +90,7 @@ class GroupListAdapter(
 
         hideGoneElements(item)
 
-        val isMember = groupList[position].playerList.contains(authUser.uid)
+        val isMember = authUser.inGroups.contains(curr.gid)
 
         /* check if authUser is in current group */
         if (!isMember) {
