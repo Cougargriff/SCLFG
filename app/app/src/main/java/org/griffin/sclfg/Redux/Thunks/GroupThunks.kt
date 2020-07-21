@@ -1,6 +1,5 @@
 package org.griffin.sclfg.Redux.Thunks
 
-import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
@@ -12,7 +11,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import org.griffin.sclfg.Models.Group
 import org.griffin.sclfg.Models.GroupViewModel
-import org.griffin.sclfg.Models.User
 import org.griffin.sclfg.Redux.Actions
 import org.griffin.sclfg.Redux.GroupsState
 import org.reduxkotlin.Thunk
@@ -22,8 +20,6 @@ val db = Firebase.firestore
 val auth = FirebaseAuth.getInstance()
 val grpRef = db.collection("groups")
 val userRef = db.collection("users")
-
-
 
 fun joinGroup(gid : String, cb: () -> Unit) : Thunk<GroupsState> = {dispatch, getState, extraArg ->
     try {
@@ -42,7 +38,6 @@ fun joinGroup(gid : String, cb: () -> Unit) : Thunk<GroupsState> = {dispatch, ge
             }
         }
     } catch(e : Exception) {}
-
 }
 
 fun leaveGroup(gid: String, cb: () -> Unit) : Thunk<GroupsState> = {dispatch, getState, extraArg ->
@@ -93,11 +88,7 @@ fun getUser() : Thunk<GroupsState> = {dispatch, getState, extraArg ->
             val user = userRef.document(auth.uid!!).get().await()
             dispatch(Actions.LOAD_USER_SUCCESS(GroupViewModel.userFromHash(user)))
         }
-    } catch (e : Exception) {
-
-    }
-
-
+    } catch (e : Exception) {}
 }
 
 fun getGroups() : Thunk<GroupsState> = { dispatch, getState, extraArg ->

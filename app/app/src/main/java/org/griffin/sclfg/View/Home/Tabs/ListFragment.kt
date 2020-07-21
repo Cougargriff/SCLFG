@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.tab_list.*
@@ -18,7 +17,6 @@ import org.griffin.sclfg.Models.Group
 import org.griffin.sclfg.Models.GroupViewModel
 import org.griffin.sclfg.Models.User
 import org.griffin.sclfg.R
-import org.griffin.sclfg.Redux.Actions
 import org.griffin.sclfg.Redux.Thunks.*
 import org.griffin.sclfg.Redux.configureStore
 import org.griffin.sclfg.Utils.Adapters.GroupListAdapter
@@ -48,7 +46,6 @@ class ListFragment : Fragment() {
                 Toast.makeText(requireContext(), "Too many people already", Toast.LENGTH_LONG)
                     .show()
             }
-
         })
     }
 
@@ -92,7 +89,17 @@ class ListFragment : Fragment() {
             adapter = rvAdapter
         }
 
+       SetupRedux()
 
+        return view
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        setupSwipeRefresh()
+    }
+
+    private fun SetupRedux() {
         /* Redux Store Setup */
         store.subscribe {
             requireActivity().runOnUiThread {
@@ -102,13 +109,6 @@ class ListFragment : Fragment() {
         }
         store.dispatch(getUser())
         store.dispatch(getGroups())
-
-        return view
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        setupSwipeRefresh()
     }
 
     private fun setupSwipeRefresh() {
@@ -149,27 +149,5 @@ class ListFragment : Fragment() {
             update(groupsList as ArrayList<Group>)
         }
     }
-
-//    private fun setupVM() {
-//        vm.getUser().observe(viewLifecycleOwner, Observer {
-//
-//        })
-//
-////        vm.getGroups().observe(viewLifecycleOwner, Observer {
-////            val tempList = ArrayList<Group>()
-////            /* Spot to check for conditions on whether to show a specific group */
-////            /* TODO possible to add filter checks for user inputted tags in the future */
-////            it!!.forEach {
-////                if (it.active) {
-////                    tempList.add(it)
-////                }
-////            }
-////            groupsList = tempList
-////            (rv.adapter as GroupListAdapter).apply {
-////                authUser = user
-////                update(groupsList as ArrayList<Group>)
-////            }
-////        })
-//    }
 }
 

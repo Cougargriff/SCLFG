@@ -14,5 +14,4 @@ class Actions {
     object LOAD_USER_REQUEST
     object LEAVE_GROUP
     object JOIN_GROUP
-
 }
