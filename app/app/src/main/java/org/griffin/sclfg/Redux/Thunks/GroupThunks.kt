@@ -9,13 +9,11 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import org.griffin.sclfg.Models.Group
-import org.griffin.sclfg.Models.GroupViewModel
-import org.griffin.sclfg.Models.Location
-import org.griffin.sclfg.Models.Ship
+import org.griffin.sclfg.Models.*
 import org.griffin.sclfg.Redux.Action
 import org.griffin.sclfg.Redux.AppState
 import org.reduxkotlin.Thunk
+import java.lang.Error
 
 val db = Firebase.firestore
 val auth = FirebaseAuth.getInstance()
@@ -26,7 +24,43 @@ val userRef = db.collection("users")
     **** THUNKS ****
  */
 
+private fun msgListFromDocs(msgDocs : MutableList<DocumentSnapshot>) : ArrayList<Message> {
+        return ArrayList(msgDocs.map {
+            MessageViewModel.messageFromHash(it)
+        })
+}
+
+fun sendMessage(gid : String, msg : Message) : Thunk<AppState> = {dispatch, getState, extraArg ->
+    dispatch(Action.SEND_MESSAGE_REQUEST)
+    try {
+        GlobalScope.launch {
+            /* todo send and get messagse */
+            grpRef.document(gid).collection("messages").add(
+                MessageViewModel.messageToHash(msg)
+            ).await()
+            dispatch(Action.SEND_MESSAGE_SUCCESS)
+        }
+
+    } catch (e : Exception) {}
+}
+
+fun setMessageListener(gid : String) : Thunk<AppState> = {dispatch, getState, extraArg ->
+    try {
+        grpRef.document(gid).collection("messages")
+            .orderBy("time" ,Query.Direction.DESCENDING)
+            .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+
+                val msgList = msgListFromDocs(querySnapshot!!.documents)
+
+                dispatch(Action.LOAD_MESSAGES_FROM_SNAP(
+                   msgList
+                ))
+            }
+    } catch (e : Exception) {}
+}
+
 fun loadSelect(gid : String) : Thunk<AppState> = {dispatch, getState, extraArg ->
+    dispatch(Action.SELECT_GROUP_REQUEST)
     try {
         GlobalScope.launch {
             var group = GroupViewModel.groupFromHash(grpRef.document(gid).get().await())

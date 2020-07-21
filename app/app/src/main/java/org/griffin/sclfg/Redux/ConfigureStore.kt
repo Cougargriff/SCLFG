@@ -1,9 +1,6 @@
 package org.griffin.sclfg.Redux
 
-import org.griffin.sclfg.Models.Group
-import org.griffin.sclfg.Models.Location
-import org.griffin.sclfg.Models.Ship
-import org.griffin.sclfg.Models.User
+import org.griffin.sclfg.Models.*
 import org.griffin.sclfg.Redux.Middleware.loggingMiddleware
 import org.griffin.sclfg.Redux.Reducers.groupsReducer
 import org.griffin.sclfg.Redux.Reducers.userReducer
@@ -18,7 +15,8 @@ data class AppState(val user : User,
                     val isLoadingGroups : Boolean,
                     val ships : ArrayList<Ship>,
                     val locations : ArrayList<Location>,
-                    val selectedGroup : Group)
+                    val selectedGroup : Group,
+                    val selectedMsgs  : ArrayList<Message>)
 
 val rootReducer = combineReducers(groupsReducer, userReducer)
 
@@ -42,7 +40,8 @@ private val initialState = AppState(User("",
     false,
     ArrayList(),
     ArrayList(),
-    initialGroup
+    initialGroup,
+    ArrayList()
 )
 
 fun configureStore() : Store<AppState> {

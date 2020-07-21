@@ -15,6 +15,8 @@ val groupsReducer : Reducer<AppState> = { state, action ->
         is Action.LOAD_LOCATIONS_SUCCESS -> state.copy(locations = action.locs)
         is Action.CLEAR_SELECTED_GROUP -> state.copy(selectedGroup = initialGroup)
         is Action.LOAD_SELECTED_GROUP -> state.copy(selectedGroup = action.group)
+        is Action.LOAD_MESSAGES_FROM_SNAP -> state.copy(selectedMsgs = action.msgs)
+        is Action.CLEAR_SELECTED_MESSAGES -> state.copy(selectedMsgs = ArrayList())
         else -> state
     }
 }

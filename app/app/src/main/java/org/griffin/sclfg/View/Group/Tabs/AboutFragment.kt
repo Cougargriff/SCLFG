@@ -18,18 +18,15 @@ import org.griffin.sclfg.Models.User
 import org.griffin.sclfg.R
 import org.griffin.sclfg.Redux.Action
 import org.griffin.sclfg.Redux.Thunks.loadSelect
+import org.griffin.sclfg.Redux.Thunks.setMessageListener
 import org.griffin.sclfg.Redux.store
 import org.griffin.sclfg.Utils.Adapters.AboutUserAdapter
 import org.reduxkotlin.StoreSubscription
 
 class AboutFragment(val gid: String) : Fragment() {
 
-    private val vm: GroupViewModel by activityViewModels()
-    private var user = User("Loading...", "loading", ArrayList(), -1)
-    private lateinit var selectedGroup: Group
     private var userList = ArrayList<String>()
     private lateinit var unsub : StoreSubscription
-
     /* Recycler View Setup */
     private lateinit var rv: RecyclerView
     private lateinit var rvManager: RecyclerView.LayoutManager
@@ -44,11 +41,9 @@ class AboutFragment(val gid: String) : Fragment() {
         /* Setup Fragment View here */
         rv = view.user_rv
         rvManager = LinearLayoutManager(context)
-
         rvAdapter = AboutUserAdapter(
             ArrayList()
         )
-
         rv.apply {
             layoutManager = rvManager
             adapter = rvAdapter
@@ -64,10 +59,7 @@ class AboutFragment(val gid: String) : Fragment() {
             loop(true)
             playAnimation()
         }
-        setupVM()
     }
-
-
 
     override fun onDetach() {
         super.onDetach()
@@ -82,7 +74,11 @@ class AboutFragment(val gid: String) : Fragment() {
 
     private fun SetupRedux() {
         unsub = store.subscribe {
-            render(store.getState().selectedGroup)
+            try {
+                requireActivity().runOnUiThread {
+                    render(store.getState().selectedGroup!!)
+                }
+            } catch (e : Exception) {}
         }
         store.dispatch(loadSelect(gid))
     }
@@ -99,25 +95,4 @@ class AboutFragment(val gid: String) : Fragment() {
 
         } catch (e : Exception) {}
     }
-
-    private fun setupVM() {
-//        vm.getUser().observe(viewLifecycleOwner, Observer {
-//            user = it
-//            vm.getGroup(gid) {
-//                it.observe(requireActivity(), Observer {
-//                    val group = it
-//                    val curr_count = group.currCount
-//                    val max_count = group.maxPlayers
-//                    GroupName.text = group.name
-//                    playerCount.text = "${curr_count}  /  ${max_count}"
-//
-//                    userList = group.playerList
-//                    (rv.adapter as AboutUserAdapter).update(userList)
-//                })
-//            }
-//        })
-
-    }
 }
-
-

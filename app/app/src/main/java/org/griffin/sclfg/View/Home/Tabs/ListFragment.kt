@@ -100,6 +100,7 @@ class ListFragment : Fragment() {
     private fun SetupRedux() {
         /* Redux Store Setup */
         unsub = store.subscribe {
+            try {
             requireActivity().runOnUiThread {
             //    if(groupsList != store.state.groups)
                     render(store.getState().groups)
@@ -107,6 +108,7 @@ class ListFragment : Fragment() {
                // if(user != store.state.user)
                     render(store.getState().user)
             }
+            } catch (e : Exception) {}
         }
        // store.dispatch(getUser())
         //store.dispatch(getGroups())

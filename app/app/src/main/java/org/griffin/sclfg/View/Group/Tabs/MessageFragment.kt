@@ -1,6 +1,7 @@
 package org.griffin.sclfg.View.Group.Tabs
 
 import android.animation.Animator
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,16 +16,21 @@ import kotlinx.android.synthetic.main.tab_message.*
 import kotlinx.android.synthetic.main.tab_message.view.*
 import org.griffin.sclfg.Models.*
 import org.griffin.sclfg.R
+import org.griffin.sclfg.Redux.Action
+import org.griffin.sclfg.Redux.Thunks.sendMessage
+import org.griffin.sclfg.Redux.Thunks.setMessageListener
+import org.griffin.sclfg.Redux.store
 import org.griffin.sclfg.Utils.Adapters.MessagesAdapter
+import org.reduxkotlin.StoreSubscription
 
 class MessageFragment(val gid: String) : Fragment() {
 
     private val vm: GroupViewModel by activityViewModels()
-    private val msgVm: MessageViewModel by activityViewModels()
-
     private var msgs = ArrayList<Message>()
     private var user = User("Loading...", "loading", ArrayList(), -1)
     private lateinit var group: Group
+
+    private lateinit var unsub : StoreSubscription
 
     private lateinit var rv: RecyclerView
     private lateinit var rvManager: RecyclerView.LayoutManager
@@ -50,7 +56,6 @@ class MessageFragment(val gid: String) : Fragment() {
         val controller = AnimationUtils.loadLayoutAnimation(context, R.anim.bottom_up)
         rv.layoutAnimation = controller
         rv.scheduleLayoutAnimation()
-
         rv.smoothScrollToPosition(0)
 
         return view
@@ -59,8 +64,53 @@ class MessageFragment(val gid: String) : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        setupVM()
         setupSendButton()
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        store.dispatch(Action.CLEAR_SELECTED_MESSAGES)
+       unsub()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        SetupRedux()
+    }
+
+    private fun SetupRedux() {
+        unsub = store.subscribe {
+            try {
+                render(store.getState().selectedMsgs!!)
+                render(store.getState().user)
+            } catch (e : Exception) {}
+        }
+        store.dispatch(setMessageListener(gid))
+    }
+
+    private fun render(newMsgs : ArrayList<Message>) {
+        try {
+                newMsgs.minus(msgs).reversed().forEach {
+                    (rv.adapter as MessagesAdapter).addItem(it)
+                }
+                msgs = newMsgs
+
+            requireActivity().runOnUiThread {
+                rv.smoothScrollToPosition(0)
+            }
+        } catch (e : Exception) {}
+    }
+
+    private fun render(newUser : User) {
+        try {
+            requireActivity().runOnUiThread {
+                user = newUser
+                (rv.adapter as MessagesAdapter).apply {
+                    authUser = user
+                    notifyDataSetChanged()
+                }
+            }
+        } catch (e : Exception) {}
     }
 
     private val retrieveName =
@@ -92,36 +142,10 @@ class MessageFragment(val gid: String) : Fragment() {
                 }
                 val txt = message_box.text.toString()
                 message_box.text.clear()
-                vm.groupExists(gid, {}, {
-                    msgVm.sendMessage(Message(user.uid, Timestamp.now().seconds, txt, "")) {
-                        msgVm.getMsgs()
-                    }
-                })
+                store.dispatch(sendMessage(gid,
+                    Message(user.uid, Timestamp.now().seconds, txt, "")))
             }
         }
-    }
-
-    private fun setupVM() {
-        vm.getUser().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            user = it
-            (rv.adapter as MessagesAdapter).authUser = user
-
-            msgVm.getMsgs().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-                var temp = ArrayList<Message>()
-                it.forEach {
-                    temp.add(it)
-                }
-
-                var diff = temp.minus(msgs)
-
-                diff.reversed().forEach {
-                    (rv.adapter as MessagesAdapter).addItem(it)
-                }
-                msgs = temp
-
-                rv.smoothScrollToPosition(0)
-            })
-        })
     }
 }
 

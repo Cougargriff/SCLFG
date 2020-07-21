@@ -11,6 +11,8 @@ import kotlinx.android.synthetic.main.activity_modal_group.*
 import org.griffin.sclfg.Models.GroupViewModel
 import org.griffin.sclfg.Models.MessageViewModel
 import org.griffin.sclfg.R
+import org.griffin.sclfg.Redux.Thunks.setMessageListener
+import org.griffin.sclfg.Redux.store
 import org.griffin.sclfg.Utils.Adapters.PageAdapter
 import org.griffin.sclfg.View.Group.Tabs.AboutFragment
 import org.griffin.sclfg.View.Group.Tabs.MessageFragment
@@ -21,12 +23,10 @@ class GroupActivity : AppCompatActivity() {
     private lateinit var pa: PageAdapter
     private var gid = ""
     private val msgVm: MessageViewModel by viewModels()
-    private val vm: GroupViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_modal_group)
-
 
 
         gid = intent.extras!!.getString("gid", "")
@@ -38,19 +38,8 @@ class GroupActivity : AppCompatActivity() {
 
         paSetup()
         vpSetup()
-        initVMs()
         modalViewPager.setCurrentItem(1, true)
     }
-
-    private fun initVMs() {
-        vm.getGroups().observe(this, Observer {
-
-        })
-        vm.getUser().observe(this, Observer {
-
-        })
-    }
-
 
     private fun paSetup() {
         pa = PageAdapter(supportFragmentManager)
@@ -73,7 +62,9 @@ class GroupActivity : AppCompatActivity() {
             override fun onPageSelected(position: Int) {
                 when (position) {
                     0 -> {
-                        /* when search is selected */
+                        /* when search is selected *
+
+                         */
                     }
 
                     1 -> {
