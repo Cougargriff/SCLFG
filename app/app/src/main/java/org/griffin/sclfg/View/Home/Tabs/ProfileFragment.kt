@@ -36,10 +36,7 @@ import org.griffin.sclfg.Models.GroupMod
 import org.griffin.sclfg.Models.GroupViewModel
 import org.griffin.sclfg.Models.User
 import org.griffin.sclfg.R
-import org.griffin.sclfg.Redux.Thunks.getGroups
-import org.griffin.sclfg.Redux.Thunks.getUser
-import org.griffin.sclfg.Redux.Thunks.setPrivate
-import org.griffin.sclfg.Redux.Thunks.setPublic
+import org.griffin.sclfg.Redux.Thunks.*
 import org.griffin.sclfg.Redux.configureStore
 import org.griffin.sclfg.Utils.Adapters.GroupListAdapter
 import org.griffin.sclfg.Utils.Adapters.ProfileAdapter
@@ -60,7 +57,6 @@ class MyAppGlideModule : AppGlideModule() {
 
 class ProfileFragment : Fragment() {
     private val PICK_PHOTO_TO_CROP = 0
-    private val vm: GroupViewModel by activityViewModels()
     private var user = User("", "", ArrayList(), 0)
 
     /* Recycler View Setup */
@@ -91,6 +87,7 @@ class ProfileFragment : Fragment() {
             when(action) {
                 GroupMod.MAKE_PRIVATE -> store.dispatch(setPrivate(gid))
                 GroupMod.MAKE_PUBLIC -> store.dispatch(setPublic(gid))
+                GroupMod.DELETE -> store.dispatch(delete(gid))
             }
         }, err_cb, openModal)
 
@@ -113,8 +110,6 @@ class ProfileFragment : Fragment() {
                 override fun onAnimationStart(animation: Animator?) = Unit
             })
         }
-
-
 
         return view
     }
@@ -169,13 +164,13 @@ class ProfileFragment : Fragment() {
     private fun SetupRedux() {
         store.subscribe {
             requireActivity().runOnUiThread {
-                render(store.state.groups)
-                render(store.state.user)
+                render(store.getState().groups)
+                render(store.getState().user)
             }
 
         }
-       store.dispatch(getUser())
-       store.dispatch(getGroups())
+       //store.dispatch(getUser())
+       //store.dispatch(getGroups())
     }
 
     private fun render(newUser : User) {
@@ -195,7 +190,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun render(newGroups : ArrayList<Group>) {
-        groupsList = ArrayList(newGroups.filter {  store.state.user.inGroups.contains(it.gid)})
+        groupsList = ArrayList(newGroups.filter {  store.getState().user.inGroups.contains(it.gid)})
 
         (rv.adapter as ProfileAdapter).apply {
             update(groupsList as ArrayList<Group>)
@@ -211,7 +206,7 @@ class ProfileFragment : Fragment() {
     /* TODO fallback image now shows. Check to see if upload will refresh */
     private fun asyncLoadProfileImg() {
         /* create cache file to store profile pic */
-        val storageRef = Firebase.storage.reference.child(vm.getUser().value!!.uid)
+        val storageRef = Firebase.storage.reference.child(store.state.user.uid)
 
         /* image caching and loading lib */
         val glidePlaceholder = CircularProgressDrawable(requireContext()).apply {
@@ -251,7 +246,7 @@ class ProfileFragment : Fragment() {
 
     private fun pushImageToStorage(uri: Uri) {
         val imgInputStream = requireContext().contentResolver.openInputStream(uri)
-        Firebase.storage.reference.child(vm.getUser().value!!.uid).putStream(imgInputStream!!)
+        Firebase.storage.reference.child(store.getState().user.uid).putStream(imgInputStream!!)
     }
 
     private fun startImgCrop(inputURI: Uri) {

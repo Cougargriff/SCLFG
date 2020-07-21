@@ -102,14 +102,14 @@ class ListFragment : Fragment() {
         store.subscribe {
             requireActivity().runOnUiThread {
             //    if(groupsList != store.state.groups)
-                    render(store.state.groups)
+                    render(store.getState().groups)
 
                // if(user != store.state.user)
-                    render(store.state.user)
+                    render(store.getState().user)
             }
         }
-        store.dispatch(getUser())
-        store.dispatch(getGroups())
+       // store.dispatch(getUser())
+        //store.dispatch(getGroups())
     }
 
     private fun setupSwipeRefresh() {

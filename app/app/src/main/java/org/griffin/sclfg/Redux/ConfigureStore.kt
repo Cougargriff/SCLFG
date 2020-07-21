@@ -1,12 +1,16 @@
 package org.griffin.sclfg.Redux
 
+import android.util.Log
 import org.griffin.sclfg.Models.Group
 import org.griffin.sclfg.Models.User
+import org.griffin.sclfg.Redux.Middleware.loggingMiddleware
 import org.griffin.sclfg.Redux.Reducers.groupsReducer
 import org.griffin.sclfg.Redux.Reducers.userReducer
+import org.griffin.sclfg.Redux.Thunks.getGroups
+import org.griffin.sclfg.Redux.Thunks.getUser
+import org.griffin.sclfg.Redux.Thunks.listenToGroups
+import org.griffin.sclfg.Redux.Thunks.listenToUser
 import org.reduxkotlin.*
-
-
 
 data class AppState(val user : User,
                     val groups : ArrayList<Group>,
@@ -14,10 +18,8 @@ data class AppState(val user : User,
 
 val rootReducer = combineReducers(groupsReducer, userReducer)
 
-
-
 fun configureStore() : Store<AppState> {
-    return createThreadSafeStore(
+    val store = createThreadSafeStore(
         rootReducer,
         AppState(User("",
             "",
@@ -25,5 +27,11 @@ fun configureStore() : Store<AppState> {
             0),
         ArrayList(),
         false),
-        applyMiddleware(createThunkMiddleware()))
+        applyMiddleware(createThunkMiddleware(), loggingMiddleware))
+
+    /* call collection listeners once */
+    store.dispatch(listenToGroups())
+    store.dispatch(listenToUser())
+
+    return store
 }

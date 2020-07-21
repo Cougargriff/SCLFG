@@ -11,18 +11,18 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import org.griffin.sclfg.Models.Group
 import org.griffin.sclfg.Models.GroupViewModel
-import org.griffin.sclfg.Redux.Actions
+import org.griffin.sclfg.Redux.Action
 import org.griffin.sclfg.Redux.AppState
 import org.reduxkotlin.Thunk
-
 
 val db = Firebase.firestore
 val auth = FirebaseAuth.getInstance()
 val grpRef = db.collection("groups")
 val userRef = db.collection("users")
 
-
-
+/*
+    **** THUNKS ****
+ */
 
 fun createGroup(group : Group, cb : () -> Unit) : Thunk<AppState> = { dispatch, getState, extraArg ->
     try {
@@ -30,20 +30,28 @@ fun createGroup(group : Group, cb : () -> Unit) : Thunk<AppState> = { dispatch, 
             val id = grpRef.add(GroupViewModel.groupToHash(group, auth.uid!!)).addOnSuccessListener {
             }.await().id
             addGroupToUser(id, auth.uid!!)
-            dispatch(Actions.PUSH_NEW_GROUP)
+            dispatch(Action.PUSH_NEW_GROUP)
         }
 
     } catch (e : Exception) {}
 }
 
 fun delete(gid : String) : Thunk<AppState> = { dispatch, getState, extraArg ->
+    dispatch(Action.DELETE_GROUP_REQUEST)
     try {
-        val grp = grpRef.document(gid).get().await()
-        
+        GlobalScope.launch {
+            val group = GroupViewModel.groupFromHash(grpRef.document(gid).get().await())
+            grpRef.document(gid).delete().await()
+            group.playerList.forEach {
+                removeGroupFromUser(gid, it)
+            }
+            dispatch(Action.DELETE_GROUP_SUCCESS)
+        }
     } catch (e : Exception) {}
 }
 
 fun joinGroup(gid : String, cb: () -> Unit) : Thunk<AppState> = { dispatch, getState, extraArg ->
+    dispatch(Action.JOIN_GROUP_REQUEST)
     try {
         GlobalScope.launch {
             var group = findGroup(gid)!!
@@ -54,7 +62,7 @@ fun joinGroup(gid : String, cb: () -> Unit) : Thunk<AppState> = { dispatch, getS
                     "playerList" to group.playerList,
                     "currCount" to group.currCount + 1
                 ), SetOptions.merge()).await()
-                dispatch(Actions.JOIN_GROUP)
+                dispatch(Action.JOIN_GROUP_SUCCESS)
             } else {
                 cb()
             }
@@ -64,6 +72,7 @@ fun joinGroup(gid : String, cb: () -> Unit) : Thunk<AppState> = { dispatch, getS
 
 
 fun leaveGroup(gid: String, cb: () -> Unit) : Thunk<AppState> = { dispatch, getState, extraArg ->
+    dispatch(Action.LEAVE_GROUP_REQUEST)
     try {
        GlobalScope.launch {
            var group = findGroup(gid)!!
@@ -74,7 +83,7 @@ fun leaveGroup(gid: String, cb: () -> Unit) : Thunk<AppState> = { dispatch, getS
                    "playerList" to group.playerList,
                    "currCount" to group.currCount - 1
                ), SetOptions.merge()).await()
-               dispatch(Actions.LEAVE_GROUP)
+               dispatch(Action.LEAVE_GROUP_SUCCESS)
            } else {
                cb()
            }
@@ -85,25 +94,22 @@ fun leaveGroup(gid: String, cb: () -> Unit) : Thunk<AppState> = { dispatch, getS
 }
 
 fun setPublic(gid : String) : Thunk<AppState> = { dispatch, getState, extraArg ->
+    dispatch(Action.MAKE_GROUP_PUBLIC_REQUEST)
     makePublic(gid) {
-       dispatch(Actions.MAKE_GROUP_PUBLIC)
+       dispatch(Action.MAKE_GROUP_PUBLIC_SUCCESS)
     }
 }
-
 
 fun setPrivate(gid : String) : Thunk<AppState> = { dispatch, getState, extraArg ->
+    dispatch(Action.MAKE_GROUP_PRIVATE_REQUEST)
     makePrivate(gid) {
-        dispatch(Actions.MAKE_GROUP_PRIVATE)
+        dispatch(Action.MAKE_GROUP_PRIVATE_SUCCESS)
     }
 }
 
-
-
-fun getGroups() : Thunk<AppState> = { dispatch, getState, extraArg ->
-    dispatch(Actions.LOAD_GROUPS_REQUEST)
-
+fun listenToGroups() : Thunk<AppState> = { dispatch, getState, extraArg ->
     /* Listens to db changes and reloads groups */
-        grpRef.orderBy("timeCreated", Query.Direction.ASCENDING)
+    grpRef.orderBy("timeCreated", Query.Direction.ASCENDING)
         .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
             /* Listen for changes and update groups list */
             GlobalScope.launch {
@@ -114,16 +120,23 @@ fun getGroups() : Thunk<AppState> = { dispatch, getState, extraArg ->
                         lookupUID(it)!!
                     })
                 }
-                dispatch(Actions.UPDATE_GROUPS_FROM_SNAP(grpList))
+                dispatch(Action.UPDATE_GROUPS_FROM_SNAP(grpList))
             }
         }
+}
+fun getGroups() : Thunk<AppState> = { dispatch, getState, extraArg ->
+    dispatch(Action.LOAD_GROUPS_REQUEST)
 
     GlobalScope.launch {
         loadGroups {
-            dispatch(Actions.LOAD_GROUPS_SUCCESS(it))
+            dispatch(Action.LOAD_GROUPS_SUCCESS(it))
         }
     }
 }
+
+/*
+    **** Async and Helper Functions ****
+ */
 
 private suspend fun addGroupToUser(gid: String, uid : String) {
     try {
@@ -139,7 +152,6 @@ private suspend fun addGroupToUser(gid: String, uid : String) {
     } catch (e : Exception) {}
 
 }
-
 
 private suspend fun removeGroupFromUser(gid: String, uid : String) {
     try {
@@ -158,7 +170,6 @@ private suspend fun removeGroupFromUser(gid: String, uid : String) {
             ).await()
     } catch (e : Exception) {}
 }
-
 
 private suspend fun findGroup(gid : String) : Group? {
     try {
