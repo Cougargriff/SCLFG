@@ -22,14 +22,24 @@ val grpRef = db.collection("groups")
 val userRef = db.collection("users")
 
 
-fun createGroup(group : Group, cb : () -> Unit) {
+
+
+fun createGroup(group : Group, cb : () -> Unit) : Thunk<AppState> = { dispatch, getState, extraArg ->
     try {
         GlobalScope.launch {
             val id = grpRef.add(GroupViewModel.groupToHash(group, auth.uid!!)).addOnSuccessListener {
             }.await().id
             addGroupToUser(id, auth.uid!!)
+            dispatch(Actions.PUSH_NEW_GROUP)
         }
 
+    } catch (e : Exception) {}
+}
+
+fun delete(gid : String) : Thunk<AppState> = { dispatch, getState, extraArg ->
+    try {
+        val grp = grpRef.document(gid).get().await()
+        
     } catch (e : Exception) {}
 }
 

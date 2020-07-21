@@ -14,7 +14,8 @@ import org.griffin.sclfg.Models.User
 import org.griffin.sclfg.R
 
 class ProfileAdapter(
-    var groupList: ArrayList<Group>, var authUser: User,
+    var groupList: ArrayList<Group>,
+    var authUser: User,
     val modifyGroup: (gid: String, action: GroupMod, err_cb : () -> Unit) -> Unit,
     val err_cb: () -> Unit,
     val openModal: (gid: String) -> Unit

@@ -32,9 +32,16 @@ import com.soundcloud.android.crop.Crop
 import kotlinx.android.synthetic.main.tab_profile.*
 import kotlinx.android.synthetic.main.tab_profile.view.*
 import org.griffin.sclfg.Models.Group
+import org.griffin.sclfg.Models.GroupMod
 import org.griffin.sclfg.Models.GroupViewModel
 import org.griffin.sclfg.Models.User
 import org.griffin.sclfg.R
+import org.griffin.sclfg.Redux.Thunks.getGroups
+import org.griffin.sclfg.Redux.Thunks.getUser
+import org.griffin.sclfg.Redux.Thunks.setPrivate
+import org.griffin.sclfg.Redux.Thunks.setPublic
+import org.griffin.sclfg.Redux.configureStore
+import org.griffin.sclfg.Utils.Adapters.GroupListAdapter
 import org.griffin.sclfg.Utils.Adapters.ProfileAdapter
 import org.griffin.sclfg.View.Group.GroupActivity
 import java.io.File
@@ -63,7 +70,7 @@ class ProfileFragment : Fragment() {
 
     private var groupsList = ArrayList<Group>()
 
-
+    private val store = configureStore()
 
     private val err_cb = fun() {
         Toast.makeText(requireContext(), "Group No Longer Exists", Toast.LENGTH_LONG)
@@ -80,7 +87,12 @@ class ProfileFragment : Fragment() {
         rv = view.my_groups
         rvManager = LinearLayoutManager(context)
 
-        rvAdapter = ProfileAdapter(ArrayList(), user, vm.modifyGroup, err_cb, openModal)
+        rvAdapter = ProfileAdapter(ArrayList(), user, {gid, action, err_cb ->
+            when(action) {
+                GroupMod.MAKE_PRIVATE -> store.dispatch(setPrivate(gid))
+                GroupMod.MAKE_PUBLIC -> store.dispatch(setPublic(gid))
+            }
+        }, err_cb, openModal)
 
         rv.apply {
             layoutManager = rvManager
@@ -102,11 +114,15 @@ class ProfileFragment : Fragment() {
             })
         }
 
+
+
         return view
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        SetupRedux()
 
         profile_animate.apply {
             setAnimation("cell_animate.json")
@@ -122,9 +138,6 @@ class ProfileFragment : Fragment() {
             playAnimation()
         }
 
-
-
-        setupVM()
         try {
             asyncLoadProfileImg()
         } catch (err: Exception) {
@@ -150,6 +163,42 @@ class ProfileFragment : Fragment() {
                 this.getButton(AlertDialog.BUTTON_NEGATIVE)
                     .setTextColor(resources.getColor(R.color.iosBlue))
             }
+        }
+    }
+
+    private fun SetupRedux() {
+        store.subscribe {
+            requireActivity().runOnUiThread {
+                render(store.state.groups)
+                render(store.state.user)
+            }
+
+        }
+       store.dispatch(getUser())
+       store.dispatch(getGroups())
+    }
+
+    private fun render(newUser : User) {
+        user = newUser
+        /*
+            possible in the future to just make local
+            call to function for getGroups instead of vm call
+         */
+        (rv.adapter as ProfileAdapter).update(groupsList as ArrayList<Group>)
+        nameChange.text = user.screenName
+        val num_in = user.inGroups.size
+        numIn.text = "In ${num_in} Groups"
+        (rv.adapter as ProfileAdapter).apply {
+            authUser = user
+            notifyDataSetChanged()
+        }
+    }
+
+    private fun render(newGroups : ArrayList<Group>) {
+        groupsList = ArrayList(newGroups.filter {  store.state.user.inGroups.contains(it.gid)})
+
+        (rv.adapter as ProfileAdapter).apply {
+            update(groupsList as ArrayList<Group>)
         }
     }
 
@@ -215,42 +264,6 @@ class ProfileFragment : Fragment() {
         val imgPicker = Intent(Intent.ACTION_GET_CONTENT)
         imgPicker.type = "image/*"
         startActivityForResult(imgPicker, PICK_PHOTO_TO_CROP)
-    }
-
-    /* ****
-
-        FIREBASE OBSERVERS AND UPDATES FOR RV
-
-     * ****/
-    private fun setupVM() {
-        var a = rv.adapter as ProfileAdapter
-        vm.getUser().observe(viewLifecycleOwner, Observer {
-            user = it!!
-            a.authUser = user
-            (rv.adapter as ProfileAdapter).update(groupsList as ArrayList<Group>)
-            nameChange.text = user.screenName
-            val num_in = user.inGroups.size
-            numIn.text = "In ${num_in} Groups"
-        })
-
-        vm.getGroups().observe(viewLifecycleOwner, Observer {
-
-            var tempList = ArrayList<Group>()
-            /* Filter out groups that user doesn't own */
-            it!!.forEach {
-                /*
-                    checks if owner of group in db
-                    appends item to list in callback
-                 */
-                if (it.playerList.contains(user.uid)) {
-                    tempList.add(it)
-                }
-            }
-
-            groupsList = tempList
-            (rv.adapter as ProfileAdapter).update(groupsList as ArrayList<Group>)
-
-        })
     }
 }
 
