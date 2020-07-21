@@ -31,6 +31,7 @@ class ListFragment : Fragment() {
     private lateinit var rvManager: RecyclerView.LayoutManager
     private lateinit var rvAdapter: RecyclerView.Adapter<*>
 
+
     private val err_cb = fun() {
         Toast.makeText(requireContext(), "Group No Longer Exists", Toast.LENGTH_LONG)
             .show()

@@ -41,7 +41,9 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     def lifecycle_version = "2.2.0"
     def fragment_version = "1.2.3"
+    implementation "org.reduxkotlin:redux-kotlin-thunk:0.5.3"
 
+    implementation "org.reduxkotlin:redux-kotlin-threadsafe-jvm:0.5.3"
 
     /* Firestore */
     implementation 'com.google.firebase:firebase-analytics:17.2.2'
