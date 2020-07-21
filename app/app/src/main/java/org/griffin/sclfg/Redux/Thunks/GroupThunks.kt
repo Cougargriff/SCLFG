@@ -11,6 +11,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import org.griffin.sclfg.Models.Group
 import org.griffin.sclfg.Models.GroupViewModel
+import org.griffin.sclfg.Models.Location
+import org.griffin.sclfg.Models.Ship
 import org.griffin.sclfg.Redux.Action
 import org.griffin.sclfg.Redux.AppState
 import org.reduxkotlin.Thunk
@@ -23,6 +25,52 @@ val userRef = db.collection("users")
 /*
     **** THUNKS ****
  */
+
+fun loadSelect(gid : String) : Thunk<AppState> = {dispatch, getState, extraArg ->
+    try {
+        GlobalScope.launch {
+            var group = GroupViewModel.groupFromHash(grpRef.document(gid).get().await())
+            group.playerList = ArrayList(group.playerList.map {
+                lookupUID(it)!!
+            })
+
+            dispatch(Action.LOAD_SELECTED_GROUP(group))
+        }
+    } catch (e : Exception) {}
+}
+
+fun getShips() : Thunk<AppState> = { dispatch, getState, extraArg ->
+    try {
+        dispatch(Action.LOAD_SHIPS_REQUEST)
+        GlobalScope.launch {
+            val ships = db.collection("ships").get().await()
+            val arrShips = ArrayList(ships.documents.toList().map {
+                val ship = it
+                val name = ship["name"] as String
+                val mass = ship["mass"] as String
+                val manu = ship["manufacturer"] as String
+                val price = ship["price"] as String
+                val prod = ship["prod_state"] as String
+                val role = ship["role"] as String
+                val size = ship["size"] as String
+                Ship(name, manu, mass, price, prod, role, size)
+            })
+            dispatch(Action.LOAD_SHIPS_SUCCESS(arrShips))
+        }
+    } catch (e : Exception) {}
+}
+
+fun getLocations() : Thunk<AppState> = { dispatch, getState, extraArg ->
+    try {
+       dispatch(Action.LOAD_LOCATIONS_REQUEST)
+        GlobalScope.launch {
+            val locs = db.collection("locations").get().await()
+                dispatch(Action.LOAD_LOCATIONS_SUCCESS(ArrayList(locs.documents.toList().map {
+                    Location(it["name"] as String)
+                })))
+        }
+    } catch (e : Exception) {}
+}
 
 fun createGroup(group : Group, cb : () -> Unit) : Thunk<AppState> = { dispatch, getState, extraArg ->
     dispatch(Action.PUSH_NEW_GROUP_REQUEST)

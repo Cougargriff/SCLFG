@@ -174,11 +174,13 @@ class ProfileFragment : Fragment() {
 
     private fun SetupRedux() {
         unsub = store.subscribe {
-            requireActivity().runOnUiThread {
-                render(store.getState().groups)
-                render(store.getState().user)
-            }
+            try {
 
+                requireActivity().runOnUiThread {
+                    render(store.getState().groups)
+                    render(store.getState().user)
+                }
+            } catch ( e : Exception) {}
         }
        store.dispatch(getUser())
     }

@@ -21,7 +21,6 @@ import org.griffin.sclfg.Redux.configureStore
 import org.griffin.sclfg.Redux.store
 
 class CreateFragment : Fragment() {
-    private val vm: GroupViewModel by activityViewModels()
     private lateinit var shipList: List<Ship>
     private lateinit var locList: List<Location>
     private var SHIPS = listOf("")
@@ -45,8 +44,9 @@ class CreateFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         handleCreate()
-        setupVM()
         setupAutoComplete()
+
+        SetupRedux()
     }
 
 
@@ -73,7 +73,6 @@ class CreateFragment : Fragment() {
         }
     }
 
-
     private var resetTextBoxes = fun() {
         requireActivity().runOnUiThread {
             groupBox.text.clear()
@@ -84,17 +83,26 @@ class CreateFragment : Fragment() {
 
     }
 
-
-    private fun setupVM() {
-        vm.getShips().observe(viewLifecycleOwner, Observer {
-            shipList = it!!
+    private fun SetupRedux() {
+        store.subscribe {
+            render(ShipList(store.getState().ships))
+            render(LocsList(store.getState().locations))
+        }
+    }
+   data class ShipList(val list : ArrayList<Ship>?)
+    private fun render(ships : ShipList) {
+        try {
+            shipList = ships.list!!.toList()
             updateAutoCompleteShips()
-        })
+        } catch (e : Exception) {}
+    }
 
-        vm.getLocs().observe(viewLifecycleOwner, Observer {
-            locList = it!!
+    data class LocsList(val list : ArrayList<Location>?)
+    private fun render(locs : LocsList) {
+        try {
+            locList = locs.list!!.toList()
             updateAutoCompleteLocs()
-        })
+        } catch (e : Exception) {}
     }
 
     private fun setupAutoComplete() {

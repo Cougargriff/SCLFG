@@ -105,6 +105,9 @@ class GroupListAdapter(
                     }
                 }
             }
+            item.openModalButton.apply {
+                visibility = View.GONE
+            }
         } else {
             item.joinButton.visibility = View.GONE
             item.leaveButton.apply {
