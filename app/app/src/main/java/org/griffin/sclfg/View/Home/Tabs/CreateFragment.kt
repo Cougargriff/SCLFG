@@ -8,16 +8,12 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.tab_create.*
 import org.griffin.sclfg.Models.Group
-import org.griffin.sclfg.Models.GroupViewModel
 import org.griffin.sclfg.Models.Location
 import org.griffin.sclfg.Models.Ship
 import org.griffin.sclfg.R
 import org.griffin.sclfg.Redux.Thunks.createGroup
-import org.griffin.sclfg.Redux.configureStore
 import org.griffin.sclfg.Redux.store
 
 class CreateFragment : Fragment() {
@@ -61,7 +57,7 @@ class CreateFragment : Fragment() {
                     groupBox.text.toString().trim(), "", System.currentTimeMillis(),
                     ArrayList(), shipSearchBox.text.toString().trim(),
                     locSearchBox.text.toString().trim(),
-                    playNumSelector.value, 1, true, "",
+                    playNumSelector.value, true, "",
                     descriptionBox.text.toString()
                 )
 
@@ -85,8 +81,10 @@ class CreateFragment : Fragment() {
 
     private fun SetupRedux() {
         store.subscribe {
-            render(ShipList(store.getState().ships))
-            render(LocsList(store.getState().locations))
+            try {
+                render(ShipList(store.getState().ships))
+                render(LocsList(store.getState().locations))
+            } catch (e : Exception) {}
         }
     }
    data class ShipList(val list : ArrayList<Ship>?)

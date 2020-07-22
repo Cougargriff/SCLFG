@@ -15,18 +15,16 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.tab_list.*
 import kotlinx.android.synthetic.main.tab_list.view.*
 import org.griffin.sclfg.Models.Group
-import org.griffin.sclfg.Models.GroupViewModel
+import org.griffin.sclfg.Models.Groups
 import org.griffin.sclfg.Models.User
 import org.griffin.sclfg.R
 import org.griffin.sclfg.Redux.Thunks.*
-import org.griffin.sclfg.Redux.configureStore
 import org.griffin.sclfg.Redux.store
 import org.griffin.sclfg.Utils.Adapters.GroupListAdapter
 import org.griffin.sclfg.View.Group.GroupActivity
 import org.reduxkotlin.StoreSubscription
 
 class ListFragment : Fragment() {
-    private val vm: GroupViewModel by activityViewModels()
     private var groupsList = ArrayList<Group>()
     private var user = User("", "", ArrayList(), 0)
     private lateinit var unsub : StoreSubscription

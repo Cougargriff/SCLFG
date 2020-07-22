@@ -4,7 +4,7 @@ import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import org.griffin.sclfg.Models.GroupViewModel
+import org.griffin.sclfg.Models.Groups
 import org.griffin.sclfg.Redux.Action
 import org.griffin.sclfg.Redux.AppState
 import org.reduxkotlin.Thunk
@@ -13,7 +13,7 @@ import org.reduxkotlin.Thunk
 fun listenToUser() : Thunk<AppState> = { dispatch, getState, extraArg ->
     userRef.document(auth.uid!!)
         .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-            val user = GroupViewModel.userFromHash(documentSnapshot!!)
+            val user = Groups.userFromHash(documentSnapshot!!)
             dispatch(Action.UPDATE_USER_FROM_SNAP(user))
         }
 }
@@ -23,7 +23,7 @@ fun getUser() : Thunk<AppState> = { dispatch, getState, extraArg ->
     GlobalScope.launch {
         try {
             val user = userRef.document(auth.uid!!).get().await()
-            dispatch(Action.LOAD_USER_SUCCESS(GroupViewModel.userFromHash(user)))
+            dispatch(Action.LOAD_USER_SUCCESS(Groups.userFromHash(user)))
         } catch (e : Exception) {}
     }
 

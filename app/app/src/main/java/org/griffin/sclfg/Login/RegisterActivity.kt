@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.griffin.sclfg.Models.GroupViewModel
+import org.griffin.sclfg.Models.Groups
 import org.griffin.sclfg.R
 import org.griffin.sclfg.Utils.Cache.LocalCache
 import org.griffin.sclfg.View.Home.HomeActivity
@@ -24,7 +24,6 @@ class RegisterActivity : AppCompatActivity(), CoroutineScope {
     }
     private lateinit var localCache: LocalCache
     private lateinit var display_name: String
-    private val gvm : GroupViewModel by viewModels()
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main
@@ -94,7 +93,7 @@ class RegisterActivity : AppCompatActivity(), CoroutineScope {
     }
 
     private suspend fun initUser(uid: String, gotoMain: () -> Unit) {
-        gvm.initUser(display_name) {
+        Groups().initUser(display_name) {
             gotoMain()
         }
     }

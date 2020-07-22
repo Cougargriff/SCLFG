@@ -62,7 +62,7 @@ fun loadSelect(gid : String) : Thunk<AppState> = {dispatch, getState, extraArg -
     dispatch(Action.SELECT_GROUP_REQUEST)
     try {
         GlobalScope.launch {
-            var group = GroupViewModel.groupFromHash(grpRef.document(gid).get().await())
+            var group = Groups.groupFromHash(grpRef.document(gid).get().await())
             group.playerList = ArrayList(group.playerList.map {
                 lookupUID(it)!!
             })
@@ -109,7 +109,7 @@ fun createGroup(group : Group, cb : () -> Unit) : Thunk<AppState> = { dispatch, 
     dispatch(Action.PUSH_NEW_GROUP_REQUEST)
     try {
         GlobalScope.launch {
-            val id = grpRef.add(GroupViewModel.groupToHash(group, auth.uid!!)).await().id
+            val id = grpRef.add(Groups.groupToHash(group, auth.uid!!)).await().id
             addGroupToUser(id, auth.uid!!)
             dispatch(Action.PUSH_NEW_GROUP_SUCCESS)
         }
@@ -121,7 +121,7 @@ fun delete(gid : String) : Thunk<AppState> = { dispatch, getState, extraArg ->
     dispatch(Action.DELETE_GROUP_REQUEST)
     try {
         GlobalScope.launch {
-            val group = GroupViewModel.groupFromHash(grpRef.document(gid).get().await())
+            val group = Groups.groupFromHash(grpRef.document(gid).get().await())
             grpRef.document(gid).delete().await()
             group.playerList.forEach {
                 removeGroupFromUser(gid, it)
@@ -136,12 +136,12 @@ fun joinGroup(gid : String, cb: () -> Unit) : Thunk<AppState> = { dispatch, getS
     try {
         GlobalScope.launch {
             var group = findGroup(gid)!!
-            if(group.currCount + 1 <= group.maxPlayers) {
+            if(group.playerList.size + 1 <= group.maxPlayers) {
                 group.playerList.add(auth.uid!!)
                 addGroupToUser(gid, auth.uid!!)
                 grpRef.document(group.gid).set(hashMapOf(
                     "playerList" to group.playerList,
-                    "currCount" to group.currCount + 1
+                    "currCount" to group.playerList.size + 1
                 ), SetOptions.merge()).await()
                 dispatch(Action.JOIN_GROUP_SUCCESS)
             } else {
@@ -157,12 +157,12 @@ fun leaveGroup(gid: String, cb: () -> Unit) : Thunk<AppState> = { dispatch, getS
     try {
        GlobalScope.launch {
            var group = findGroup(gid)!!
-           if(group.currCount - 1 >= 0) {
+           if(group.playerList.size - 1 >= 0) {
                group.playerList.remove(getState().user.uid)
                removeGroupFromUser(gid, auth.uid!!)
                grpRef.document(group.gid).set(hashMapOf(
                    "playerList" to group.playerList,
-                   "currCount" to group.currCount - 1
+                   "currCount" to group.playerList.size - 1
                ), SetOptions.merge()).await()
                dispatch(Action.LEAVE_GROUP_SUCCESS)
            } else {
@@ -227,7 +227,7 @@ private fun msgListFromDocs(msgDocs : MutableList<DocumentSnapshot>) : ArrayList
 
 private suspend fun addGroupToUser(gid: String, uid : String) {
     try {
-        val user = GroupViewModel.userFromHash(userRef.document(uid).get().await())
+        val user = Groups.userFromHash(userRef.document(uid).get().await())
         var currIngroups = user.inGroups
         currIngroups.add(gid)
         userRef.document(uid)
@@ -242,7 +242,7 @@ private suspend fun addGroupToUser(gid: String, uid : String) {
 
 private suspend fun removeGroupFromUser(gid: String, uid : String) {
     try {
-        val user = GroupViewModel.userFromHash(userRef.document(uid).get().await())
+        val user = Groups.userFromHash(userRef.document(uid).get().await())
         var newIngroups = user.inGroups
         newIngroups.forEach {
             if (it.compareTo(gid) == 0) {
@@ -261,7 +261,7 @@ private suspend fun removeGroupFromUser(gid: String, uid : String) {
 private suspend fun findGroup(gid : String) : Group? {
     try {
         val group = grpRef.document(gid).get().await()
-        return GroupViewModel.groupFromHash(group)
+        return Groups.groupFromHash(group)
     } catch (e : Exception) {
         return null
     }
@@ -295,7 +295,7 @@ private fun makePrivate(gid: String, cb : () -> Unit) {
 private suspend fun lookupUID(uid: String) : String? {
     try {
         val user = userRef.document(uid).get().await()
-        return GroupViewModel.userFromHash(user).screenName
+        return Groups.userFromHash(user).screenName
     } catch(e : Exception) {
         return null
     }
@@ -304,7 +304,7 @@ private suspend fun lookupUID(uid: String) : String? {
 private fun groupListFromDocs(grpDocs: MutableList<DocumentSnapshot>): ArrayList<Group> {
     var grpList = ArrayList<Group>()
     for (grp in grpDocs) {
-        grpList.add(GroupViewModel.groupFromHash(grp))
+        grpList.add(Groups.groupFromHash(grp))
     }
     return grpList
 }

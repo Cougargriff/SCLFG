@@ -1,8 +1,6 @@
 package org.griffin.sclfg.View.Home.Tabs
 
 import android.animation.Animator
-import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -14,37 +12,26 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
-import com.bumptech.glide.Registry
-import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.module.AppGlideModule
-import com.firebase.ui.storage.images.FirebaseImageLoader
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import com.soundcloud.android.crop.Crop
 import kotlinx.android.synthetic.main.tab_profile.*
 import kotlinx.android.synthetic.main.tab_profile.view.*
 import org.griffin.sclfg.Models.Group
 import org.griffin.sclfg.Models.GroupMod
-import org.griffin.sclfg.Models.GroupViewModel
 import org.griffin.sclfg.Models.User
 import org.griffin.sclfg.R
 import org.griffin.sclfg.Redux.Thunks.*
-import org.griffin.sclfg.Redux.configureStore
 import org.griffin.sclfg.Redux.store
-import org.griffin.sclfg.Utils.Adapters.GroupListAdapter
 import org.griffin.sclfg.Utils.Adapters.ProfileAdapter
 import org.griffin.sclfg.View.Group.GroupActivity
 import org.reduxkotlin.StoreSubscription
 import java.io.File
-import java.io.InputStream
 import kotlin.Exception
 
 //@GlideModule

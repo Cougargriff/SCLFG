@@ -8,16 +8,13 @@ import android.view.MenuItem
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toolbar
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
 import kotlinx.android.synthetic.main.activty_main.*
 import org.griffin.sclfg.Login.LoginActivity
-import org.griffin.sclfg.Models.GroupViewModel
 import org.griffin.sclfg.R
 import org.griffin.sclfg.Redux.Thunks.changeName
-import org.griffin.sclfg.Redux.configureStore
 import org.griffin.sclfg.Redux.store
 import org.griffin.sclfg.Utils.Adapters.PageAdapter
 import org.griffin.sclfg.Utils.Cache.LocalCache

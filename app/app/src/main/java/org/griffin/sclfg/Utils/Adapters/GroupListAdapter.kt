@@ -60,7 +60,7 @@ class GroupListAdapter(
         val curr = groupList[position]
         val item = holder.itemView
         item.groupName.text = curr.name
-        item.currCount.text = curr.currCount.toString()
+        item.currCount.text = curr.playerList.size.toString()
         item.maxCount.text = "${curr.maxPlayers}  ...  Players Joined"
         item.shiploc.text = "${curr.ship} - ${curr.loc}"
         item.descriptionBox.text = groupList[position].description

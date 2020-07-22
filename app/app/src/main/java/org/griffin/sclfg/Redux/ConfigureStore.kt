@@ -26,7 +26,7 @@ val initialGroup = Group("",
     0,
     ArrayList(),
     "","",
-    0,0,
+    0,
     false,
     "",
     "")

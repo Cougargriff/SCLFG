@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Timestamp
@@ -84,6 +83,7 @@ class MessageFragment(val gid: String) : Fragment() {
                 render(store.getState().user)
             } catch (e : Exception) {}
         }
+        // TODO get snap listener unsub fun
         store.dispatch(setMessageListener(gid))
     }
 
@@ -119,7 +119,7 @@ class MessageFragment(val gid: String) : Fragment() {
                     val user = db.collection("users").document(uid)
                         .get().await()
                     requireActivity().runOnUiThread {
-                        cb(GroupViewModel.userFromHash(user).screenName)
+                        cb(Groups.userFromHash(user).screenName)
                     }
                 }
             } catch (e : Exception) {}
