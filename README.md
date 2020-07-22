@@ -21,7 +21,7 @@ Finally, in the Create screen, you can create new groups which you will be added
 From any of the main screens, you can access the Sign Out and Change screen name options by clicking the three dots menu in the upper right. 
 
 #### Redux-Kotlin
-![](https://www.google.com/url?sa=i&url=https%3A%2F%2Freduxkotlin.org%2F&psig=AOvVaw0KbKVCag1ENGe-G90v2iWe&ust=1595484868825000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCJjdw7ia4OoCFQAAAAAdAAAAABAE)
+![](https://reduxkotlin.org/img/redux-logo-landscape.png)
 Recently I transitioned the state management from ViewModels to Redux. The result is a more robust system that allows for a better debugging experience. Though this benefit does come at a cost. Theres bound to be some state related bugs floating around. Everything appears good on the surface but let me know if anything odd happens...
 
 #### Known Issues
