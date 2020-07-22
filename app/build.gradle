@@ -11,6 +11,9 @@ buildscript {
         classpath 'com.android.tools.build:gradle:4.0.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
+        /* Crash Analytics */
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.2.0'
+
         // for Firestore -> from google tutorial
         classpath 'com.google.gms:google-services:4.3.3'
 
