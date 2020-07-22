@@ -1,0 +1,9 @@
+
+qkotlin:S101"URename class "LOAD_USER_SUCCESS" to match the regular expression ^[A-Z][a-zA-Z0-9]*$.(Œ´ÑÀûÿÿÿÿ
+pkotlin:S101	"YRename class "UPDATE_USER_FROM_SNAP" to match the regular expression ^[A-Z][a-zA-Z0-9]*$.(‚°Ä…
+xkotlin:S101#"[Rename class "LOAD_MESSAGES_FROM_SNAP" to match the regular expression ^[A-Z][a-zA-Z0-9]*$.(ðÓ„8ÊÕÀ™·.
+ykotlin:S101"VRename class "LOAD_SHIPS_SUCCESS" to match the regular expression ^[A-Z][a-zA-Z0-9]*$.(Â‘¸ãøÿÿÿÿ8€£Ê•·.
+skotlin:S101"WRename class "LOAD_GROUPS_SUCCESS" to match the regular expression ^[A-Z][a-zA-Z0-9]*$.(”ŸÎºüÿÿÿÿ
+rkotlin:S101"[Rename class "UPDATE_GROUPS_FROM_SNAP" to match the regular expression ^[A-Z][a-zA-Z0-9]*$.(ÂÐÏ¶
+}kotlin:S101 "ZRename class "LOAD_LOCATIONS_SUCCESS" to match the regular expression ^[A-Z][a-zA-Z0-9]*$.(Ë¼³Ñûÿÿÿÿ8“¯Í•·.
+ukotlin:S101"WRename class "LOAD_SELECTED_GROUP" to match the regular expression ^[A-Z][a-zA-Z0-9]*$.(¡‹ÚÃ8âðÞ–·.

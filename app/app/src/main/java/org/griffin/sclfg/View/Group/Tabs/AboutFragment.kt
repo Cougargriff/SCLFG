@@ -73,11 +73,12 @@ class AboutFragment(val gid: String) : Fragment() {
     }
 
     private fun SetupRedux() {
+
         unsub = store.subscribe {
             try {
-                requireActivity().runOnUiThread {
+
                     render(store.getState().selectedGroup!!)
-                }
+
             } catch (e : Exception) {}
         }
         store.dispatch(loadSelect(gid))
@@ -85,11 +86,12 @@ class AboutFragment(val gid: String) : Fragment() {
 
     private fun render(group : Group) {
         try {
-            val curr_count = group.currCount
-            val max_count = group.maxPlayers
-            GroupName.text = group.name
-            playerCount.text = "${curr_count}  /  ${max_count}"
-
+            requireActivity().runOnUiThread {
+                val curr_count = group.currCount
+                val max_count = group.maxPlayers
+                GroupName.text = group.name
+                playerCount.text = "${curr_count}  /  ${max_count}"
+            }
             userList = group.playerList
             (rv.adapter as AboutUserAdapter).update(userList)
 

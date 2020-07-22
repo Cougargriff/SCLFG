@@ -14,9 +14,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Timestamp
 import kotlinx.android.synthetic.main.tab_message.*
 import kotlinx.android.synthetic.main.tab_message.view.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import org.griffin.sclfg.Models.*
 import org.griffin.sclfg.R
 import org.griffin.sclfg.Redux.Action
+import org.griffin.sclfg.Redux.Thunks.db
 import org.griffin.sclfg.Redux.Thunks.sendMessage
 import org.griffin.sclfg.Redux.Thunks.setMessageListener
 import org.griffin.sclfg.Redux.store
@@ -24,8 +28,6 @@ import org.griffin.sclfg.Utils.Adapters.MessagesAdapter
 import org.reduxkotlin.StoreSubscription
 
 class MessageFragment(val gid: String) : Fragment() {
-
-    private val vm: GroupViewModel by activityViewModels()
     private var msgs = ArrayList<Message>()
     private var user = User("Loading...", "loading", ArrayList(), -1)
     private lateinit var unsub : StoreSubscription
@@ -87,11 +89,12 @@ class MessageFragment(val gid: String) : Fragment() {
 
     private fun render(newMsgs : ArrayList<Message>) {
         try {
+            requireActivity().runOnUiThread {
                 newMsgs.minus(msgs).reversed().forEach {
                     (rv.adapter as MessagesAdapter).addItem(it)
                 }
                 msgs = newMsgs
-            requireActivity().runOnUiThread {
+
                 rv.smoothScrollToPosition(0)
             }
         } catch (e : Exception) {}
@@ -111,9 +114,15 @@ class MessageFragment(val gid: String) : Fragment() {
 
     private val retrieveName =
         fun(uid: String, cb: (name: String) -> Unit) {
-            vm.lookupUID(uid) {
-                cb(it)
-            }
+            try {
+                GlobalScope.launch {
+                    val user = db.collection("users").document(uid)
+                        .get().await()
+                    requireActivity().runOnUiThread {
+                        cb(GroupViewModel.userFromHash(user).screenName)
+                    }
+                }
+            } catch (e : Exception) {}
         }
 
     private fun setupSendButton() {

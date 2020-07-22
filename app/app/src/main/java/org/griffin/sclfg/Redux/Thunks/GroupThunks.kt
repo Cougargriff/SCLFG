@@ -23,12 +23,6 @@ val userRef = db.collection("users")
     **** THUNKS ****
  */
 
-private fun msgListFromDocs(msgDocs : MutableList<DocumentSnapshot>) : ArrayList<Message> {
-        return ArrayList(msgDocs.map {
-            Messages.messageFromHash(it)
-        })
-}
-
 fun sendMessage(gid : String, msg : Message) : Thunk<AppState> = {dispatch, getState, extraArg ->
     dispatch(Action.SEND_MESSAGE_REQUEST)
     try {
@@ -49,11 +43,17 @@ fun setMessageListener(gid : String) : Thunk<AppState> = {dispatch, getState, ex
             .orderBy("time" ,Query.Direction.DESCENDING)
             .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
 
-                val msgList = msgListFromDocs(querySnapshot!!.documents)
+                GlobalScope.launch {
+                    val msgList = msgListFromDocs(querySnapshot!!.documents)
+                    var newList = ArrayList<Message>()
+                    msgList.forEach {
+                        newList.add(it.copy(author = lookupUID(it.author)!!))
+                    }
 
-                dispatch(Action.LOAD_MESSAGES_FROM_SNAP(
-                   msgList
-                ))
+                    dispatch(Action.LOAD_MESSAGES_FROM_SNAP(
+                        msgList
+                    ))
+                }
             }
     } catch (e : Exception) {}
 }
@@ -218,6 +218,12 @@ fun getGroups() : Thunk<AppState> = { dispatch, getState, extraArg ->
 /*
     **** Async and Helper Functions ****
  */
+
+private fun msgListFromDocs(msgDocs : MutableList<DocumentSnapshot>) : ArrayList<Message> {
+    return ArrayList(msgDocs.map {
+        Messages.messageFromHash(it)
+    })
+}
 
 private suspend fun addGroupToUser(gid: String, uid : String) {
     try {

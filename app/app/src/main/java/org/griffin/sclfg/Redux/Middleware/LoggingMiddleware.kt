@@ -14,7 +14,7 @@ val loggingMiddleware: Middleware<AppState> =
     { store ->
         { next ->
             { action ->
-                Log.i("REDUX-STORE", action.toString())
+                Log.i("*************** REDUX-STORE", action.toString())
                 next(action)
             }
         }
