@@ -8,8 +8,7 @@ import kotlinx.android.synthetic.main.user_cell.view.*
 import org.griffin.sclfg.R
 
 class UserListAdapter(
-    val userList: ArrayList<String>,
-    val lookUp: (uid: String, cb: (name: String) -> Unit) -> Unit
+    val userList: ArrayList<String>
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     class ViewHolder(val cellView: LinearLayout) : RecyclerView.ViewHolder(cellView)
@@ -26,12 +25,7 @@ class UserListAdapter(
         val curr = userList[position]
         val item = holder.itemView
 
-
-        lookUp(curr) {
-            item.userName.text = it
-
-        }
-
+        item.userName.text = curr
 
         /* other setup for user list cell components */
     }

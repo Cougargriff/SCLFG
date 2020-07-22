@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_login.*
-import org.griffin.sclfg.Models.GroupViewModel
+import org.griffin.sclfg.Models.Groups
 import org.griffin.sclfg.R
 import org.griffin.sclfg.Utils.Cache.LocalCache
 import org.griffin.sclfg.View.Home.HomeActivity
@@ -17,7 +17,6 @@ import org.griffin.sclfg.View.Home.HomeActivity
 
 class LoginActivity : AppCompatActivity() {
 
-    private val vm: GroupViewModel by viewModels()
 
     private val BUTTON_ELEVATION by lazy {
         applicationContext.resources.displayMetrics.density * 8
@@ -84,13 +83,8 @@ class LoginActivity : AppCompatActivity() {
         Decouples the context logic with logging in for intent purposes
      */
     var login_cb = fun() {
-
-        vm.getUser().observe(this, Observer{
             var intent = Intent(this@LoginActivity, HomeActivity::class.java)
             ContextCompat.startActivity(this@LoginActivity, intent, null)
-        })
-
-
     }
 
     var cache_login_cb = fun(user: EmailPasswordLoginHandler.User) {

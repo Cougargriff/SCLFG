@@ -21,7 +21,6 @@ class GroupListAdapter(
     val activity: FragmentActivity,
     var groupList: ArrayList<Group>,
     var authUser: User,
-    val lookUp: (uid: String, cb: (name: String) -> Unit) -> Unit,
     val joinGroup: (gid: String, uid: String, cb: () -> Unit) -> Unit,
     val leaveGroup: (gid: String, uid: String, cb: () -> Unit) -> Unit,
     val openModal: (gid: String) -> Unit
@@ -61,7 +60,7 @@ class GroupListAdapter(
         val curr = groupList[position]
         val item = holder.itemView
         item.groupName.text = curr.name
-        item.currCount.text = curr.currCount.toString()
+        item.currCount.text = curr.playerList.size.toString()
         item.maxCount.text = "${curr.maxPlayers}  ...  Players Joined"
         item.shiploc.text = "${curr.ship} - ${curr.loc}"
         item.descriptionBox.text = groupList[position].description
@@ -80,7 +79,7 @@ class GroupListAdapter(
         /* BIND USER LIST */
         grvManager = LinearLayoutManager(vParent.context)
         val gRV = item.userListView
-        val grvAdapter = UserListAdapter(curr.playerList, lookUp)
+        val grvAdapter = UserListAdapter(curr.playerList)
 
         /* Bind everything together */
         gRV.apply {
@@ -91,7 +90,7 @@ class GroupListAdapter(
 
         hideGoneElements(item)
 
-        val isMember = groupList[position].playerList.contains(authUser.uid)
+        val isMember = authUser.inGroups.contains(curr.gid)
 
         /* check if authUser is in current group */
         if (!isMember) {
@@ -105,6 +104,9 @@ class GroupListAdapter(
                         /* Callback to happen after join group */
                     }
                 }
+            }
+            item.openModalButton.apply {
+                visibility = View.GONE
             }
         } else {
             item.joinButton.visibility = View.GONE

@@ -1,6 +1,13 @@
 
-mkotlin:S1192 "HDefine a constant instead of duplicating this literal "#CECFD1" 4 times.(Ğû¨çıÿÿÿÿ8ƒ©éñµ.
-hkotlin:S1192š"HDefine a constant instead of duplicating this literal "#2196F3" 4 times.(ïœÈ“8ƒ©éñµ.
-vkotlin:S117ø"RRename this local variable to match the regular expression "^[_a-z][a-zA-Z0-9]*$".(ç¸ÿ×ûÿÿÿÿ8óšÍ¥µ.
-Kkotlin:S1135³"2Complete the task associated to this TODO comment.(”ŒÆª
-qkotlin:S117Å"MRename this parameter to match the regular expression "^[_a-z][a-zA-Z0-9]*$".(äø¹¬üÿÿÿÿ8¿ô”­µ.
+Qkotlin:S1144Œ"1Remove this unused private "startImgCrop" method.(Ÿëº8³”ä”·.
+Hkotlin:S108Ê")Either remove or fill this block of code.(½ûöÆ8¹åî”·.
+kkotlin:S117W"MRename this parameter to match the regular expression "^[_a-z][a-zA-Z0-9]*$".(¡Ñº8„Ô‘·.
+tkotlin:S100¯"PRename function "SetupRedux" to match the regular expression ^[a-z][a-zA-Z0-9]*$(£¡Úãüÿÿÿÿ8„Ô‘·.
+Rkotlin:S1144’"2Remove this unused private "doImagePicker" method.(ÁÉÚ8ÁÌã”·.
+>kotlin:S125ô"Remove this commented out code.(›óåÃ8³”ä”·.
+Kkotlin:S1135Ş"2Complete the task associated to this TODO comment.(”ŒÆª
+Bkotlin:S1252"Remove this commented out code.(ìÆ¶ÿÿÿÿÿ8¶–å”·.
+Hkotlin:S108Ô")Either remove or fill this block of code.(½ûöÆ8Á‡î”·.
+Wkotlin:S1144‡"7Remove this unused private "pushImageToStorage" method.(·Ğ„8³”ä”·.
+]kotlin:S1144ß"8Remove this unused private "asyncLoadProfileImg" method.(‡Úşÿÿÿÿ8ÁÌã”·.
+Hkotlin:S108·")Either remove or fill this block of code.(½ûöÆ8¼ëµ—·.

@@ -14,8 +14,10 @@ import org.griffin.sclfg.Models.User
 import org.griffin.sclfg.R
 
 class ProfileAdapter(
-    var groupList: ArrayList<Group>, var authUser: User,
-    val modifyGroup: (gid: String, action: GroupMod) -> Unit,
+    var groupList: ArrayList<Group>,
+    var authUser: User,
+    val modifyGroup: (gid: String, action: GroupMod, err_cb : () -> Unit) -> Unit,
+    val err_cb: () -> Unit,
     val openModal: (gid: String) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     class ViewHolder(val cellView: LinearLayout) : RecyclerView.ViewHolder(cellView)
@@ -49,7 +51,6 @@ class ProfileAdapter(
                 }
                 .start()
         }
-
     }
 
     private fun animateUp(views: List<View>) {
@@ -62,7 +63,6 @@ class ProfileAdapter(
                     if (views.size > 1) {
                         animateUp(views.subList(1, views.size))
                     }
-
                 }
                 .withEndAction {
                     views[0].visibility = View.VISIBLE
@@ -76,7 +76,7 @@ class ProfileAdapter(
         var item = holder.itemView
 
         item.groupName.text = curr.name
-        item.currCount.text = curr.currCount.toString()
+        item.currCount.text = curr.playerList.size.toString()
         item.maxCount.text = "${curr.maxPlayers}  ...  Players Joined"
         item.shiploc.text = "${curr.ship} - ${curr.loc}"
 
@@ -98,13 +98,9 @@ class ProfileAdapter(
                                 item.cancel_button!!
                             )
                         )
-
-
                         animateDown(
                             listOf(
-
                                 item.startDelete!!,
-
                                 item.cell_container!!
                             )
                         )
@@ -116,8 +112,6 @@ class ProfileAdapter(
                                 item.cancel_button!!
                             )
                         )
-
-
                         animateUp(
                             listOf(
                                 item.startDelete!!,
@@ -127,7 +121,6 @@ class ProfileAdapter(
                     }
                 }
             }
-
 
             /* attach delete button */
             item.startDelete.setOnClickListener {
@@ -161,7 +154,6 @@ class ProfileAdapter(
                 }
             }
 
-
             item.active_toggle.setOnClickListener {
                 /* isActivated is state !BEFORE! switched */
                 when (it.isActivated) {
@@ -170,25 +162,24 @@ class ProfileAdapter(
                             ColorStateList.valueOf(Color.parseColor("#2196F3"))
                         item.active_toggle.trackTintList =
                             ColorStateList.valueOf(Color.parseColor("#2196F3"))
-                        modifyGroup(curr.gid, GroupMod.MAKE_PRIVATE)
+                        modifyGroup(curr.gid, GroupMod.MAKE_PRIVATE, err_cb)
                     }
                     true -> {
                         item.active_toggle.thumbTintList =
                             ColorStateList.valueOf(Color.parseColor("#CECFD1"))
                         item.active_toggle.trackTintList =
                             ColorStateList.valueOf(Color.parseColor("#CECFD1"))
-                        modifyGroup(curr.gid, GroupMod.MAKE_PUBLIC)
+                        modifyGroup(curr.gid, GroupMod.MAKE_PUBLIC, err_cb)
                     }
                 }
             }
         } else {
             item.active_toggle.visibility = View.GONE
         }
-
     }
 
     fun removeItem(gid: String, position: Int) {
-        modifyGroup(gid, GroupMod.DELETE)
+        modifyGroup(gid, GroupMod.DELETE, err_cb)
         notifyItemRemoved(position)
     }
 

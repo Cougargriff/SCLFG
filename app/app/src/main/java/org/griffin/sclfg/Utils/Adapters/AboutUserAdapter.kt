@@ -8,8 +8,7 @@ import kotlinx.android.synthetic.main.user_cell_message.view.*
 import org.griffin.sclfg.R
 
 class AboutUserAdapter(
-    var userList: ArrayList<String>,
-    val lookUp: (uid: String, cb: (name: String) -> Unit) -> Unit
+    var userList: ArrayList<String>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     class ViewHolder(val cellView: LinearLayout) : RecyclerView.ViewHolder(cellView)
 
@@ -36,13 +35,12 @@ class AboutUserAdapter(
             .alpha(0f)
             .setDuration(0L)
             .start()
-        lookUp(curr) {
-            item.userName.text = it
+            item.userName.text = curr
             item.animate()
                 .alpha(1f)
                 .setDuration(400L)
                 .start()
-        }
+
 
     }
 

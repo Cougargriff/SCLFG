@@ -1,5 +1,6 @@
 package org.griffin.sclfg.View.Home.Tabs
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,23 +10,24 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.tab_list.*
 import kotlinx.android.synthetic.main.tab_list.view.*
 import org.griffin.sclfg.Models.Group
-import org.griffin.sclfg.Models.GroupViewModel
+import org.griffin.sclfg.Models.Groups
 import org.griffin.sclfg.Models.User
 import org.griffin.sclfg.R
+import org.griffin.sclfg.Redux.Thunks.*
+import org.griffin.sclfg.Redux.store
 import org.griffin.sclfg.Utils.Adapters.GroupListAdapter
 import org.griffin.sclfg.View.Group.GroupActivity
+import org.reduxkotlin.StoreSubscription
 
 class ListFragment : Fragment() {
-    private val vm: GroupViewModel by activityViewModels()
-    private lateinit var groupsList: List<Group>
+    private var groupsList = ArrayList<Group>()
     private var user = User("", "", ArrayList(), 0)
-
+    private lateinit var unsub : StoreSubscription
     /* Recycler View Setup */
     private lateinit var rv: RecyclerView
     private lateinit var rvManager: RecyclerView.LayoutManager
@@ -38,26 +40,12 @@ class ListFragment : Fragment() {
 
     /* closures for joining and leaving groups. passed to list adapters */
     private val joinGroup = fun(gid: String, uid: String, cb: () -> Unit) {
-        vm.groupExists(gid, err_cb) {
-            /* callback invoked after checking if group still exists on db */
-            var g = GroupViewModel.groupFromHash(it)
-            if (g.currCount + 1 <= g.maxPlayers) {
-                g.playerList.add(uid)
-                /* only pass updated data due to nature of merging docs */
-                val hash = hashMapOf(
-                    "playerList" to g.playerList,
-                    "currCount" to g.currCount + 1
-                )
-                vm.joinGroup(g.gid, hash) {
-                    /* after joining group make button clickable again */
-                    cb()
-                }
-            } else {
+        store.dispatch(joinGroup(gid) {
+            requireActivity().runOnUiThread {
                 Toast.makeText(requireContext(), "Too many people already", Toast.LENGTH_LONG)
                     .show()
             }
-        }
-
+        })
     }
 
     private val openModal = fun(gid: String) {
@@ -67,23 +55,12 @@ class ListFragment : Fragment() {
     }
 
     private val leaveGroup = fun(gid: String, uid: String, cb: () -> Unit) {
-        vm.groupExists(gid, err_cb) {
-            /* callback invoked after checking if group still exists on db */
-            var g = GroupViewModel.groupFromHash(it)
-            if (g.currCount - 1 >= 0) {
-                g.playerList.remove(uid)
-                /* only pass updated data due to nature of merging docs */
-                val hash = hashMapOf(
-                    "playerList" to g.playerList,
-                    "currCount" to g.currCount - 1
-                )
-                vm.leaveGroup(g.gid, hash) {
-                    /* after leaving group make button clickable again */
-                    cb()
-                }
+        store.dispatch(leaveGroup(gid) {
+            requireActivity().runOnUiThread {
+                Toast.makeText(requireContext(), "Too few people already", Toast.LENGTH_LONG)
+                    .show()
             }
-        }
-
+        })
     }
 
     override fun onCreateView(
@@ -100,7 +77,6 @@ class ListFragment : Fragment() {
             requireActivity(),
             ArrayList(),
             user,
-            lookUp,
             joinGroup,
             leaveGroup,
             openModal
@@ -117,7 +93,33 @@ class ListFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setupSwipeRefresh()
-        setupVM()
+    }
+
+    private fun SetupRedux() {
+        /* Redux Store Setup */
+        unsub = store.subscribe {
+            try {
+            requireActivity().runOnUiThread {
+            //    if(groupsList != store.state.groups)
+                    render(store.getState().groups)
+
+               // if(user != store.state.user)
+                    render(store.getState().user)
+            }
+            } catch (e : Exception) {}
+        }
+       // store.dispatch(getUser())
+        //store.dispatch(getGroups())
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        SetupRedux()
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        unsub()
     }
 
     private fun setupSwipeRefresh() {
@@ -126,45 +128,34 @@ class ListFragment : Fragment() {
                 Updates group list in view model.
                 Observer in fragment will update local list.
              */
-            vm.update()
+            store.dispatch(getGroups())
             swipe_layout.isRefreshing = false
         }
     }
 
-    private fun setupVM() {
-        vm.getUser().observe(viewLifecycleOwner, Observer {
-            user = it!!
+    private fun render(newUser : User) {
+        try {
+            user = newUser
             /*
-                possible in the future to just make local
-                call to function for getGroups instead of vm call
-             */
+            possible in the future to just make local
+            call to function for getGroups instead of vm call
+         */
             (rv.adapter as GroupListAdapter).apply {
                 authUser = user
                 notifyDataSetChanged()
             }
-        })
-
-        vm.getGroups().observe(viewLifecycleOwner, Observer {
-            val tempList = ArrayList<Group>()
-            /* Spot to check for conditions on whether to show a specific group */
-            /* TODO possible to add filter checks for user inputted tags in the future */
-            it!!.forEach {
-                if (it.active) {
-                    tempList.add(it)
-                }
-            }
-            groupsList = tempList
-            (rv.adapter as GroupListAdapter).apply {
-                authUser = user
-                update(groupsList as ArrayList<Group>)
-            }
-        })
+        } catch (e : Exception) {}
     }
 
-    private val lookUp = fun(uid: String, cb: (name: String) -> Unit) {
-        vm.lookupUID(uid) {
-            cb(it)
-        }
+    private fun render(newGroups : ArrayList<Group>) {
+        try {
+            groupsList = ArrayList(newGroups.filter {  it.active })
+
+            (rv.adapter as GroupListAdapter).apply {
+                update(groupsList as ArrayList<Group>)
+            }
+        } catch(e : Exception) {}
+
     }
 }
 

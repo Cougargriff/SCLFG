@@ -8,19 +8,14 @@ import android.view.MenuItem
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toolbar
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activty_main.*
 import org.griffin.sclfg.Login.LoginActivity
-import org.griffin.sclfg.Models.*
 import org.griffin.sclfg.R
+import org.griffin.sclfg.Redux.Thunks.changeName
+import org.griffin.sclfg.Redux.store
 import org.griffin.sclfg.Utils.Adapters.PageAdapter
 import org.griffin.sclfg.Utils.Cache.LocalCache
 import org.griffin.sclfg.View.Home.Tabs.CreateFragment
@@ -36,7 +31,6 @@ class HomeActivity : AppCompatActivity() {
 
     /* Fragment Frameworks */
     private lateinit var pa: PageAdapter
-    private val vm: GroupViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,7 +73,7 @@ class HomeActivity : AppCompatActivity() {
                     setTitle(NAME_CHANGE_TITLE)
                     setCancelable(true)
                     setPositiveButton("Change") { dialog, which ->
-                        vm.updateScreenName(nameEditBox.text.toString())
+                        store.dispatch(changeName(nameEditBox.text.toString()))
                     }
                     setView(nameEditBox)
                 }
@@ -111,7 +105,6 @@ class HomeActivity : AppCompatActivity() {
     private fun lateSetup() {
         paSetup()
         vpSetup()
-        vmSetup()
         viewPager.setCurrentItem(2, true)
 
         /* if from register, update screen name */
@@ -122,24 +115,8 @@ class HomeActivity : AppCompatActivity() {
     private fun registerScreenName() {
         if (intent.extras != null) {
             val screenName = intent.extras!!.get("display_name") as String
-            vm.updateScreenName(screenName)
+            store.dispatch(changeName(screenName))
         }
-    }
-
-    private fun vmSetup() {
-        /* View Model Setup */
-        /* UI Updaters on Observation Changes from FireStore */
-//        vm.getLocs().observe(this, Observer {
-//
-//            vm.getShips().observe(this, Observer {
-//
-//                /* depends on ships and locations */
-//                vm.getGroups().observe(this, Observer {
-//                })
-//            })
-//        })
-
-
     }
 
     private fun paSetup() {

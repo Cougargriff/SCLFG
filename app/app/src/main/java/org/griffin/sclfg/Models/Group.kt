@@ -12,7 +12,6 @@ data class Group(
     var ship: String,
     var loc: String,
     var maxPlayers: Int,
-    var currCount: Int,
     var active: Boolean,
     var createdBy: String,
     var description: String

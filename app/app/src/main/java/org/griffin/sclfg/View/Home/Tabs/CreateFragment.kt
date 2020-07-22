@@ -8,17 +8,15 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.tab_create.*
 import org.griffin.sclfg.Models.Group
-import org.griffin.sclfg.Models.GroupViewModel
 import org.griffin.sclfg.Models.Location
 import org.griffin.sclfg.Models.Ship
 import org.griffin.sclfg.R
+import org.griffin.sclfg.Redux.Thunks.createGroup
+import org.griffin.sclfg.Redux.store
 
 class CreateFragment : Fragment() {
-    private val vm: GroupViewModel by activityViewModels()
     private lateinit var shipList: List<Ship>
     private lateinit var locList: List<Location>
     private var SHIPS = listOf("")
@@ -27,6 +25,7 @@ class CreateFragment : Fragment() {
     private lateinit var locAdapter: ArrayAdapter<String>
     private lateinit var acView: AutoCompleteTextView
     private val EMPTY = ""
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,9 +40,11 @@ class CreateFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         handleCreate()
-        setupVM()
         setupAutoComplete()
+
+        SetupRedux()
     }
+
 
     private fun handleCreate() {
         groupCreateButton.setOnClickListener {
@@ -56,16 +57,12 @@ class CreateFragment : Fragment() {
                     groupBox.text.toString().trim(), "", System.currentTimeMillis(),
                     ArrayList(), shipSearchBox.text.toString().trim(),
                     locSearchBox.text.toString().trim(),
-                    playNumSelector.value, 1, true, "",
+                    playNumSelector.value, true, "",
                     descriptionBox.text.toString()
                 )
 
+                store.dispatch(createGroup(newGroup, resetTextBoxes))
                 /* resetTextBoxes -> UI update on success callback */
-                vm.pushGroup(newGroup, resetTextBoxes) {
-                    /* after pushing group, callback with new gid param */
-                    /* add group to inGroups under user */
-                    vm.addGroupToUser(it)
-                }
                 Toast.makeText(requireContext(), newGroup.name + " Created!", Toast.LENGTH_SHORT)
                     .show()
             }
@@ -73,23 +70,37 @@ class CreateFragment : Fragment() {
     }
 
     private var resetTextBoxes = fun() {
-        groupBox.text.clear()
-        shipSearchBox.text.clear()
-        locSearchBox.text.clear()
-        descriptionBox.text.clear()
+        requireActivity().runOnUiThread {
+            groupBox.text.clear()
+            shipSearchBox.text.clear()
+            locSearchBox.text.clear()
+            descriptionBox.text.clear()
+        }
+
     }
 
-
-    private fun setupVM() {
-        vm.getShips().observe(viewLifecycleOwner, Observer {
-            shipList = it!!
+    private fun SetupRedux() {
+        store.subscribe {
+            try {
+                render(ShipList(store.getState().ships))
+                render(LocsList(store.getState().locations))
+            } catch (e : Exception) {}
+        }
+    }
+   data class ShipList(val list : ArrayList<Ship>?)
+    private fun render(ships : ShipList) {
+        try {
+            shipList = ships.list!!.toList()
             updateAutoCompleteShips()
-        })
+        } catch (e : Exception) {}
+    }
 
-        vm.getLocs().observe(viewLifecycleOwner, Observer {
-            locList = it!!
+    data class LocsList(val list : ArrayList<Location>?)
+    private fun render(locs : LocsList) {
+        try {
+            locList = locs.list!!.toList()
             updateAutoCompleteLocs()
-        })
+        } catch (e : Exception) {}
     }
 
     private fun setupAutoComplete() {
