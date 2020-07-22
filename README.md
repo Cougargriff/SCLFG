@@ -21,7 +21,7 @@ Finally, in the Create screen, you can create new groups which you will be added
 From any of the main screens, you can access the Sign Out and Change screen name options by clicking the three dots menu in the upper right. 
 
 <p align="center">
-  <img  height="100" src="https://reduxkotlin.org/img/redux-logo-landscape.png">
+  <img  height="100" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Redux_Logo.png/640px-Redux_Logo.png">
   <img  height="100"  src="https://logos-download.com/wp-content/uploads/2016/10/Kotlin_logo_wordmark.png">
 </p>
 
