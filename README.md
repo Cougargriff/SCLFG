@@ -27,6 +27,11 @@ From any of the main screens, you can access the Sign Out and Change screen name
 
 Recently I transitioned the state management from ViewModels to Redux. The result is a more robust system that allows for a better debugging experience. Though this benefit does come at a cost. Theres bound to be some state related bugs floating around. Everything appears good on the surface but let me know if anything odd happens...
 
+#### Installing the App
+The app-debug.apk file is the complete and built app for you to use. Reach out to me if you would like to be an official beta tester. 
+
+Simply drag the file onto a simulator to install the apk file or download the file to your phone and install there.
+
 #### Known Issues
 
 - If in a dedicated group screen and the group is delete by another user. The app will crash...
