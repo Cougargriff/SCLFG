@@ -22,6 +22,7 @@ From any of the main screens, you can access the Sign Out and Change screen name
 
 <p align="center">
   <img width="420" src="https://reduxkotlin.org/img/redux-logo-landscape.png">
+  <img width="420" src="https://logos-download.com/wp-content/uploads/2016/10/Kotlin_logo_wordmark.png">
 </p>
 
 Recently I transitioned the state management from ViewModels to Redux. The result is a more robust system that allows for a better debugging experience. Though this benefit does come at a cost. Theres bound to be some state related bugs floating around. Everything appears good on the surface but let me know if anything odd happens...
