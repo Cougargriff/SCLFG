@@ -19,6 +19,7 @@ import kotlinx.coroutines.tasks.await
 import org.griffin.sclfg.Models.*
 import org.griffin.sclfg.R
 import org.griffin.sclfg.Redux.Action
+import org.griffin.sclfg.Redux.Thunks.clearSelectedMessages
 import org.griffin.sclfg.Redux.Thunks.db
 import org.griffin.sclfg.Redux.Thunks.sendMessage
 import org.griffin.sclfg.Redux.Thunks.setMessageListener
@@ -67,7 +68,7 @@ class MessageFragment(val gid: String) : Fragment() {
 
     override fun onDetach() {
         super.onDetach()
-        store.dispatch(Action.CLEAR_SELECTED_MESSAGES)
+        store.dispatch(clearSelectedMessages())
        unsub()
     }
 
@@ -83,8 +84,8 @@ class MessageFragment(val gid: String) : Fragment() {
                 render(store.getState().user)
             } catch (e : Exception) {}
         }
-        // TODO get snap listener unsub fun
-        store.dispatch(setMessageListener(gid))
+        /* Passing activity should detach listener automatically */
+        store.dispatch(setMessageListener(requireActivity(), gid))
     }
 
     private fun render(newMsgs : ArrayList<Message>) {

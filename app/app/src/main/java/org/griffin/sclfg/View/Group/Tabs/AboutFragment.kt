@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.tab_about.view.*
 import org.griffin.sclfg.Models.Group
 import org.griffin.sclfg.R
 import org.griffin.sclfg.Redux.Action
+import org.griffin.sclfg.Redux.Thunks.clearSelectedGroup
 import org.griffin.sclfg.Redux.Thunks.loadSelect
 import org.griffin.sclfg.Redux.store
 import org.griffin.sclfg.Utils.Adapters.AboutUserAdapter
@@ -58,7 +59,7 @@ class AboutFragment(val gid: String) : Fragment() {
 
     override fun onDetach() {
         super.onDetach()
-        store.dispatch(Action.CLEAR_SELECTED_GROUP)
+        store.dispatch(clearSelectedGroup())
         unsub()
     }
 

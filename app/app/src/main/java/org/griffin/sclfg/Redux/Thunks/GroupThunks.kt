@@ -1,5 +1,6 @@
 package org.griffin.sclfg.Redux.Thunks
 
+import android.app.Activity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
@@ -37,24 +38,37 @@ fun sendMessage(gid : String, msg : Message) : Thunk<AppState> = {dispatch, getS
     } catch (e : Exception) {}
 }
 
-fun setMessageListener(gid : String) : Thunk<AppState> = {dispatch, getState, extraArg ->
+
+fun clearSelectedMessages() : Thunk<AppState> = {dispatch, getState, extraArg ->
+
+
+    dispatch(Action.CLEAR_SELECTED_MESSAGES)
+}
+
+fun clearSelectedGroup() : Thunk<AppState> = {dispatch, getState, extraArg ->
+
+
+    dispatch(Action.CLEAR_SELECTED_GROUP)
+}
+
+fun setMessageListener(view : Activity, gid : String) : Thunk<AppState> = { dispatch, getState, extraArg ->
     try {
-        grpRef.document(gid).collection("messages")
-            .orderBy("time" ,Query.Direction.DESCENDING)
-            .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-
-                GlobalScope.launch {
-                    val msgList = msgListFromDocs(querySnapshot!!.documents)
-                    var newList = ArrayList<Message>()
-                    msgList.forEach {
-                        newList.add(it.copy(author = lookupUID(it.author)!!))
-                    }
-
-                    dispatch(Action.LOAD_MESSAGES_FROM_SNAP(
-                        msgList
-                    ))
+        val query = grpRef.document(gid).collection("messages")
+            .orderBy("time", Query.Direction.DESCENDING)
+        query.addSnapshotListener(view) { querySnapshot, err ->
+            GlobalScope.launch {
+                val msgList = msgListFromDocs(querySnapshot!!.documents)
+                var newList = ArrayList<Message>()
+                msgList.forEach {
+                    /* Change each author uid to screen name */
+                    newList.add(it.copy(author = lookupUID(it.author)!!))
                 }
+
+                dispatch(Action.LOAD_MESSAGES_FROM_SNAP(
+                    msgList
+                ))
             }
+        }
     } catch (e : Exception) {}
 }
 

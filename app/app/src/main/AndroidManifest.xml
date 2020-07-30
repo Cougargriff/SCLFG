@@ -14,7 +14,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".View.Group.Tabs.AboutFragment"></activity>
         <activity
             android:name=".View.Group.GroupActivity"
             android:windowSoftInputMode="adjustResize" />
