@@ -28,7 +28,6 @@ fun sendMessage(gid : String, msg : Message) : Thunk<AppState> = {dispatch, getS
     dispatch(Action.SEND_MESSAGE_REQUEST)
     try {
         GlobalScope.launch {
-            /* todo send and get messagse */
             grpRef.document(gid).collection("messages").add(
                 Messages.messageToHash(msg)
             ).await()
