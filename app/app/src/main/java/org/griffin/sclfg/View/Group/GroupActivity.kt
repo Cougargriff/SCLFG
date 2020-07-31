@@ -18,9 +18,9 @@ class GroupActivity : AppCompatActivity() {
     private var gid = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_modal_group)
-
 
         try {
             gid = intent.extras!!.getString("gid", "")
@@ -36,10 +36,9 @@ class GroupActivity : AppCompatActivity() {
 
     private fun paSetup() {
         pa = PageAdapter(supportFragmentManager)
-
         /* Create and add fragments to page adapter */
         pa.addFragments(MessageFragment(gid), "Message")
-        pa.addFragments(AboutFragment(gid), "About")
+        pa.addFragments(AboutFragment(), "About")
     }
 
     private fun vpSetup() {
@@ -55,11 +54,8 @@ class GroupActivity : AppCompatActivity() {
             override fun onPageSelected(position: Int) {
                 when (position) {
                     0 -> {
-                        /* when search is selected *
-
-                         */
+                        /* when search is selected */
                     }
-
                     1 -> {
                         /* when list is selected */
                     }

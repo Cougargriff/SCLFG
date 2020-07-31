@@ -21,7 +21,7 @@ class Action {
     object JOIN_GROUP_REQUEST
     object CLEAR_SELECTED_GROUP
     object SELECT_GROUP_REQUEST
-    data class LOAD_SELECTED_GROUP(val group : Group)
+    data class LOAD_SELECTED_GROUP_SUCCESS(val group : Group)
     object DELETE_GROUP_REQUEST
     object DELETE_GROUP_SUCCESS
     object CHANGE_NAME_REQUEST

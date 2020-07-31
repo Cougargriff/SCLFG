@@ -23,8 +23,6 @@ f
 6app/src/main/java/org/griffin/sclfg/Models/GroupMod.kt,a\7\a791397abe3935a896597bd412ecdd66a37f0fc8
 m
 =app/src/main/java/org/griffin/sclfg/View/Home/HomeActivity.kt,7\5\75f532d1079aff8bc51ccadce251f274c2bf5fae
-l
-<app/src/main/java/org/griffin/sclfg/Models/GroupViewModel.kt,c\7\c7f95ee0b0fc489c3c99785d91fcc7db3580ea88
 x
 Happ/src/main/java/org/griffin/sclfg/Utils/Adapters/ProfileListAdapter.kt,4\d\4d62c5bae9d1c598feedcd2a92ee116a9bfd95e3
 u
@@ -55,3 +53,9 @@ f
 6app/src/main/java/org/griffin/sclfg/Models/Messages.kt,1\d\1d5bbf581dc0afa8b4c2e06876f1c3c2e0fbd552
 o
 ?app/src/main/java/org/griffin/sclfg/Redux/Thunks/GroupThunks.kt,1\d\1d7304f3fb14569674542133ed6b1a286e55079e
+u
+Eapp/src/main/java/org/griffin/sclfg/Utils/Adapters/MessagesAdapter.kt,8\9\89f656b822be3e2acaa5fa5d9be1fe01f40d1447
+c
+3app/src/main/java/org/griffin/sclfg/Models/Group.kt,e\3\e3bd9d8fca54c1231460305e66b89e8572a531d4
+d
+4app/src/main/java/org/griffin/sclfg/Models/Groups.kt,e\b\eb3643b4f55dd8e9e2dc55cbb6a35f8a8901918c

@@ -13,15 +13,19 @@ import kotlinx.android.synthetic.main.tab_about.view.*
 import org.griffin.sclfg.Models.Group
 import org.griffin.sclfg.R
 import org.griffin.sclfg.Redux.Action
+import org.griffin.sclfg.Redux.Thunks.clearSelectedGroup
 import org.griffin.sclfg.Redux.Thunks.loadSelect
+import org.griffin.sclfg.Redux.initialGroup
 import org.griffin.sclfg.Redux.store
 import org.griffin.sclfg.Utils.Adapters.AboutUserAdapter
 import org.reduxkotlin.StoreSubscription
 
-class AboutFragment(val gid: String) : Fragment() {
+class AboutFragment() : Fragment() {
 
     private var userList = ArrayList<String>()
+    private var selectedGroup = initialGroup
     private lateinit var unsub : StoreSubscription
+
     /* Recycler View Setup */
     private lateinit var rv: RecyclerView
     private lateinit var rvManager: RecyclerView.LayoutManager
@@ -58,7 +62,7 @@ class AboutFragment(val gid: String) : Fragment() {
 
     override fun onDetach() {
         super.onDetach()
-        store.dispatch(Action.CLEAR_SELECTED_GROUP)
+        store.dispatch(clearSelectedGroup())
         unsub()
     }
 
@@ -68,15 +72,15 @@ class AboutFragment(val gid: String) : Fragment() {
     }
 
     private fun SetupRedux() {
-        store.dispatch(loadSelect(gid))
         unsub = store.subscribe {
             try {
-
-                    render(store.getState().selectedGroup!!)
-
+                    val changedGroup = store.getState().selectedGroup!!
+                    if(selectedGroup != changedGroup) {
+                        selectedGroup = changedGroup
+                        render(store.getState().selectedGroup!!)
+                    }
             } catch (e : Exception) {}
         }
-
     }
 
     private fun render(group : Group) {
@@ -87,6 +91,8 @@ class AboutFragment(val gid: String) : Fragment() {
                 GroupName.text = group.name
                 playerCount.text = "${curr_count}  /  ${max_count}"
 
+                nameContainer.visibility = View.VISIBLE
+                listContainer.visibility = View.VISIBLE
             userList = group.playerList
             (rv.adapter as AboutUserAdapter).update(userList)
             }

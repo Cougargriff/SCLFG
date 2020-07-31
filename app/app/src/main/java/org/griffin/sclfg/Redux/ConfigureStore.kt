@@ -16,7 +16,8 @@ data class AppState(val user : User,
                     val ships : ArrayList<Ship>,
                     val locations : ArrayList<Location>,
                     val selectedGroup : Group,
-                    val selectedMsgs  : ArrayList<Message>)
+                    val selectedMsgs  : ArrayList<Message>,
+                    val isSelectedGrpLoaded : Boolean)
 
 val rootReducer = combineReducers(groupsReducer, userReducer)
 
@@ -41,7 +42,8 @@ private val initialState = AppState(User("",
     ArrayList(),
     ArrayList(),
     initialGroup,
-    ArrayList()
+    ArrayList(),
+    false
 )
 
 fun configureStore() : Store<AppState> {

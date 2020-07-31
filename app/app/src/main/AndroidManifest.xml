@@ -14,13 +14,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".View.Group.Tabs.AboutFragment"></activity>
         <activity
             android:name=".View.Group.GroupActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".Login.LoginActivity"
-            android:windowSoftInputMode="adjustPan">
+            android:name=".Login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,8 +26,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Login.RegisterActivity"
-            android:windowSoftInputMode="adjustPan" />
+            android:name=".Login.RegisterActivity"/>
         <activity
             android:name=".View.Home.HomeActivity"
             android:theme="@style/AppTheme" />

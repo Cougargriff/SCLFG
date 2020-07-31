@@ -58,7 +58,7 @@ class LoginActivity : AppCompatActivity() {
         login_container.visibility = View.VISIBLE
         space_stars.visibility = View.VISIBLE
         if (!space_stars.isAnimating) {
-            space_stars.setAnimation("space.json")
+            space_stars.setAnimation("reg_ship.json")
             space_stars.speed = 0.2f
             space_stars.playAnimation()
             space_stars.loop(true)
