@@ -15,6 +15,7 @@ import org.griffin.sclfg.R
 import org.griffin.sclfg.Redux.Action
 import org.griffin.sclfg.Redux.Thunks.clearSelectedGroup
 import org.griffin.sclfg.Redux.Thunks.loadSelect
+import org.griffin.sclfg.Redux.initialGroup
 import org.griffin.sclfg.Redux.store
 import org.griffin.sclfg.Utils.Adapters.AboutUserAdapter
 import org.reduxkotlin.StoreSubscription
@@ -22,6 +23,7 @@ import org.reduxkotlin.StoreSubscription
 class AboutFragment(val gid: String) : Fragment() {
 
     private var userList = ArrayList<String>()
+    private var selectedGroup = initialGroup
     private lateinit var unsub : StoreSubscription
     /* Recycler View Setup */
     private lateinit var rv: RecyclerView
@@ -71,10 +73,13 @@ class AboutFragment(val gid: String) : Fragment() {
     private fun SetupRedux() {
         unsub = store.subscribe {
             try {
-                    render(store.getState().selectedGroup!!)
+                    val changedGroup = store.getState().selectedGroup!!
+                    if(selectedGroup != changedGroup) {
+                        selectedGroup = changedGroup
+                        render(store.getState().selectedGroup!!)
+                    }
             } catch (e : Exception) {}
         }
-
     }
 
     private fun render(group : Group) {
@@ -85,6 +90,8 @@ class AboutFragment(val gid: String) : Fragment() {
                 GroupName.text = group.name
                 playerCount.text = "${curr_count}  /  ${max_count}"
 
+                nameContainer.visibility = View.VISIBLE
+                listContainer.visibility = View.VISIBLE
             userList = group.playerList
             (rv.adapter as AboutUserAdapter).update(userList)
             }
