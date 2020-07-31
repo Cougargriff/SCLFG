@@ -5,16 +5,13 @@ import org.griffin.sclfg.Redux.Action
 import org.griffin.sclfg.Redux.AppState
 import org.reduxkotlin.Middleware
 
-private fun log(action : Action) : String {
-    val type = "\n{\n" +  action.toString() + "\n}\n"
-    return type
-}
+private val ACTION_TAG = "******* REDUX-STORE -> "
 
 val loggingMiddleware: Middleware<AppState> =
     { store ->
         { next ->
             { action ->
-                Log.i("*************** REDUX-STORE", action.toString())
+                Log.i(ACTION_TAG, action.toString())
                 next(action)
             }
         }

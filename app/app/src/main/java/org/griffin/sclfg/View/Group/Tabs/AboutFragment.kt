@@ -25,6 +25,7 @@ class AboutFragment() : Fragment() {
     private var userList = ArrayList<String>()
     private var selectedGroup = initialGroup
     private lateinit var unsub : StoreSubscription
+
     /* Recycler View Setup */
     private lateinit var rv: RecyclerView
     private lateinit var rvManager: RecyclerView.LayoutManager

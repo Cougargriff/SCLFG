@@ -75,6 +75,8 @@ fun loadSelect(gid : String) : Thunk<AppState> = {dispatch, getState, extraArg -
     dispatch(Action.SELECT_GROUP_REQUEST)
     try {
         GlobalScope.launch {
+
+
             var group = Groups.groupFromHash(grpRef.document(gid).get().await())
             group.playerList = ArrayList(group.playerList.map {
                 lookupUID(it)!!
