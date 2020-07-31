@@ -33,7 +33,6 @@ class CreateFragment : Fragment() {
     ): View? {
         var view = inflater.inflate(R.layout.tab_create, container, false)
         /* Setup Fragment View here */
-
         return view
     }
 

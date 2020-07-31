@@ -166,6 +166,10 @@ class ProfileFragment : Fragment() {
                 requireActivity().runOnUiThread {
                     render(store.getState().groups)
                     render(store.getState().user)
+
+                    if(store.getState().groups.size > 0) {
+                        loading_profile_groups.visibility = View.INVISIBLE
+                    }
                 }
             } catch ( e : Exception) {}
         }
@@ -201,33 +205,33 @@ class ProfileFragment : Fragment() {
     }
 
     private val openModal = fun(gid: String) {
+        store.dispatch(loadSelect(gid))
         var intent = Intent(requireActivity(), GroupActivity::class.java)
         intent.putExtra("gid", gid)
         ContextCompat.startActivity(requireContext(), intent, null)
     }
 
-    /* TODO fallback image now shows. Check to see if upload will refresh */
-    private fun asyncLoadProfileImg() {
-        /* create cache file to store profile pic */
-        val storageRef = Firebase.storage.reference.child(store.state.user.uid)
-
-        /* image caching and loading lib */
-        val glidePlaceholder = CircularProgressDrawable(requireContext()).apply {
-            strokeWidth = 5f
-            setColorSchemeColors(Color.WHITE)
-            centerRadius = 30f
-            start()
-        }
-
-        Glide.with(requireContext())
-            .load(storageRef)
-            .placeholder(glidePlaceholder)
-            .diskCacheStrategy(DiskCacheStrategy.NONE)
-            .error(R.drawable.astro_prof)
-            .into(profileImage)
-
-    }
-
+/* Glide image loading */
+//    private fun asyncLoadProfileImg() {
+//        /* create cache file to store profile pic */
+//        val storageRef = Firebase.storage.reference.child(store.state.user.uid)
+//
+//        /* image caching and loading lib */
+//        val glidePlaceholder = CircularProgressDrawable(requireContext()).apply {
+//            strokeWidth = 5f
+//            setColorSchemeColors(Color.WHITE)
+//            centerRadius = 30f
+//            start()
+//        }
+//
+//        Glide.with(requireContext())
+//            .load(storageRef)
+//            .placeholder(glidePlaceholder)
+//            .diskCacheStrategy(DiskCacheStrategy.NONE)
+//            .error(R.drawable.astro_prof)
+//            .into(profileImage)
+//
+//    }
 //    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 //        super.onActivityResult(requestCode, resultCode, data)
 //
@@ -246,23 +250,22 @@ class ProfileFragment : Fragment() {
 //            }
 //        }
 //    }
-
-    private fun pushImageToStorage(uri: Uri) {
-        val imgInputStream = requireContext().contentResolver.openInputStream(uri)
-        Firebase.storage.reference.child(store.getState().user.uid).putStream(imgInputStream!!)
-    }
-
-    private fun startImgCrop(inputURI: Uri) {
-        val outputURI = Uri.fromFile(File(requireActivity().externalCacheDir, "cropped"))
-        var cropIntent = Crop.of(inputURI, outputURI).asSquare().getIntent(requireContext())
-        startActivityForResult(cropIntent, Crop.REQUEST_CROP)
-    }
-
-    private fun doImagePicker() {
-        val imgPicker = Intent(Intent.ACTION_GET_CONTENT)
-        imgPicker.type = "image/*"
-        startActivityForResult(imgPicker, PICK_PHOTO_TO_CROP)
-    }
+//    private fun pushImageToStorage(uri: Uri) {
+//        val imgInputStream = requireContext().contentResolver.openInputStream(uri)
+//        Firebase.storage.reference.child(store.getState().user.uid).putStream(imgInputStream!!)
+//    }
+//
+//    private fun startImgCrop(inputURI: Uri) {
+//        val outputURI = Uri.fromFile(File(requireActivity().externalCacheDir, "cropped"))
+//        var cropIntent = Crop.of(inputURI, outputURI).asSquare().getIntent(requireContext())
+//        startActivityForResult(cropIntent, Crop.REQUEST_CROP)
+//    }
+//
+//    private fun doImagePicker() {
+//        val imgPicker = Intent(Intent.ACTION_GET_CONTENT)
+//        imgPicker.type = "image/*"
+//        startActivityForResult(imgPicker, PICK_PHOTO_TO_CROP)
+//    }
 }
 
 

@@ -69,12 +69,9 @@ class AboutFragment(val gid: String) : Fragment() {
     }
 
     private fun SetupRedux() {
-        store.dispatch(loadSelect(gid))
         unsub = store.subscribe {
             try {
-
                     render(store.getState().selectedGroup!!)
-
             } catch (e : Exception) {}
         }
 

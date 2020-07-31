@@ -80,7 +80,7 @@ fun loadSelect(gid : String) : Thunk<AppState> = {dispatch, getState, extraArg -
                 lookupUID(it)!!
             })
 
-            dispatch(Action.LOAD_SELECTED_GROUP(group))
+            dispatch(Action.LOAD_SELECTED_GROUP_SUCCESS(group))
         }
     } catch (e : Exception) {}
 }

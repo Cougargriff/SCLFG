@@ -1,13 +1,13 @@
 
-Hkotlin:S108ª")Either remove or fill this block of code.(½ûöÆ8¼ëµ—·.
 kkotlin:S117J"MRename this parameter to match the regular expression "^[_a-z][a-zA-Z0-9]*$".(¡Ñº8„Ô‘·.
-tkotlin:S100¢"PRename function "SetupRedux" to match the regular expression ^[a-z][a-zA-Z0-9]*$(£¡Úãüÿÿÿÿ8„Ô‘·.
-Hkotlin:S108½")Either remove or fill this block of code.(½ûöÆ8¹åî”·.
-Qkotlin:S1144ÿ"1Remove this unused private "startImgCrop" method.(Ÿëº8³”ä”·.
->kotlin:S125ç"Remove this commented out code.(›óåÃ8³”ä”·.
-Rkotlin:S1144…"2Remove this unused private "doImagePicker" method.(ÁÉÚ8ÁÌã”·.
-]kotlin:S1144Ò"8Remove this unused private "asyncLoadProfileImg" method.(‡Úşÿÿÿÿ8ÁÌã”·.
-Hkotlin:S108Ç")Either remove or fill this block of code.(½ûöÆ8Á‡î”·.
 Bkotlin:S125%"Remove this commented out code.(ìÆ¶ÿÿÿÿÿ8¶–å”·.
 Wkotlin:S1144ú"7Remove this unused private "pushImageToStorage" method.(·Ğ„8³”ä”·.
+]kotlin:S1144Ò"8Remove this unused private "asyncLoadProfileImg" method.(‡Úşÿÿÿÿ8ÁÌã”·.
+Rkotlin:S1144…"2Remove this unused private "doImagePicker" method.(ÁÉÚ8ÁÌã”·.
+tkotlin:S100¢"PRename function "SetupRedux" to match the regular expression ^[a-z][a-zA-Z0-9]*$(£¡Úãüÿÿÿÿ8„Ô‘·.
+Hkotlin:S108ª")Either remove or fill this block of code.(½ûöÆ8¼ëµ—·.
+Qkotlin:S1144ÿ"1Remove this unused private "startImgCrop" method.(Ÿëº8³”ä”·.
+Hkotlin:S108½")Either remove or fill this block of code.(½ûöÆ8¹åî”·.
 Kkotlin:S1135Ñ"2Complete the task associated to this TODO comment.(”ŒÆª
+Hkotlin:S108Ç")Either remove or fill this block of code.(½ûöÆ8Á‡î”·.
+>kotlin:S125ç"Remove this commented out code.(›óåÃ8³”ä”·.

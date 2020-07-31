@@ -49,6 +49,7 @@ class ListFragment : Fragment() {
     }
 
     private val openModal = fun(gid: String) {
+        store.dispatch(loadSelect(gid))
         var intent = Intent(requireActivity(), GroupActivity::class.java)
         intent.putExtra("gid", gid)
         ContextCompat.startActivity(requireContext(), intent, null)
