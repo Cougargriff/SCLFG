@@ -39,7 +39,7 @@ class GroupActivity : AppCompatActivity() {
 
         /* Create and add fragments to page adapter */
         pa.addFragments(MessageFragment(gid), "Message")
-        pa.addFragments(AboutFragment(gid), "About")
+        pa.addFragments(AboutFragment(), "About")
     }
 
     private fun vpSetup() {

@@ -20,7 +20,7 @@ import org.griffin.sclfg.Redux.store
 import org.griffin.sclfg.Utils.Adapters.AboutUserAdapter
 import org.reduxkotlin.StoreSubscription
 
-class AboutFragment(val gid: String) : Fragment() {
+class AboutFragment() : Fragment() {
 
     private var userList = ArrayList<String>()
     private var selectedGroup = initialGroup
