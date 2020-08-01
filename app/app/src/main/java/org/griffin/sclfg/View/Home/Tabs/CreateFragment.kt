@@ -123,7 +123,7 @@ class CreateFragment : Fragment() {
         for (ship in shipList) {
             temp.add(ship.name)
         }
-        SHIPS = temp
+        SHIPS = temp.toList()
 
         shipAdapter = ArrayAdapter(
             this.requireContext(),
@@ -138,7 +138,7 @@ class CreateFragment : Fragment() {
         for (loc in locList) {
             temp.add(loc.name)
         }
-        LOCS = temp
+        LOCS = temp.toList()
 
         locAdapter = ArrayAdapter(
             this.requireContext(),

@@ -26,7 +26,6 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
         hideUI()
         login_bar.apply {
             imageAssetsFolder = "/assets/"
@@ -113,7 +112,6 @@ class LoginActivity : AppCompatActivity() {
 
     private fun validateFields(lpacket : EmailPasswordLoginHandler.User) : Boolean {
         var err = false
-
         if (email.text!!.isNotBlank() && password.text.isNotBlank()) {
             lpacket.email = email.text.toString()
             lpacket.password = password.text.toString()

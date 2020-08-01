@@ -127,6 +127,7 @@ fun createGroup(group : Group, cb : () -> Unit) : Thunk<AppState> = { dispatch, 
             val id = grpRef.add(Groups.groupToHash(group, auth.uid!!)).await().id
             addGroupToUser(id, auth.uid!!)
             dispatch(Action.PUSH_NEW_GROUP_SUCCESS)
+            cb()
         }
 
     } catch (e : Exception) {}
