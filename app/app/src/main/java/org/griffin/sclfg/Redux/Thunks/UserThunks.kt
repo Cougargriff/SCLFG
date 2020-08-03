@@ -1,5 +1,6 @@
 package org.griffin.sclfg.Redux.Thunks
 
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -9,12 +10,28 @@ import org.griffin.sclfg.Redux.Action
 import org.griffin.sclfg.Redux.AppState
 import org.reduxkotlin.Thunk
 
+private lateinit var userListener : ListenerRegistration
+
+fun signInUser() : Thunk<AppState> = {dispatch, getState, extraArg ->
+    dispatch(listenToUser())
+    dispatch(Action.SIGN_IN)
+
+}
+fun signOutUser() : Thunk<AppState> = {dispatch, getState, extraArg ->
+    dispatch(Action.SIGN_OUT_REQUEST)
+    userListener.remove()
+    auth.signOut()
+    dispatch(Action.SIGN_OUT_SUCCESS)
+
+}
 
 fun listenToUser() : Thunk<AppState> = { dispatch, getState, extraArg ->
     userRef.document(auth.uid!!)
         .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
             val user = Groups.userFromHash(documentSnapshot!!)
             dispatch(Action.UPDATE_USER_FROM_SNAP(user))
+        }.apply {
+            userListener  = this
         }
 }
 

@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.activty_main.*
 import org.griffin.sclfg.Login.LoginActivity
 import org.griffin.sclfg.R
 import org.griffin.sclfg.Redux.Thunks.changeName
+import org.griffin.sclfg.Redux.Thunks.signOutUser
 import org.griffin.sclfg.Redux.store
 import org.griffin.sclfg.Utils.Adapters.PageAdapter
 import org.griffin.sclfg.Utils.Cache.LocalCache
@@ -52,6 +53,7 @@ class HomeActivity : AppCompatActivity() {
                     /* clear cache and sign out */
                     clearCache {
                         /* callback after cache clear */
+                        store.dispatch(signOutUser())
                         val intent = Intent(this@HomeActivity, LoginActivity::class.java)
                         ContextCompat.startActivity(this@HomeActivity, intent, null)
                     }

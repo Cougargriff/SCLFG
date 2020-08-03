@@ -137,10 +137,7 @@ class ListFragment : Fragment() {
     private fun render(newUser : User) {
         try {
             user = newUser
-            /*
-            possible in the future to just make local
-            call to function for getGroups instead of vm call
-         */
+
             (rv.adapter as GroupListAdapter).apply {
                 authUser = user
                 notifyDataSetChanged()

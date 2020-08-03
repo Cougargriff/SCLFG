@@ -51,7 +51,6 @@ class CreateFragment : Fragment() {
             if (!(groupBox.text.isBlank() || shipSearchBox.text.isBlank() ||
                         locSearchBox.text.isBlank() || descriptionBox.text.isBlank())
             ) {
-
                 var newGroup = Group(
                     groupBox.text.toString().trim(), "", System.currentTimeMillis(),
                     ArrayList(), shipSearchBox.text.toString().trim(),
@@ -125,6 +124,8 @@ class CreateFragment : Fragment() {
         }
         SHIPS = temp.toList()
 
+        shipAdapter.clear()
+
         shipAdapter = ArrayAdapter(
             this.requireContext(),
             android.R.layout.simple_dropdown_item_1line, SHIPS
@@ -140,6 +141,7 @@ class CreateFragment : Fragment() {
         }
         LOCS = temp.toList()
 
+        locAdapter.clear()
         locAdapter = ArrayAdapter(
             this.requireContext(),
             android.R.layout.simple_dropdown_item_1line, LOCS

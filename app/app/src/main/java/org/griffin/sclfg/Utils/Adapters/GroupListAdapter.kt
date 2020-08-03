@@ -90,6 +90,7 @@ class GroupListAdapter(
 
         hideGoneElements(item)
 
+
         val isMember = authUser.inGroups.contains(curr.gid)
 
         /* check if authUser is in current group */
