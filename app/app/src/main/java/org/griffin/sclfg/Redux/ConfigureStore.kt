@@ -60,7 +60,6 @@ fun configureStore() : Store<AppState> {
     /* call collection listeners once */
     store.dispatch(listenToGroups())
 
-
     return store
 }
 

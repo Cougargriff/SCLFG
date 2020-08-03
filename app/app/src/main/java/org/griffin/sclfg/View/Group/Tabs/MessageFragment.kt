@@ -80,8 +80,13 @@ class MessageFragment(val gid: String) : Fragment() {
     private fun SetupRedux() {
         unsub = store.subscribe {
             try {
-                render(store.getState().selectedMsgs!!)
-                render(store.getState().user)
+
+                if(msgs != store.getState().selectedMsgs!!) {
+                    render(store.getState().selectedMsgs!!)
+                }
+                if(user != store.getState().user) {
+                    render(store.getState().user)
+                }
             } catch (e : Exception) {}
         }
         /* Passing activity should detach listener automatically */
