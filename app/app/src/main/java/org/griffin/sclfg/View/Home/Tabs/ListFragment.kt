@@ -101,16 +101,16 @@ class ListFragment : Fragment() {
         unsub = store.subscribe {
             try {
             requireActivity().runOnUiThread {
-            //    if(groupsList != store.state.groups)
+                if(groupsList != store.getState().groups) {
                     render(store.getState().groups)
+                }
 
-               // if(user != store.state.user)
-                    render(store.getState().user)
+               if(user != store.getState().user) {
+                   render(store.getState().user)
+               }
             }
             } catch (e : Exception) {}
         }
-       // store.dispatch(getUser())
-        //store.dispatch(getGroups())
     }
 
     override fun onAttach(context: Context) {

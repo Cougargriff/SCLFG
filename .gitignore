@@ -3,6 +3,8 @@
 *.ap_
 *.aab
 
+.idea/sonarlint/
+
 \app\app\google-services.json
 
 # Files for the ART/Dalvik VM
