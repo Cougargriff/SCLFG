@@ -32,11 +32,13 @@ val initialGroup = Group("",
     "",
     "")
 
-
-private val initialState = AppState(User("",
+val initialUser = User("",
     "",
     ArrayList(),
-    0),
+    0)
+
+private val initialState = AppState(
+    initialUser,
     ArrayList(),
     false,
     ArrayList(),
@@ -54,11 +56,13 @@ fun configureStore() : Store<AppState> {
 
     store.dispatch(getShips())
     store.dispatch(getLocations())
+
     /* call collection listeners once */
     store.dispatch(listenToGroups())
-    store.dispatch(listenToUser())
+
 
     return store
 }
 
 val store = configureStore()
+

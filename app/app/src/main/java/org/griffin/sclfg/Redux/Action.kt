@@ -34,4 +34,8 @@ class Action {
     object SEND_MESSAGE_SUCCESS
     data class LOAD_MESSAGES_FROM_SNAP(val msgs : ArrayList<Message>)
     object CLEAR_SELECTED_MESSAGES
+    object SIGN_OUT_REQUEST
+    object SIGN_OUT_SUCCESS
+    object SIGN_IN_REQUEST
+    object SIGN_IN
 }

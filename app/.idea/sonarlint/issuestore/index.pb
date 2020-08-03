@@ -59,3 +59,7 @@ c
 3app/src/main/java/org/griffin/sclfg/Models/Group.kt,e\3\e3bd9d8fca54c1231460305e66b89e8572a531d4
 d
 4app/src/main/java/org/griffin/sclfg/Models/Groups.kt,e\b\eb3643b4f55dd8e9e2dc55cbb6a35f8a8901918c
+f
+6app/src/test/java/org/griffin/sclfg/ExampleUnitTest.kt,d\6\d6d3f320bf6566cb01249e3e2cd7f8f52783fbe7
+u
+Eapp/src/androidTest/java/org/griffin/sclfg/ExampleInstrumentedTest.kt,c\9\c9757eb15d871adb80b6d9c11265ae92490bc23c
