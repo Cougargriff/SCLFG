@@ -19,26 +19,6 @@ import kotlin.coroutines.CoroutineContext
 /* Need to pass Ship and Loc db ref to get lists */
 class Groups : CoroutineScope {
     companion object {
-
-        fun findShip(searchName: String, shipList: List<Ship>): Ship? {
-            for (ship in shipList) {
-                if (ship.name.compareTo(searchName) == 0) {
-                    return ship
-                }
-            }
-            return null
-        }
-
-        fun findLoc(searchLoc: String, locList: List<Location>): Location? {
-            for (loc in locList) {
-                if (loc.name.compareTo(searchLoc) == 0) {
-                    return loc
-                }
-            }
-            return null
-        }
-
-
         fun userFromHash(result: DocumentSnapshot): User {
             var time = result["timeCreated"].toString()
             var name = result["screenName"].toString()

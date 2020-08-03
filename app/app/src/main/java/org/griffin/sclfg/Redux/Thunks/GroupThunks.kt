@@ -138,6 +138,20 @@ fun delete(gid : String) : Thunk<AppState> = { dispatch, getState, extraArg ->
     try {
         GlobalScope.launch {
             val group = Groups.groupFromHash(grpRef.document(gid).get().await())
+
+            /*
+                NOTE - Firestore doesn't support remote delete of collections
+                Delete all messages in sub collection one by one
+            */
+            val grpMsgs = grpRef.document(gid).collection("messages").get().await()
+            grpMsgs.documents.forEach {
+                val currMsg = Messages.messageFromHash(it)
+                grpRef.document(gid)
+                    .collection("messages")
+                    .document(currMsg.mid)
+                    .delete().await()
+            }
+
             grpRef.document(gid).delete().await()
             group.playerList.forEach {
                 removeGroupFromUser(gid, it)
@@ -156,15 +170,16 @@ fun joinGroup(gid : String, cb: () -> Unit) : Thunk<AppState> = { dispatch, getS
                 group.playerList.add(auth.uid!!)
                 addGroupToUser(gid, auth.uid!!)
                 grpRef.document(group.gid).set(hashMapOf(
-                    "playerList" to group.playerList,
-                    "currCount" to group.playerList.size + 1
+                    "playerList" to group.playerList
                 ), SetOptions.merge()).await()
                 dispatch(Action.JOIN_GROUP_SUCCESS)
             } else {
                 cb()
             }
         }
-    } catch(e : Exception) {}
+    } catch(e : Exception) {
+        cb()
+    }
 }
 
 
@@ -177,8 +192,7 @@ fun leaveGroup(gid: String, cb: () -> Unit) : Thunk<AppState> = { dispatch, getS
                group.playerList.remove(getState().user.uid)
                removeGroupFromUser(gid, auth.uid!!)
                grpRef.document(group.gid).set(hashMapOf(
-                   "playerList" to group.playerList,
-                   "currCount" to group.playerList.size - 1
+                   "playerList" to group.playerList
                ), SetOptions.merge()).await()
                dispatch(Action.LEAVE_GROUP_SUCCESS)
            } else {
