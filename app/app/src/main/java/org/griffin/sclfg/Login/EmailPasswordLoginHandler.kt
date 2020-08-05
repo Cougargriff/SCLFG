@@ -25,7 +25,7 @@ class EmailPasswordLoginHandler(var lPacket: User, val failCb: () -> Unit) {
             }
         }
             .addOnFailureListener {
-
+                failCb()
             }
     }
 
@@ -39,5 +39,8 @@ class EmailPasswordLoginHandler(var lPacket: User, val failCb: () -> Unit) {
                 failCb()
             }
         }
+            .addOnFailureListener {
+                failCb()
+            }
     }
 }
