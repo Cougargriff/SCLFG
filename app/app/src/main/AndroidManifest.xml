@@ -16,9 +16,11 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".View.Group.GroupActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".Login.LoginActivity">
+            android:name=".Login.LoginActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,9 +28,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Login.RegisterActivity"/>
+            android:name=".Login.RegisterActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".View.Home.HomeActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
     </application>
