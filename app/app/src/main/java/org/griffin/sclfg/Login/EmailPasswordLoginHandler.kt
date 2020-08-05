@@ -13,11 +13,12 @@ class EmailPasswordLoginHandler(var lPacket: User, val failCb: () -> Unit) {
     private var email = lPacket.email
     private var psw = lPacket.password
 
+    /* TODO move to redux */
+
     fun login(cacheCb: (user: User) -> Unit) {
 
         mAuth.signInWithEmailAndPassword(email, psw).addOnCompleteListener {
             if (it.isSuccessful) {
-                store.dispatch(signInUser())
                 cacheCb(lPacket)
             } else {
                 failCb()

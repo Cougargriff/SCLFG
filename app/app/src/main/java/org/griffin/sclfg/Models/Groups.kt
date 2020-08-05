@@ -22,7 +22,12 @@ class Groups : CoroutineScope {
         fun userFromHash(result: DocumentSnapshot): User {
             var time = result["timeCreated"].toString()
             var name = result["screenName"].toString()
-            var inGroups = result["inGroups"] as ArrayList<String>
+            var inGroups : ArrayList<String>
+            inGroups = try {
+                result["inGroups"] as ArrayList<String>
+            } catch (e : Exception) {
+                ArrayList()
+            }
             return User(name, result.id, inGroups, time.toLong())
         }
 
