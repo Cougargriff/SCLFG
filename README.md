@@ -20,6 +20,18 @@ Finally, in the Create screen, you can create new groups which you will be added
 
 From any of the main screens, you can access the Sign Out and Change screen name options by clicking the three dots menu in the upper right. 
 
+<p align="center">
+  <img  height="100" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Redux_Logo.png/640px-Redux_Logo.png">
+  <img  height="100"  src="https://logos-download.com/wp-content/uploads/2016/10/Kotlin_logo_wordmark.png">
+</p>
+
+Recently I transitioned the state management from ViewModels to Redux. The result is a more robust system that allows for a better debugging experience. Though this benefit does come at a cost. Theres bound to be some state related bugs floating around. Everything appears good on the surface but let me know if anything odd happens...
+
+#### Installing the App
+The app-debug.apk file is the complete and built app for you to use. Reach out to me if you would like to be an official beta tester. 
+
+Simply drag the file onto a simulator to install the apk file or download the file to your phone and install there.
+
 #### Known Issues
 
 - If in a dedicated group screen and the group is delete by another user. The app will crash...

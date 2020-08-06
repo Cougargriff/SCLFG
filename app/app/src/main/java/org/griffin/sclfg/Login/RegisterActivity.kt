@@ -14,6 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.griffin.sclfg.Models.Groups
 import org.griffin.sclfg.R
+import org.griffin.sclfg.Redux.Thunks.signInUser
 import org.griffin.sclfg.Redux.store
 import org.griffin.sclfg.Utils.Cache.LocalCache
 import org.griffin.sclfg.View.Home.HomeActivity
@@ -86,6 +87,7 @@ class RegisterActivity : AppCompatActivity(), CoroutineScope {
         /* INIT USER w/ display name */
         launch {
             initUser(uid) {
+                store.dispatch(signInUser())
                 var intent = Intent(this@RegisterActivity, HomeActivity::class.java)
                 intent.putExtra("display_name", display_name)
                 ContextCompat.startActivity(this@RegisterActivity, intent, null)

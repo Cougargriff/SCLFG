@@ -11,6 +11,8 @@ import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_login.*
 import org.griffin.sclfg.Models.Groups
 import org.griffin.sclfg.R
+import org.griffin.sclfg.Redux.Thunks.signInUser
+import org.griffin.sclfg.Redux.store
 import org.griffin.sclfg.Utils.Cache.LocalCache
 import org.griffin.sclfg.View.Home.HomeActivity
 
@@ -82,6 +84,7 @@ class LoginActivity : AppCompatActivity() {
         Decouples the context logic with logging in for intent purposes
      */
     var login_cb = fun() {
+            store.dispatch(signInUser())
             var intent = Intent(this@LoginActivity, HomeActivity::class.java)
             ContextCompat.startActivity(this@LoginActivity, intent, null)
     }
