@@ -63,3 +63,7 @@ f
 6app/src/test/java/org/griffin/sclfg/ExampleUnitTest.kt,d\6\d6d3f320bf6566cb01249e3e2cd7f8f52783fbe7
 u
 Eapp/src/androidTest/java/org/griffin/sclfg/ExampleInstrumentedTest.kt,c\9\c9757eb15d871adb80b6d9c11265ae92490bc23c
+b
+2app/src/main/java/org/griffin/sclfg/Models/Ship.kt,2\e\2ee612efbf46ae3fbf13293c355afdec9e9040ec
+v
+Fapp/src/main/java/org/griffin/sclfg/Login/EmailPasswordLoginHandler.kt,8\4\8476e1c9b44e2ad9263087f1d6f8b7e98794c4a2
